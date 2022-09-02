@@ -21,6 +21,8 @@
 		94DF82FA2878BB570054D5B8 /* RettearkUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DF82F92878BB570054D5B8 /* RettearkUITests.swift */; };
 		94DF82FC2878BB570054D5B8 /* RettearkUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DF82FB2878BB570054D5B8 /* RettearkUITestsLaunchTests.swift */; };
 		94DF83092878BF4C0054D5B8 /* Prøve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DF83082878BF4C0054D5B8 /* Prøve.swift */; };
+		DE05744D28C1F64F001D487B /* navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE05744C28C1F64F001D487B /* navigation.swift */; };
+		DE05744F28C1F67E001D487B /* elevKategoriVisning.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE05744E28C1F67E001D487B /* elevKategoriVisning.swift */; };
 		DE37053428AA2A0200EAC29F /* karakterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE37053328AA2A0100EAC29F /* karakterView.swift */; };
 		DE87C38E28BF65D900E880A9 /* kakediagram.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE87C38D28BF65D900E880A9 /* kakediagram.swift */; };
 		DEB6BBCE28B36560008BBD31 /* Kategorier.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEB6BBCD28B36560008BBD31 /* Kategorier.swift */; };
@@ -65,6 +67,8 @@
 		94DF82F92878BB570054D5B8 /* RettearkUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RettearkUITests.swift; sourceTree = "<group>"; };
 		94DF82FB2878BB570054D5B8 /* RettearkUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RettearkUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		94DF83082878BF4C0054D5B8 /* Prøve.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Prøve.swift"; sourceTree = "<group>"; };
+		DE05744C28C1F64F001D487B /* navigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = navigation.swift; sourceTree = "<group>"; };
+		DE05744E28C1F67E001D487B /* elevKategoriVisning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = elevKategoriVisning.swift; sourceTree = "<group>"; };
 		DE37053328AA2A0100EAC29F /* karakterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = karakterView.swift; sourceTree = "<group>"; };
 		DE87C38D28BF65D900E880A9 /* kakediagram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = kakediagram.swift; sourceTree = "<group>"; };
 		DEB6BBCD28B36560008BBD31 /* Kategorier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Kategorier.swift; sourceTree = "<group>"; };
@@ -106,6 +110,8 @@
 				DEB6BBD328B39336008BBD31 /* kategoriView.swift */,
 				DE87C38D28BF65D900E880A9 /* kakediagram.swift */,
 				DEB6BBD128B37B66008BBD31 /* poengTabellView.swift */,
+				DE05744E28C1F67E001D487B /* elevKategoriVisning.swift */,
+				DE05744C28C1F64F001D487B /* navigation.swift */,
 				DEB6BBCF28B378EC008BBD31 /* BoolOgId.swift */,
 				DEB6BBCD28B36560008BBD31 /* Kategorier.swift */,
 				94CC3008289D951D00A193F4 /* sumCelle.swift */,
@@ -305,6 +311,7 @@
 			files = (
 				DEC071DF28C0EB11006622FA /* elevVurdering.swift in Sources */,
 				DE87C38E28BF65D900E880A9 /* kakediagram.swift in Sources */,
+				DE05744F28C1F67E001D487B /* elevKategoriVisning.swift in Sources */,
 				94CC300528953FD600A193F4 /* PoengView.swift in Sources */,
 				94DF82E12878BB540054D5B8 /* ContentView.swift in Sources */,
 				94CC3009289D951D00A193F4 /* sumCelle.swift in Sources */,
@@ -315,6 +322,7 @@
 				94DF83092878BF4C0054D5B8 /* Prøve.swift in Sources */,
 				94CC3007289B046800A193F4 /* NumericTextField.swift in Sources */,
 				94DF82DF2878BB540054D5B8 /* RettearkApp.swift in Sources */,
+				DE05744D28C1F64F001D487B /* navigation.swift in Sources */,
 				DEB6BBD428B39336008BBD31 /* kategoriView.swift in Sources */,
 				DEB6BBCE28B36560008BBD31 /* Kategorier.swift in Sources */,
 				941205F128900ED700D7FA3C /* poeng.swift in Sources */,

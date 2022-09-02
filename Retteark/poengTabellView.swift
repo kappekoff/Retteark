@@ -10,6 +10,7 @@ import SwiftUI
 struct poengTabellView: View {
     
     @ObservedObject var prøve: Prøve
+    @State var visElevKategori: Bool = false
     
     var body: some View {
         Grid(horizontalSpacing: 0, verticalSpacing: 0){
@@ -53,11 +54,10 @@ struct poengTabellView: View {
             .background(.gray)
             ForEach(0..<prøve.elever.count){elevIndeks in
                 GridRow(){
-                    /*Button(Text(prøve.elever[elevIndeks].navn), action: {
-                        elevVurdering(elevNavn: prøve.elever[elevIndeks].navn, elevIndex: elevIndeks)
-                    })*/
-                    Text(prøve.elever[elevIndeks].navn)
-                        
+                    Button(prøve.elever[elevIndeks].navn) {
+                        visElevKategori = true
+                    }
+                    //Text(prøve.elever[elevIndeks].navn)
                     ForEach(0..<prøve.oppgaver.count){ poengIndeks in
                         PoengView(poeng: $prøve.poeng[elevIndeks][poengIndeks].poeng)
                             .background(elevIndeks % 2 != 0 ? .white:.orange)
@@ -77,5 +77,6 @@ struct poengTabellView: View {
                 .background(elevIndeks % 2 != 0 ? .white:.orange)
             }
         }
+        .navigate(to: elevKategoriVisning(elevNavn: "prøve.elever[elevIndeks].navn"), when: $visElevKategori)
     }
 }
