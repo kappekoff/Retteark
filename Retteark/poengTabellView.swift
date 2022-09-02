@@ -77,6 +77,6 @@ struct poengTabellView: View {
                 .background(elevIndeks % 2 != 0 ? .white:.orange)
             }
         }
-        .navigate(to: elevKategoriVisning(elevNavn: "prøve.elever[elevIndeks].navn"), when: $visElevKategori)
+        .navigate(to: elevKategoriVisning(elevNavn: "prøve.elever[elevIndeks].navn", visElevKategori: $visElevKategori), when: $visElevKategori)
     }
 }

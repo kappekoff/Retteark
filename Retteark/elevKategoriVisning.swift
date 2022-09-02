@@ -9,13 +9,20 @@ import SwiftUI
 
 struct elevKategoriVisning: View {
     var elevNavn: String
+    @Binding var visElevKategori:Bool
+    
     var body: some View {
+        HStack{
+            VStack {
+                Button("Tilbake") {
+                    visElevKategori = false
+                }
+                Spacer()
+                
+            }
         Text(elevNavn)
+        }
+            
+        }
+        
     }
-}
-
-struct elevKategoriVisning_Previews: PreviewProvider {
-    static var previews: some View {
-        elevKategoriVisning(elevNavn: "Peder")
-    }
-}
