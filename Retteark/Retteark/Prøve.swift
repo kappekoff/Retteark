@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Collections
 
 class Prøve: ObservableObject{
     
@@ -75,7 +74,7 @@ var elever_test = [
     Elev(id: 7, navn: "Ronja"),
     Elev(id: 8, navn: "Ask"),
     Elev(id: 9, navn: "Fredrik"),
-    Elev(id: 10, navn: "Ada")
+    Elev(id: 10, navn: "Adam")
     ]
 
 var kategoier_test = [
