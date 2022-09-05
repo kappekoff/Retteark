@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct elevKategoriVisning: View {
-    var elevNavn: String
+    var elevIndeks: Int
     @Binding var visElevKategori:Bool
     
     var body: some View {
@@ -20,7 +20,7 @@ struct elevKategoriVisning: View {
                 Spacer()
                 
             }
-        Text(elevNavn)
+        Text(String(elevIndeks))
         }
             
         }
