@@ -7,20 +7,20 @@
 
 import SwiftUI
 
-struct elevKategoriVisning: View {
-    var elevIndeks: Int
-    @Binding var visElevKategori:Bool
+struct elevTilbakemeldingVisning: View {
+    var elev: Elev
+    @Binding var visElevTilbakemleding:VisElevTilbakemleding?
+    @ObservedObject var prøve: Prøve
     
     var body: some View {
         HStack{
             VStack {
                 Button("Tilbake") {
-                    visElevKategori = false
+                    visElevTilbakemleding = nil
                 }
-                Spacer()
-                
+                .frame(alignment: .leading)
             }
-        Text(String(elevIndeks))
+            Text(elev.navn)
         }
             
         }

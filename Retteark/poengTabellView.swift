@@ -10,7 +10,7 @@ import SwiftUI
 struct poengTabellView: View {
     
     @ObservedObject var prøve: Prøve
-    @State var visElevKategori: ElevKategori?
+    @State var visElevTilbakemleding: VisElevTilbakemleding?
     
     var body: some View {
         Grid(horizontalSpacing: 0, verticalSpacing: 0){
@@ -23,12 +23,7 @@ struct poengTabellView: View {
                 Image(systemName: "graduationcap.fill")
                 Image(systemName: "lock.fill")
             }
-            .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
-            .font(.title)
-            .fontWeight(.bold)
-            .border(.primary)
-            .background(.green)
-            .multilineTextAlignment(.center)
+            .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).font(.title).fontWeight(.bold).border(.primary).background(.green).multilineTextAlignment(.center)
             GridRow{
                 Image(systemName: "light.max")
                 ForEach(0..<prøve.oppgaver.count){indeks in
@@ -47,18 +42,18 @@ struct poengTabellView: View {
                 Text("6")
                 Color.clear.gridCellUnsizedAxes([.horizontal, .vertical])
             }
-            .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
-            .font(.title)
-            .border(.primary)
-            .fontWeight(.bold)
-            .background(.gray)
+            .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).font(.title).border(.primary).fontWeight(.bold).background(.gray)
             ForEach(0..<prøve.elever.count){elevIndeks in
                 GridRow(){
                     Button(prøve.elever[elevIndeks].navn) {
-                        visElevKategori = .elevIndeks(elevIndeks)
+                        visElevTilbakemleding = .valgtElev(elev: prøve.elever[elevIndeks])
                     }
-                    .sheet(item: $visElevKategori, onDismiss: { visElevKategori = nil }) {
-                        elevKategoriVisning(elevIndeks: elevIndeks, visElevKategori: $visElevKategori)})
+                    .sheet(item: $visElevTilbakemleding, onDismiss: { visElevTilbakemleding = nil }) { visElevTilbakemleding in
+                        switch visElevTilbakemleding{
+                        case .valgtElev(let elev):
+                            elevTilbakemeldingVisning(elev: elev, visElevTilbakemleding: $visElevTilbakemleding, prøve: prøve)
+                        }
+                    }
                     ForEach(0..<prøve.oppgaver.count){ poengIndeks in
                         PoengView(poeng: $prøve.poeng[elevIndeks][poengIndeks].poeng)
                             .background(elevIndeks % 2 != 0 ? .white:.orange)
@@ -72,20 +67,11 @@ struct poengTabellView: View {
                         Image(systemName: prøve.elever[elevIndeks].låstKarakter ? "lock.open.fill" : "lock.fill")
                     })
                 }
-                .font(.title3)
-                .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
-                .border(.primary)
-                .background(elevIndeks % 2 != 0 ? .white:.orange)
+                .font(.title3).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background(elevIndeks % 2 != 0 ? .white:.orange)
             }
         }
     }
 }
 
 
-enum ElevKategori: Identifiable  {
-    case elevIndeks(Int)
-    
-
-    
-}
 

@@ -23,6 +23,7 @@
 		94DF83092878BF4C0054D5B8 /* Prøve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DF83082878BF4C0054D5B8 /* Prøve.swift */; };
 		DE05744D28C1F64F001D487B /* navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE05744C28C1F64F001D487B /* navigation.swift */; };
 		DE05744F28C1F67E001D487B /* elevKategoriVisning.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE05744E28C1F67E001D487B /* elevKategoriVisning.swift */; };
+		DE05745128C6073B001D487B /* VisElevTilbakemleding.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE05745028C6073B001D487B /* VisElevTilbakemleding.swift */; };
 		DE37053428AA2A0200EAC29F /* karakterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE37053328AA2A0100EAC29F /* karakterView.swift */; };
 		DE87C38E28BF65D900E880A9 /* kakediagram.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE87C38D28BF65D900E880A9 /* kakediagram.swift */; };
 		DEB6BBCE28B36560008BBD31 /* Kategorier.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEB6BBCD28B36560008BBD31 /* Kategorier.swift */; };
@@ -69,6 +70,7 @@
 		94DF83082878BF4C0054D5B8 /* Prøve.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Prøve.swift"; sourceTree = "<group>"; };
 		DE05744C28C1F64F001D487B /* navigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = navigation.swift; sourceTree = "<group>"; };
 		DE05744E28C1F67E001D487B /* elevKategoriVisning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = elevKategoriVisning.swift; sourceTree = "<group>"; };
+		DE05745028C6073B001D487B /* VisElevTilbakemleding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisElevTilbakemleding.swift; sourceTree = "<group>"; };
 		DE37053328AA2A0100EAC29F /* karakterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = karakterView.swift; sourceTree = "<group>"; };
 		DE87C38D28BF65D900E880A9 /* kakediagram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = kakediagram.swift; sourceTree = "<group>"; };
 		DEB6BBCD28B36560008BBD31 /* Kategorier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Kategorier.swift; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 		94DF82D22878BB540054D5B8 = {
 			isa = PBXGroup;
 			children = (
+				DE05745028C6073B001D487B /* VisElevTilbakemleding.swift */,
 				DEC071DE28C0EB11006622FA /* elevVurdering.swift */,
 				DEB6BBD328B39336008BBD31 /* kategoriView.swift */,
 				DE87C38D28BF65D900E880A9 /* kakediagram.swift */,
@@ -309,6 +312,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DE05745128C6073B001D487B /* VisElevTilbakemleding.swift in Sources */,
 				DEC071DF28C0EB11006622FA /* elevVurdering.swift in Sources */,
 				DE87C38E28BF65D900E880A9 /* kakediagram.swift in Sources */,
 				DE05744F28C1F67E001D487B /* elevKategoriVisning.swift in Sources */,
