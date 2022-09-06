@@ -14,6 +14,7 @@ class Prøve: ObservableObject{
     @Published var poeng: [[Poeng]] = []
     @Published var kategorier: [Kategori] = []
     @Published var kategorierOgOppgaver: [[Bool]] = []
+    @Published var tilbakemeldinger: [(String, Float)] = [("Du viser høy kompetanse", 66), ("Du viser middels kompetanse", 33), ("Du viser noe kompetanse", 0)]
     
     init(elever: [Elev], oppgaver: [Oppgave], kategorier: [Kategori]) {
         self.elever = elever

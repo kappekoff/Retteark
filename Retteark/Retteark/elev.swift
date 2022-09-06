@@ -14,6 +14,7 @@ struct Elev: Identifiable {
     var navn: String
     var karakter: String
     var låstKarakter: Bool
+    var framovermelding: String = ""
     
     init(id: Int, navn: String, karakter: String = "1"){
         self.id = id
