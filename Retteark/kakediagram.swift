@@ -15,12 +15,12 @@ struct kakediagram: View {
     
     var body: some View {
         ZStack{
-            kakeStykke(startVinkel: -90, sluttVinkel: 270-desimaltall*360)
+            kakeStykke(startVinkel: -90, sluttVinkel: -90-desimaltall*360)
                 .stroke(.black, lineWidth: 4)
-                .background(kakeStykke(startVinkel: -90, sluttVinkel: 270-desimaltall*360).foregroundColor(farge))
-            kakeStykke(startVinkel: 270-desimaltall*360, sluttVinkel: 270)
+                .background(kakeStykke(startVinkel: -90, sluttVinkel: -90-desimaltall*360).foregroundColor(farge))
+            kakeStykke(startVinkel: -90-desimaltall*360, sluttVinkel: -90-360)
                 .stroke(.black, lineWidth: 4)
-                .background(kakeStykke(startVinkel: 270-desimaltall*360, sluttVinkel: 270).foregroundColor(Color.white))
+                .background(kakeStykke(startVinkel: -90-desimaltall*360, sluttVinkel: -90-360).foregroundColor(Color.white))
         }
         
     }

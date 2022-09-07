@@ -10,21 +10,31 @@ import SwiftUI
 struct ContentView: View {
     
     @ObservedObject var prøve: Prøve = Prøve(elever: elever_test, oppgaver: oppgaver_test, kategorier: kategoier_test)
-    @State var viserKategoriVisning: Bool = false
+    @State var viserSheet: VisElevTilbakemleding? = nil
     
     var body: some View {
         VStack {
-            Button("Kategorier") {
-                viserKategoriVisning = true
+            HStack {
+                Button("Kategorier") {
+                    viserSheet = .valgtKategorier
+                }
+                Button("Instillinger") {
+                    viserSheet = .velgtInstillinger
+                }
             }
-            .sheet(isPresented: $viserKategoriVisning, content: {
-                kategoriView(viserKategoriVisning: $viserKategoriVisning, prøve: prøve)
-            })
             
+            .sheet(item: $viserSheet, onDismiss: {viserSheet = nil}){ viserSheet in
+                switch viserSheet{
+                case .valgtKategorier:
+                    kategoriView(viserSheet: $viserSheet, prøve: prøve)
+                case .velgtInstillinger:
+                    instillinger(prøve: prøve)
+                case .valgtElev(let elev):
+                    Text("Skal aldri komme hit .valgtElev(elev: prøve.elever[0]")
+                }
+            }
             poengTabellView(prøve: prøve)
         }
-        
-        
     }
 }
 

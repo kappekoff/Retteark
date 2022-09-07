@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct Kategori: Hashable{
-    let navn: String
+struct Kategori: Hashable, Identifiable{
+    var navn: String
     let id: Int
     
     init(navn: String, id: Int) {

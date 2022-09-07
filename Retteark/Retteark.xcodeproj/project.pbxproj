@@ -10,6 +10,7 @@
 		941205ED289006A500D7FA3C /* elev.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941205EC289006A500D7FA3C /* elev.swift */; };
 		941205EF2890071900D7FA3C /* oppgave.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941205EE2890071900D7FA3C /* oppgave.swift */; };
 		941205F128900ED700D7FA3C /* poeng.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941205F028900ED700D7FA3C /* poeng.swift */; };
+		94403CF728C7D9D80064D69F /* instillinger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94403CF628C7D9D80064D69F /* instillinger.swift */; };
 		94CC300528953FD600A193F4 /* PoengView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CC300428953FD600A193F4 /* PoengView.swift */; };
 		94CC3007289B046800A193F4 /* NumericTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CC3006289B046800A193F4 /* NumericTextField.swift */; };
 		94CC3009289D951D00A193F4 /* sumCelle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CC3008289D951D00A193F4 /* sumCelle.swift */; };
@@ -54,6 +55,7 @@
 		941205EC289006A500D7FA3C /* elev.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = elev.swift; sourceTree = "<group>"; };
 		941205EE2890071900D7FA3C /* oppgave.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = oppgave.swift; sourceTree = "<group>"; };
 		941205F028900ED700D7FA3C /* poeng.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = poeng.swift; sourceTree = "<group>"; };
+		94403CF628C7D9D80064D69F /* instillinger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = instillinger.swift; sourceTree = "<group>"; };
 		94CC300428953FD600A193F4 /* PoengView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoengView.swift; sourceTree = "<group>"; };
 		94CC3006289B046800A193F4 /* NumericTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumericTextField.swift; sourceTree = "<group>"; };
 		94CC3008289D951D00A193F4 /* sumCelle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sumCelle.swift; sourceTree = "<group>"; };
@@ -108,6 +110,7 @@
 		94DF82D22878BB540054D5B8 = {
 			isa = PBXGroup;
 			children = (
+				94403CF628C7D9D80064D69F /* instillinger.swift */,
 				DE05745028C6073B001D487B /* VisElevTilbakemleding.swift */,
 				DEC071DE28C0EB11006622FA /* elevVurdering.swift */,
 				DEB6BBD328B39336008BBD31 /* kategoriView.swift */,
@@ -313,6 +316,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DE05745128C6073B001D487B /* VisElevTilbakemleding.swift in Sources */,
+				94403CF728C7D9D80064D69F /* instillinger.swift in Sources */,
 				DEC071DF28C0EB11006622FA /* elevVurdering.swift in Sources */,
 				DE87C38E28BF65D900E880A9 /* kakediagram.swift in Sources */,
 				DE05744F28C1F67E001D487B /* elevKategoriVisning.swift in Sources */,

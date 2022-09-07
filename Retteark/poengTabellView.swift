@@ -52,6 +52,10 @@ struct poengTabellView: View {
                         switch visElevTilbakemleding{
                         case .valgtElev(let elev):
                             elevTilbakemeldingVisning(elev: elev, visElevTilbakemleding: $visElevTilbakemleding, prøve: prøve)
+                        case .velgtInstillinger:
+                            Text("skal aldri komme hit .velgtInstillinger")
+                        case .valgtKategorier:
+                            Text("skal aldri komme hit .valgtKategorier")
                         }
                     }
                     ForEach(0..<prøve.oppgaver.count){ poengIndeks in

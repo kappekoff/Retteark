@@ -18,21 +18,24 @@ struct elevTilbakemeldingVisning: View {
     
     var body: some View {
         ScrollView {
-            VStack{
-                Text(elev.navn).font(.largeTitle)
+            VStack(alignment: .listRowSeparatorLeading){
+                Text(elev.navn).font(.largeTitle).frame(alignment: .center)
                 LazyVGrid(columns: columns, spacing: 30) {
                     ForEach(0..<prøve.kategorier.count) { kategoriIndex in
-                        VStack {
-                            Text(prøve.kategorier[kategoriIndex].navn)
-                            kakediagram(desimaltall: Double(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex)), farge:farger[kategoriIndex % farger.count]).frame(width: 150, height: 150, alignment: .center)
-                            Text(String(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)) + "/" + String(maxPoengKategori(kategoriIndex: kategoriIndex)))
-                        }
                         
+                        if(maxPoengKategori(kategoriIndex: kategoriIndex) > 0) {
+                            VStack {
+                                Text(prøve.kategorier[kategoriIndex].navn)
+                                kakediagram(desimaltall: Double(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex)), farge:farger[kategoriIndex % farger.count]).frame(width: 150, height: 150, alignment: .center)
+                                Text(String(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)) + "/" + String(maxPoengKategori(kategoriIndex: kategoriIndex)))
+                            }
+                        }
                     }
                 }
                 Text(lagElevtilbakemelding()).frame(alignment: .leading)
-                TextField("Framovermelding", text: $prøve.elever[prøve.elever.firstIndex{$0.id == elev.id}!].framovermelding)
-            }
+                TextField("Framovermelding", text: $prøve.elever[prøve.elever.firstIndex{$0.id == elev.id}!].framovermelding, axis: .vertical)
+                Text("Karakter: " + elev.karakter)
+            }.padding(20)
         }
         
     }
@@ -43,9 +46,6 @@ struct elevTilbakemeldingVisning: View {
             if(prøve.kategorierOgOppgaver[kategoriIndex][oppgaveIndex]){
                 sum += prøve.oppgaver[oppgaveIndex].maksPoeng ?? 0
             }
-        }
-        if(sum == 0){
-            return 1
         }
         return sum
     }
@@ -65,8 +65,6 @@ struct elevTilbakemeldingVisning: View {
         var middels: String = prøve.tilbakemeldinger[1].0 + ": "
         var lav: String = prøve.tilbakemeldinger[2].0 + ": "
         for kategoriIndex in 0..<prøve.kategorier.count {
-            print(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex))
-            print(prøve.tilbakemeldinger[0].1/100)
             if(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex) > prøve.tilbakemeldinger[0].1/100) {
                 høy += prøve.kategorier[kategoriIndex].navn + ", "
             }

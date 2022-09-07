@@ -9,7 +9,7 @@ import SwiftUI
 
 
 struct kategoriView: View {
-    @Binding var viserKategoriVisning: Bool
+    @Binding var viserSheet: VisElevTilbakemleding?
     @ObservedObject var prøve: Prøve
     
     
@@ -30,7 +30,7 @@ struct kategoriView: View {
                     
                 }
                 Button("Tilbake") {
-                    viserKategoriVisning = false
+                    viserSheet = nil
 
                 }
             }

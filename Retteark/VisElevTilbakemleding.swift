@@ -10,11 +10,17 @@ import SwiftUI
 
 enum VisElevTilbakemleding: Identifiable  {
     case valgtElev(elev: Elev)
+    case velgtInstillinger
+    case valgtKategorier
     
     var id: String {
         switch self {
         case .valgtElev:
             return "valgtElev"
+        case .velgtInstillinger:
+            return "velgtInstillinger"
+        case .valgtKategorier:
+            return "valgtKategorier"
         }
             
     }
