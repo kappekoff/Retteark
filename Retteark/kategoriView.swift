@@ -15,27 +15,29 @@ struct kategoriView: View {
     
     
     var body: some View {
-        ScrollView {
-            
-       
-            VStack {
-                Text("Kategoier og oppgaver").font(.largeTitle)
-                ForEach(0..<prøve.kategorier.count){kategoriIndex in
-                    Text(prøve.kategorier[kategoriIndex].navn)
-                        .fontWeight(.heavy)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    ForEach(0..<prøve.oppgaver.count){oppgaveIndex in
-                        Toggle(prøve.oppgaver[oppgaveIndex].navn, isOn: $prøve.kategorierOgOppgaver[kategoriIndex][oppgaveIndex])
-                    }
-                    
+        VStack {
+            Text("Kategorier og oppgaver").font(.largeTitle)
+            Grid(horizontalSpacing: 0, verticalSpacing: 0){
+                GridRow{
+                    Color.green.gridCellUnsizedAxes([.horizontal, .vertical]).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary)
+                    ForEach(prøve.oppgaver){oppgave in
+                        Text(oppgave.navn)
+                    }.frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background(.green)
                 }
-                Button("Tilbake") {
-                    viserSheet = nil
-
+                ForEach(0..<prøve.kategorier.count){ kategoriIndex in
+                    GridRow() {
+                        Text(prøve.kategorier[kategoriIndex].navn).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background(.orange)
+                        ForEach(0..<prøve.oppgaver.count){oppgaveIndex in
+                            Toggle("", isOn: $prøve.kategorierOgOppgaver[kategoriIndex][oppgaveIndex])
+                        }.frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary)
+                        
+                    }
                 }
             }
+            Button("Tilbake") {
+                viserSheet = nil
+            }
         }
-        
     }
 }
 

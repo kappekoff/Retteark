@@ -65,24 +65,24 @@ struct elevTilbakemeldingVisning: View {
         var middels: String = prøve.tilbakemeldinger[1].0 + ": "
         var lav: String = prøve.tilbakemeldinger[2].0 + ": "
         for kategoriIndex in 0..<prøve.kategorier.count {
-            if(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex) > prøve.tilbakemeldinger[0].1/100) {
+            if(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex) > (prøve.tilbakemeldinger[0].1 ?? 66) / 100) {
                 høy += prøve.kategorier[kategoriIndex].navn + ", "
             }
             
-            else if(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex) > prøve.tilbakemeldinger[1].1/100) {
+            else if(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex) > (prøve.tilbakemeldinger[1].1 ?? 33) / 100) {
                 middels += prøve.kategorier[kategoriIndex].navn + ", "
             }
             
-            else if(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex) > prøve.tilbakemeldinger[2].1/100) {
+            else if(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex) > (prøve.tilbakemeldinger[2].1 ?? 0)/100) {
                 lav += prøve.kategorier[kategoriIndex].navn + ", "
             }
             
         }
-        middels.dropLast(2)
+        middels = String(middels.dropLast(2))
         middels += "\n"
-        høy.dropLast(2)
+        høy = String(høy.dropLast(2))
         høy += "\n"
-        lav.dropLast(2)
+        lav = String(lav.dropLast(2))
         lav += "\n"
         return (høy + middels + lav)
     }
