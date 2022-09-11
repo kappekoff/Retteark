@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct Elev: Identifiable {
+struct Elev: Identifiable, Hashable, Codable {
     
     let id: Int
     var navn: String

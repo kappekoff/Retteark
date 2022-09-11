@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @ObservedObject var prøve: Prøve = Prøve(elever: elever_test, oppgaver: oppgaver_test, kategorier: kategoier_test)
+    @ObservedObject var prøve: Prøve
     @State var viserSheet: VisElevTilbakemleding? = nil
     
     var body: some View {
@@ -21,7 +21,7 @@ struct ContentView: View {
                 Button("Instillinger") {
                     viserSheet = .velgtInstillinger
                 }
-            }
+            }.buttonStyle(.borderedProminent)
             
             .sheet(item: $viserSheet, onDismiss: {viserSheet = nil}){ viserSheet in
                 switch viserSheet{
@@ -35,11 +35,5 @@ struct ContentView: View {
             }
             poengTabellView(prøve: prøve)
         }
-    }
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
     }
 }

@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct Oppgave: Identifiable, Hashable {
+struct Oppgave: Identifiable, Hashable, Codable {
     
     let id: Int
     var navn: String

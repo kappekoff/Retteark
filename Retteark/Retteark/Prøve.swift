@@ -7,8 +7,13 @@
 
 import Foundation
 
-class Prøve: ObservableObject{
+class Prøve: ObservableObject, Hashable, Identifiable, Codable{
+    static func == (lhs: Prøve, rhs: Prøve) -> Bool {
+        return (lhs.id == rhs.id)
+    }
     
+    @Published var navn: String
+    var id: String = UUID().uuidString
     @Published var elever: [Elev] = []
     @Published var oppgaver: [Oppgave] = []
     @Published var poeng: [[Poeng]] = []
@@ -16,10 +21,17 @@ class Prøve: ObservableObject{
     @Published var kategorierOgOppgaver: [[Bool]] = []
     @Published var tilbakemeldinger: [(String, Float?)] = [("Du viser høy kompetanse", 66), ("Du viser middels kompetanse", 33), ("Du viser noe kompetanse", 0)]
     
-    init(elever: [Elev], oppgaver: [Oppgave], kategorier: [Kategori]) {
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(navn)
+    }
+    
+    init(navn: String, elever: [Elev], oppgaver: [Oppgave], kategorier: [Kategori]) {
         self.elever = elever
         self.oppgaver = oppgaver
         self.kategorier = kategorier
+        self.navn = navn
     
         for i in 0..<elever.count {
             self.poeng.append([])
@@ -65,18 +77,6 @@ var oppgaver_test = [
     Oppgave(id: 9, navn: "6", maksPoeng: 10)
     ]
     
-var elever_test = [
-    Elev(id: 1, navn: "Petter"),
-    Elev(id: 2, navn: "Åse"),
-    Elev(id: 3, navn: "Stein"),
-    Elev(id: 4, navn: "Per"),
-    Elev(id: 5, navn: "Lise"),
-    Elev(id: 6, navn: "Jinbo"),
-    Elev(id: 7, navn: "Ronja"),
-    Elev(id: 8, navn: "Ask"),
-    Elev(id: 9, navn: "Fredrik"),
-    Elev(id: 10, navn: "Adam")
-    ]
 
 var kategoier_test = [
     Kategori(navn: "Algebra", id: 1),

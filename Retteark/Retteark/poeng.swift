@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Poeng: Identifiable {
+struct Poeng: Identifiable, Hashable, Codable {
     let id: [Int]
     var poeng: Float?
     

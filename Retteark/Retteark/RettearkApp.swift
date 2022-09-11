@@ -12,7 +12,7 @@ import SwiftUI
 struct RettearkApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            klasseVisning(klasseOversikt: Klasseoversikt())
         }
     }
 }

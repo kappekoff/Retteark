@@ -11,6 +11,10 @@
 		941205EF2890071900D7FA3C /* oppgave.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941205EE2890071900D7FA3C /* oppgave.swift */; };
 		941205F128900ED700D7FA3C /* poeng.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941205F028900ED700D7FA3C /* poeng.swift */; };
 		94403CF728C7D9D80064D69F /* instillinger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94403CF628C7D9D80064D69F /* instillinger.swift */; };
+		94B82C4A28CBCE010086368A /* Klasse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B82C4928CBCE010086368A /* Klasse.swift */; };
+		94B82C4C28CBCF350086368A /* klasseVisning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B82C4B28CBCF350086368A /* klasseVisning.swift */; };
+		94B82C4E28CBCFC20086368A /* Klasseoversikt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B82C4D28CBCFC20086368A /* Klasseoversikt.swift */; };
+		94B82C5028CC475B0086368A /* prøveOversiktVisning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B82C4F28CC475B0086368A /* prøveOversiktVisning.swift */; };
 		94CC300528953FD600A193F4 /* PoengView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CC300428953FD600A193F4 /* PoengView.swift */; };
 		94CC3007289B046800A193F4 /* NumericTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CC3006289B046800A193F4 /* NumericTextField.swift */; };
 		94CC3009289D951D00A193F4 /* sumCelle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CC3008289D951D00A193F4 /* sumCelle.swift */; };
@@ -56,6 +60,10 @@
 		941205EE2890071900D7FA3C /* oppgave.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = oppgave.swift; sourceTree = "<group>"; };
 		941205F028900ED700D7FA3C /* poeng.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = poeng.swift; sourceTree = "<group>"; };
 		94403CF628C7D9D80064D69F /* instillinger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = instillinger.swift; sourceTree = "<group>"; };
+		94B82C4928CBCE010086368A /* Klasse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Klasse.swift; sourceTree = "<group>"; };
+		94B82C4B28CBCF350086368A /* klasseVisning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = klasseVisning.swift; sourceTree = "<group>"; };
+		94B82C4D28CBCFC20086368A /* Klasseoversikt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Klasseoversikt.swift; sourceTree = "<group>"; };
+		94B82C4F28CC475B0086368A /* prøveOversiktVisning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "prøveOversiktVisning.swift"; sourceTree = "<group>"; };
 		94CC300428953FD600A193F4 /* PoengView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoengView.swift; sourceTree = "<group>"; };
 		94CC3006289B046800A193F4 /* NumericTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumericTextField.swift; sourceTree = "<group>"; };
 		94CC3008289D951D00A193F4 /* sumCelle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sumCelle.swift; sourceTree = "<group>"; };
@@ -110,6 +118,10 @@
 		94DF82D22878BB540054D5B8 = {
 			isa = PBXGroup;
 			children = (
+				94B82C4F28CC475B0086368A /* prøveOversiktVisning.swift */,
+				94B82C4928CBCE010086368A /* Klasse.swift */,
+				94B82C4B28CBCF350086368A /* klasseVisning.swift */,
+				94B82C4D28CBCFC20086368A /* Klasseoversikt.swift */,
 				94403CF628C7D9D80064D69F /* instillinger.swift */,
 				DE05745028C6073B001D487B /* VisElevTilbakemleding.swift */,
 				DEC071DE28C0EB11006622FA /* elevVurdering.swift */,
@@ -322,13 +334,17 @@
 				DE05744F28C1F67E001D487B /* elevKategoriVisning.swift in Sources */,
 				94CC300528953FD600A193F4 /* PoengView.swift in Sources */,
 				94DF82E12878BB540054D5B8 /* ContentView.swift in Sources */,
+				94B82C5028CC475B0086368A /* prøveOversiktVisning.swift in Sources */,
 				94CC3009289D951D00A193F4 /* sumCelle.swift in Sources */,
 				DE37053428AA2A0200EAC29F /* karakterView.swift in Sources */,
 				DEB6BBD028B378EC008BBD31 /* BoolOgId.swift in Sources */,
 				941205EF2890071900D7FA3C /* oppgave.swift in Sources */,
 				941205ED289006A500D7FA3C /* elev.swift in Sources */,
 				94DF83092878BF4C0054D5B8 /* Prøve.swift in Sources */,
+				94B82C4C28CBCF350086368A /* klasseVisning.swift in Sources */,
+				94B82C4A28CBCE010086368A /* Klasse.swift in Sources */,
 				94CC3007289B046800A193F4 /* NumericTextField.swift in Sources */,
+				94B82C4E28CBCFC20086368A /* Klasseoversikt.swift in Sources */,
 				94DF82DF2878BB540054D5B8 /* RettearkApp.swift in Sources */,
 				DE05744D28C1F64F001D487B /* navigation.swift in Sources */,
 				DEB6BBD428B39336008BBD31 /* kategoriView.swift in Sources */,

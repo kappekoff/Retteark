@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Kategori: Hashable, Identifiable{
+struct Kategori: Hashable, Identifiable, Codable{
     var navn: String
     let id: Int
     
