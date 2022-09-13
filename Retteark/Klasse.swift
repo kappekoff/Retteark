@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Klasse:  Identifiable, Hashable, Codable {
+struct Klasse:  Identifiable, Hashable {
     
     
     var id: String = UUID().uuidString
@@ -28,4 +28,5 @@ struct Klasse:  Identifiable, Hashable, Codable {
     static func == (lhs: Klasse, rhs: Klasse) -> Bool {
         return (lhs.id == rhs.id)
     }
+    
 }

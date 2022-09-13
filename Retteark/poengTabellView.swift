@@ -28,10 +28,9 @@ struct poengTabellView: View {
                 Image(systemName: "light.max")
                 ForEach(0..<prøve.oppgaver.count){indeks in
                     PoengView(poeng: $prøve.oppgaver[indeks].maksPoeng)
-                        /*.onSubmit({ //Kode for å endre poeng for alle elever. Fungerer ikke nå
+                        /*onSubmit({ //Kode for å endre poeng for alle elever. Fungerer ikke nå
                         
                             let endringsfaktor = (prøve.oppgaver[indeks].maksPoeng ?? 0) / prøve.oppgaver[indeks].maksPoengGammelVerdi
-                            
                             prøve.oppgaver[indeks].maksPoengGammelVerdi = prøve.oppgaver[indeks].maksPoeng ?? 0
 
                             prøve.endrePoengAlleElever(oppgaveIndeks: indeks, endringsfaktor: endringsfaktor)

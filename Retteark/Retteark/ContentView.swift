@@ -14,6 +14,7 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
+            Text(prøve.navn).font(.largeTitle)
             HStack {
                 Button("Kategorier") {
                     viserSheet = .valgtKategorier

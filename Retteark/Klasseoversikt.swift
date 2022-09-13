@@ -7,12 +7,42 @@
 
 import Foundation
 
-class Klasseoversikt: ObservableObject, Codable {
+class Klasseoversikt: ObservableObject {
     
     @Published var klasser: [Klasse]
     
     init(){
         self.klasser = [Klasse(navn: "2IMT", elever: elever_test, skoleÅr: "22/23")]
+    }
+    
+    func lastInnKlasser() {
+        FileManager.readDocument(docname: filnavn) { resultat in
+            switch resultat:
+            case .sucsess(let data) {
+                    let dekoder = JSONDecoder
+                    do{
+                        klasser = try dekoder.decode([Klasse].Self, from: data)
+                    }
+                    catch {
+                        print(error.localizedDescription)
+                    }
+                }
+            case .failure(let error) {
+                print(error.localizedDescription)
+            }
+            
+        }
+    }
+    
+    func lagreKlasser() {
+        let enkoder = JSONEncoder()
+        do {
+            let data = try enkoder.encode(klasser)
+            let jsonString = String(decoding: data, as: UTF8.self)
+        }
+        catch {
+            
+        }
     }
 }
 

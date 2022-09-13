@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Prøve: ObservableObject, Hashable, Identifiable, Codable{
+class Prøve: ObservableObject, Hashable, Identifiable{
     static func == (lhs: Prøve, rhs: Prøve) -> Bool {
         return (lhs.id == rhs.id)
     }
@@ -28,6 +28,7 @@ class Prøve: ObservableObject, Hashable, Identifiable, Codable{
     }
     
     init(navn: String, elever: [Elev], oppgaver: [Oppgave], kategorier: [Kategori]) {
+        
         self.elever = elever
         self.oppgaver = oppgaver
         self.kategorier = kategorier
@@ -46,17 +47,15 @@ class Prøve: ObservableObject, Hashable, Identifiable, Codable{
                 kategorierOgOppgaver[i].append(false)
             }
         }
-    
-        
     }
     
     func endrePoengAlleElever(oppgaveIndeks: Int, endringsfaktor: Float){
-        
+        self.objectWillChange.send()
         for i in 0..<self.elever.count {
             self.poeng[i][oppgaveIndeks].poeng = (self.poeng[i][oppgaveIndeks].poeng ?? 0) * endringsfaktor
             print(self.poeng[i][oppgaveIndeks].poeng ?? -1)
         }
-        self.objectWillChange.send()
+        
     }
     
     func printPoeng() {
