@@ -45,8 +45,8 @@ struct tilbakemeldingsLinje: View {
     
     var body: some View{
         HStack {
-            TextField("Tilbakemelding", text: $prøve.tilbakemeldinger[index].0)
-            NumericTextField("Grense", number: $prøve.tilbakemeldinger[index].1, isDecimalAllowed: false).frame(width: 25, alignment: .trailing)
+            TextField("Tilbakemelding", text: $prøve.tilbakemeldinger[index].tekst)
+            NumericTextField("Grense", number: $prøve.tilbakemeldinger[index].nedreGrense, isDecimalAllowed: false).frame(width: 25, alignment: .trailing)
             Text("%")
         }
     }

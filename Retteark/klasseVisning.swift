@@ -40,6 +40,13 @@ struct klasseVisning: View {
             }
         } detail: {
             if let prøveIndex = valgtPrøveIndex, let klasseIndex = valgtKlasseIndex {
+                VStack {
+                    Button{
+                        klasseOversikt.lagreKlasser()
+                    } label: {
+                        Text("Lagre")
+                    }
+                }
                 ContentView(prøve: klasseOversikt.klasser[klasseIndex].prøver[prøveIndex])
             }
             else {

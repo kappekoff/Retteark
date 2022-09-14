@@ -14,10 +14,10 @@ extension FileManager {
         return Self.default.urls(for: .documentDirectory, in: .userDomainMask).first!
     }
     
-    func lagreDokument(innhold: String, dokumentnavn: String, completion: (Error?) -> Void) {
-        let url = Self.docDirURL.appendingPathComponent(dokumentnavn)
+    func saveDocument(contents: String, documentname: String, completion: (Error?) -> Void) {
+        let url = Self.docDirURL.appendingPathComponent(documentname)
         do{
-            try innhold.write(to: url, atomically: true, encoding: .utf8)
+            try contents.write(to: url, atomically: true, encoding: .utf8)
         }
         catch {
             completion(error)
@@ -25,13 +25,12 @@ extension FileManager {
     }
     
     
-    func lesDokument(dokumentnavn: String, completion: (Result<Data, Error>) -> Void) {
-        let url = Self.docDirURL.appendingPathComponent(dokumentnavn)
+    func readDocument(docName: String, completion: (Result<Data, Error>) -> Void) {
+        let url = Self.docDirURL.appendingPathComponent(docName)
         do {
             let data = try Data(contentsOf: url)
             completion(.success(data))
-        }
-        catch {
+        } catch {
             completion(.failure(error))
         }
     }

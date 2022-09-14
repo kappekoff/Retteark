@@ -61,19 +61,19 @@ struct elevTilbakemeldingVisning: View {
     }
     
     func lagElevtilbakemelding() -> String {
-        var høy: String = prøve.tilbakemeldinger[0].0 + ": "
-        var middels: String = prøve.tilbakemeldinger[1].0 + ": "
-        var lav: String = prøve.tilbakemeldinger[2].0 + ": "
+        var høy: String = prøve.tilbakemeldinger[0].tekst + ": "
+        var middels: String = prøve.tilbakemeldinger[1].tekst + ": "
+        var lav: String = prøve.tilbakemeldinger[2].tekst + ": "
         for kategoriIndex in 0..<prøve.kategorier.count {
-            if(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex) > (prøve.tilbakemeldinger[0].1 ?? 66) / 100) {
+            if(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex) > (prøve.tilbakemeldinger[0].nedreGrense ?? 66) / 100) {
                 høy += prøve.kategorier[kategoriIndex].navn + ", "
             }
             
-            else if(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex) > (prøve.tilbakemeldinger[1].1 ?? 33) / 100) {
+            else if(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex) > (prøve.tilbakemeldinger[1].nedreGrense ?? 33) / 100) {
                 middels += prøve.kategorier[kategoriIndex].navn + ", "
             }
             
-            else if(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex) > (prøve.tilbakemeldinger[2].1 ?? 0)/100) {
+            else if(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex) > (prøve.tilbakemeldinger[2].nedreGrense ?? 0)/100) {
                 lav += prøve.kategorier[kategoriIndex].navn + ", "
             }
             
