@@ -16,21 +16,19 @@ class Klasseoversikt: ObservableObject {
     }
     
     func lastInnKlasser() {
-        FileManager.readDocument(docname: filnavn) { resultat in
-            switch resultat:
-            case .sucsess(let data) {
-                    let dekoder = JSONDecoder
-                    do{
-                        klasser = try dekoder.decode([Klasse].Self, from: data)
-                    }
-                    catch {
-                        print(error.localizedDescription)
-                    }
+        FileManager().lesDokument(dokumentnavn: filnavn){ (result) in
+            switch result {
+            case .sucsess(let data):
+                let dekoder = JSONDecoder()
+                do {
+                    klasser = try dekoder.decode([Klasse].self, from: data)
                 }
-            case .failure(let error) {
+                catch {
+                    print(error.localizedDescription)
+                }
+            case .failure(let error):
                 print(error.localizedDescription)
             }
-            
         }
     }
     
@@ -39,9 +37,15 @@ class Klasseoversikt: ObservableObject {
         do {
             let data = try enkoder.encode(klasser)
             let jsonString = String(decoding: data, as: UTF8.self)
+            FileManager().lagreDokument(innhold: jsonString, dokumentnavn: filnavn) { (error) in
+                if let error = error {
+                    print(error.localizedDescription)
+                }
+                
+            }
         }
         catch {
-            
+            print(error.localizedDescription)
         }
     }
 }

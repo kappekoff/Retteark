@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Prøve: ObservableObject, Hashable, Identifiable{
+class Prøve: ObservableObject, Hashable, Identifiable, Codable{
     static func == (lhs: Prøve, rhs: Prøve) -> Bool {
         return (lhs.id == rhs.id)
     }
@@ -19,14 +19,49 @@ class Prøve: ObservableObject, Hashable, Identifiable{
     @Published var poeng: [[Poeng]] = []
     @Published var kategorier: [Kategori] = []
     @Published var kategorierOgOppgaver: [[Bool]] = []
-    @Published var tilbakemeldinger: [(String, Float?)] = [("Du viser høy kompetanse", 66), ("Du viser middels kompetanse", 33), ("Du viser noe kompetanse", 0)]
+    @Published var tilbakemeldinger: [Tilbakemelding] = [Tilbakemelding(tekst: "Du viser høy kompetanse", nedreGrense: 66), Tilbakemelding(tekst: "Du viser middels kompetanse", nedreGrense: 33), Tilbakemelding(tekst: "Du viser noe kompetanse", nedreGrense: 0)]
     
+
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
         hasher.combine(navn)
     }
     
+    enum CodingKeys: CodingKey {
+        case navn
+        case id
+        case elever
+        case oppgaver
+        case poeng
+        case kategorier
+        case kategorierOgOppgaver
+        case tilbakemeldinger
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        navn = try container.decode(String.self, forKey: .navn)
+        id = try container.decode(String.self, forKey: .id)
+        elever = try container.decode([Elev].self, forKey: .elever)
+        oppgaver = try container.decode([Oppgave].self, forKey: .oppgaver)
+        poeng = try container.decode([[Poeng]].self, forKey: .poeng)
+        kategorier = try container.decode([Kategori].self, forKey: .kategorier)
+        kategorierOgOppgaver = try container.decode([[Bool]].self, forKey: .kategorierOgOppgaver)
+        tilbakemeldinger = try container.decode([Tilbakemelding].self, forKey: .tilbakemeldinger)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(navn, forKey: .navn)
+        try container.encode(id, forKey: .id)
+        try container.encode(elever, forKey: .elever)
+        try container.encode(oppgaver, forKey: .oppgaver)
+        try container.encode(poeng, forKey: .poeng)
+        try container.encode(kategorier, forKey: .kategorier)
+        try container.encode(kategorierOgOppgaver, forKey: .kategorierOgOppgaver)
+        try container.encode(tilbakemeldinger, forKey: .tilbakemeldinger)
+    }
     init(navn: String, elever: [Elev], oppgaver: [Oppgave], kategorier: [Kategori]) {
         
         self.elever = elever

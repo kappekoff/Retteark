@@ -7,17 +7,17 @@
 
 import Foundation
 
-let filnavn = "Retteark.json"
+let filnavn:String = "Retteark.json"
 
 extension FileManager {
     static var docDirURL: URL {
         return Self.default.urls(for: .documentDirectory, in: .userDomainMask).first!
     }
     
-    func saveDocument(contents: String, docname: String, completion: (Error?) -> Void) {
-        let url = Self.docDirURL.appendingPathComponent(docname)
+    func lagreDokument(innhold: String, dokumentnavn: String, completion: (Error?) -> Void) {
+        let url = Self.docDirURL.appendingPathComponent(dokumentnavn)
         do{
-            try contents.write(to: url, atomically: true, encoding: .utf8)
+            try innhold.write(to: url, atomically: true, encoding: .utf8)
         }
         catch {
             completion(error)
@@ -25,8 +25,8 @@ extension FileManager {
     }
     
     
-    func readDocument(docname: String, completion: (Result<Data, Error>) -> Void) {
-        let url = Self.docDirURL.appendingPathComponent(docname)
+    func lesDokument(dokumentnavn: String, completion: (Result<Data, Error>) -> Void) {
+        let url = Self.docDirURL.appendingPathComponent(dokumentnavn)
         do {
             let data = try Data(contentsOf: url)
             completion(.success(data))

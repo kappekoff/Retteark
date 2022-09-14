@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Klasse:  Identifiable, Hashable {
+struct Klasse:  Identifiable, Hashable, Codable {
     
     
     var id: String = UUID().uuidString
