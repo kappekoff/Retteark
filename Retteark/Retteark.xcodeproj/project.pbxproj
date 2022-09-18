@@ -15,6 +15,7 @@
 		94B82C4C28CBCF350086368A /* klasseVisning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B82C4B28CBCF350086368A /* klasseVisning.swift */; };
 		94B82C4E28CBCFC20086368A /* Klasseoversikt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B82C4D28CBCFC20086368A /* Klasseoversikt.swift */; };
 		94B82C5028CC475B0086368A /* prøveOversiktVisning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B82C4F28CC475B0086368A /* prøveOversiktVisning.swift */; };
+		94B82C5228D5D6210086368A /* pdf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B82C5128D5D6210086368A /* pdf.swift */; };
 		94CC300528953FD600A193F4 /* PoengView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CC300428953FD600A193F4 /* PoengView.swift */; };
 		94CC3007289B046800A193F4 /* NumericTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CC3006289B046800A193F4 /* NumericTextField.swift */; };
 		94CC3009289D951D00A193F4 /* sumCelle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CC3008289D951D00A193F4 /* sumCelle.swift */; };
@@ -65,6 +66,7 @@
 		94B82C4B28CBCF350086368A /* klasseVisning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = klasseVisning.swift; sourceTree = "<group>"; };
 		94B82C4D28CBCFC20086368A /* Klasseoversikt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Klasseoversikt.swift; sourceTree = "<group>"; };
 		94B82C4F28CC475B0086368A /* prøveOversiktVisning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "prøveOversiktVisning.swift"; sourceTree = "<group>"; };
+		94B82C5128D5D6210086368A /* pdf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pdf.swift; sourceTree = "<group>"; };
 		94CC300428953FD600A193F4 /* PoengView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoengView.swift; sourceTree = "<group>"; };
 		94CC3006289B046800A193F4 /* NumericTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumericTextField.swift; sourceTree = "<group>"; };
 		94CC3008289D951D00A193F4 /* sumCelle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sumCelle.swift; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 		94DF82D22878BB540054D5B8 = {
 			isa = PBXGroup;
 			children = (
+				94B82C5128D5D6210086368A /* pdf.swift */,
 				DE0620D828D1F482008AF4EA /* Tilbakemelding.swift */,
 				DE0620D628D0981E008AF4EA /* filemanager_extension.swift */,
 				94B82C4F28CC475B0086368A /* prøveOversiktVisning.swift */,
@@ -352,6 +355,7 @@
 				94B82C4E28CBCFC20086368A /* Klasseoversikt.swift in Sources */,
 				94DF82DF2878BB540054D5B8 /* RettearkApp.swift in Sources */,
 				DEB6BBD428B39336008BBD31 /* kategoriView.swift in Sources */,
+				94B82C5228D5D6210086368A /* pdf.swift in Sources */,
 				DEB6BBCE28B36560008BBD31 /* Kategorier.swift in Sources */,
 				941205F128900ED700D7FA3C /* poeng.swift in Sources */,
 				DEB6BBD228B37B66008BBD31 /* poengTabellView.swift in Sources */,

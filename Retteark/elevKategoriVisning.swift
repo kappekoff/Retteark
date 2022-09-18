@@ -17,9 +17,27 @@ struct elevTilbakemeldingVisning: View {
     let farger: [Color] = [Color.teal, Color.red, Color.green, Color.indigo, Color.brown, Color.mint, Color.orange, Color.pink, Color.purple, Color.yellow, Color.gray, Color.cyan]
     
     var body: some View {
+        HStack {
+            Text(elev.navn).font(.largeTitle).frame(alignment: .center)
+            Button {
+                exportPDF{
+                    elevTilbakemeldingVisning(elev: elev, visElevTilbakemleding:$visElevTilbakemleding , prøve: prøve)
+                } completion: { status, url in
+                    if let url = url,status{
+                        print(url)
+                    }
+                    else {
+                        print("Klarte ikke produsere pdf")
+                    }
+                }
+            } label: {
+                Image(systemName: "square.and.arrow.up.fill")
+            }
+
+        }
         ScrollView {
             VStack(alignment: .listRowSeparatorLeading){
-                Text(elev.navn).font(.largeTitle).frame(alignment: .center)
+                
                 LazyVGrid(columns: columns, spacing: 30) {
                     ForEach(0..<prøve.kategorier.count) { kategoriIndex in
                         
@@ -73,7 +91,7 @@ struct elevTilbakemeldingVisning: View {
                 middels += prøve.kategorier[kategoriIndex].navn + ", "
             }
             
-            else if(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex) > (prøve.tilbakemeldinger[2].nedreGrense ?? 0)/100) {
+            else if(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex) >= (prøve.tilbakemeldinger[2].nedreGrense ?? 0)/100) {
                 lav += prøve.kategorier[kategoriIndex].navn + ", "
             }
             
