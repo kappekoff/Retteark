@@ -31,11 +31,11 @@ extension View {
         return scrollView
     }
     
-    func exportPDF<Content: View>(@ViewBuilder content: @escaping ()->Content,completion: @escaping (Bool, URL?)->()){
+    func exportPDF<Content: View>(filnavn: String, @ViewBuilder content: @escaping ()->Content,completion: @escaping (Bool, URL?)->()){
         
         
         let docuementDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
-        let outputfileURL = docuementDirectory.appendingPathComponent("elevtilbakemelding\(UUID().uuidString).pdf")
+        let outputfileURL = docuementDirectory.appendingPathComponent("\(filnavn).pdf")
         
         let pdfView = convertToScrollView {
             content()

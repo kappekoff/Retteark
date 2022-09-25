@@ -30,8 +30,10 @@ struct ContentView: View {
                     kategoriView(viserSheet: $viserSheet, prøve: prøve)
                 case .velgtInstillinger:
                     instillinger(prøve: prøve)
-                case .valgtElev(let elev):
+                case .valgtElev(_):
                     Text("Skal aldri komme hit .valgtElev(elev: prøve.elever[0]")
+                case .leggTilNyKlasse:
+                    Text("Skal aldri komme hit .leggTilNyKlasse")
                 }
             }
             poengTabellView(prøve: prøve)

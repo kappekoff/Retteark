@@ -10,6 +10,7 @@ import Foundation
 class Klasseoversikt: ObservableObject {
     
     @Published var klasser: [Klasse]
+    var lagret_tidspunkt: Date?
     
     init(){
         
@@ -17,6 +18,7 @@ class Klasseoversikt: ObservableObject {
         if(FileManager().documentDoesExist(named: filnavn)){
             lastInnKlasser()
         }
+        lagret_tidspunkt = nil
         
         
     }

@@ -28,7 +28,9 @@ extension FileManager {
     func readDocument(docName: String, completion: (Result<Data, Error>) -> Void) {
         let url = Self.docDirURL.appendingPathComponent(docName)
         do {
+            print(url)
             let data = try Data(contentsOf: url)
+            
             completion(.success(data))
         } catch {
             completion(.failure(error))

@@ -22,7 +22,7 @@ struct Klasse:  Identifiable, Hashable, Codable {
         self.navn = navn
         self.elever = elever
         self.skoleÅr = skoleÅr
-        self.prøver = [Prøve(navn: "Heldagsprøve", elever: elever_test, oppgaver: oppgaver_test, kategorier: kategoier_test)]
+        self.prøver = [Prøve(navn: "Heldagsprøve", elever: elever_test, oppgaver: oppgaver_test, kategorier: kategoier_test, visEleverKarakter: true)]
     }
     
     static func == (lhs: Klasse, rhs: Klasse) -> Bool {

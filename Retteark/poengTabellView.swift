@@ -55,6 +55,8 @@ struct poengTabellView: View {
                             Text("skal aldri komme hit .velgtInstillinger")
                         case .valgtKategorier:
                             Text("skal aldri komme hit .valgtKategorier")
+                        case .leggTilNyKlasse:
+                            Text("skal aldri komme hit .leggTilNyKlasse")
                         }
                     }
                     ForEach(0..<prøve.oppgaver.count){ poengIndeks in

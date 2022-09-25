@@ -19,7 +19,8 @@ class Prøve: ObservableObject, Hashable, Identifiable, Codable{
     @Published var poeng: [[Poeng]] = []
     @Published var kategorier: [Kategori] = []
     @Published var kategorierOgOppgaver: [[Bool]] = []
-    @Published var tilbakemeldinger: [Tilbakemelding] = [Tilbakemelding(tekst: "Du viser høy kompetanse", nedreGrense: 66), Tilbakemelding(tekst: "Du viser middels kompetanse", nedreGrense: 33), Tilbakemelding(tekst: "Du viser noe kompetanse", nedreGrense: 0)]
+    @Published var visEleverKarakter: Bool = true
+    @Published var tilbakemeldinger: [Tilbakemelding] = [Tilbakemelding(tekst: "Du viser høy kompetanse", nedreGrense: 66), Tilbakemelding(tekst: "Du viser middels kompetanse", nedreGrense: 33), Tilbakemelding(tekst: "Arbeid mer med", nedreGrense: 0)]
     
 
     
@@ -37,6 +38,7 @@ class Prøve: ObservableObject, Hashable, Identifiable, Codable{
         case kategorier
         case kategorierOgOppgaver
         case tilbakemeldinger
+        case visEleverKarakter
     }
     
     required init(from decoder: Decoder) throws {
@@ -49,6 +51,7 @@ class Prøve: ObservableObject, Hashable, Identifiable, Codable{
         kategorier = try container.decode([Kategori].self, forKey: .kategorier)
         kategorierOgOppgaver = try container.decode([[Bool]].self, forKey: .kategorierOgOppgaver)
         tilbakemeldinger = try container.decode([Tilbakemelding].self, forKey: .tilbakemeldinger)
+        visEleverKarakter = try container.decode(Bool.self, forKey: .visEleverKarakter)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -61,18 +64,20 @@ class Prøve: ObservableObject, Hashable, Identifiable, Codable{
         try container.encode(kategorier, forKey: .kategorier)
         try container.encode(kategorierOgOppgaver, forKey: .kategorierOgOppgaver)
         try container.encode(tilbakemeldinger, forKey: .tilbakemeldinger)
+        try container.encode(visEleverKarakter, forKey: .visEleverKarakter)
     }
-    init(navn: String, elever: [Elev], oppgaver: [Oppgave], kategorier: [Kategori]) {
+    init(navn: String, elever: [Elev], oppgaver: [Oppgave], kategorier: [Kategori], visEleverKarakter: Bool) {
         
         self.elever = elever
         self.oppgaver = oppgaver
         self.kategorier = kategorier
         self.navn = navn
+        self.visEleverKarakter = visEleverKarakter
     
         for i in 0..<elever.count {
             self.poeng.append([])
             for j  in 0..<oppgaver.count {
-                self.poeng[i].append(Poeng(id: [i, j], poeng: round(Float.random(in: 0...(oppgaver[j].maksPoeng ?? 0)))))
+                self.poeng[i].append(Poeng(id: [i, j], poeng: 0))
             }
         }
         

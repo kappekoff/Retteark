@@ -28,9 +28,6 @@ struct karakterView: View {
         }
         else{
             TextField("", text: $elev.karakter)
-                .onAppear{
-                    print(elev.navn + " " + elev.karakter)
-                }
                 .font(.title3)
                 .fontWeight(.bold)
                 .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)

@@ -20,7 +20,7 @@ struct elevTilbakemeldingVisning: View {
         HStack {
             Text(elev.navn).font(.largeTitle).frame(alignment: .center)
             Button {
-                exportPDF{
+                exportPDF(filnavn: prøve.navn + " " + elev.navn){
                     elevTilbakemeldingVisning(elev: elev, visElevTilbakemleding:$visElevTilbakemleding , prøve: prøve)
                 } completion: { status, url in
                     if let url = url,status{
@@ -52,7 +52,10 @@ struct elevTilbakemeldingVisning: View {
                 }
                 Text(lagElevtilbakemelding()).frame(alignment: .leading)
                 TextField("Framovermelding", text: $prøve.elever[prøve.elever.firstIndex{$0.id == elev.id}!].framovermelding, axis: .vertical)
-                Text("Karakter: " + elev.karakter)
+                if(prøve.visEleverKarakter){
+                    Text("Karakter: " + elev.karakter)
+                }
+                
             }.padding(20)
         }
         

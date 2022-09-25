@@ -33,6 +33,9 @@ struct instillinger: View {
                 }
                 
             }
+            Section(header: Text("Om prøven")){
+                Toggle("Vis elever karakter", isOn: $prøve.visEleverKarakter)
+            }
         }
             
         
