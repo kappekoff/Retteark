@@ -10,7 +10,7 @@ import SwiftUI
 
 struct kategoriView: View {
     @Binding var viserSheet: VisElevTilbakemleding?
-    @ObservedObject var prøve: Prøve
+    var prøve: Prøve
     
     
     

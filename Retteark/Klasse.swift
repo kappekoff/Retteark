@@ -29,4 +29,7 @@ struct Klasse:  Identifiable, Hashable, Codable {
         return (lhs.id == rhs.id)
     }
     
+    func finnPrøveFraId(id: String) -> Prøve? {
+        return self.prøver.first(where: {$0.id == id})
+    }
 }

@@ -10,23 +10,21 @@ import SwiftUI
 struct klasseVisning: View {
     @StateObject var klasseOversikt: Klasseoversikt
     @State private var visSideKolonner = NavigationSplitViewVisibility.all
-    @State private var valgtKlasseIndex: Int?
-    @State private var valgtPrøveIndex: Int?
+    @State private var valgtKlasseID: Klasse.ID?
+    @State private var valgtPrøveID: Prøve.ID?
     @State var visElevTilbakemelding: VisElevTilbakemleding? = nil
 
     
     var body: some View {
         NavigationSplitView(columnVisibility: $visSideKolonner){
-            List(0..<klasseOversikt.klasser.count, selection: $valgtKlasseIndex, rowContent: { valgtKlasseIndex in
+            List($klasseOversikt.klasser, selection: $valgtKlasseID) { valgtKlasse in
                 HStack {
-                    Text(klasseOversikt.klasser[valgtKlasseIndex].navn)
+                    Text(valgtKlasse.navn.wrappedValue)
                     Spacer()
-                    Text(klasseOversikt.klasser[valgtKlasseIndex].skoleÅr)
+                    Text(valgtKlasse.skoleÅr.wrappedValue)
                 }
                 .font(.title).bold()
-                
-
-            })
+            }
             .navigationTitle("Klasser")
             .toolbar(content: {
                 Button {
@@ -37,38 +35,42 @@ struct klasseVisning: View {
             })
             .sheet(item: $visElevTilbakemelding, onDismiss: { visElevTilbakemelding = nil }) { visElevTilbakemleding in
                 switch visElevTilbakemleding{
-                case .valgtElev(let elev):
-                    Text("skal aldri komme hit .valgtElev")
-                case .velgtInstillinger:
-                    Text("skal aldri komme hit .velgtInstillinger")
-                case .valgtKategorier:
-                    Text("skal aldri komme hit .valgtKategorier")
                 case .leggTilNyKlasse:
                     leggTilNyKlasseVisning(klasseoversikt: klasseOversikt, tekstFraVisma: "", klasseNavn: "", skoleÅr: "",  visElevTilbakemelding: $visElevTilbakemelding)
+                default:
+                    Text("Du skal aldri komme hit")
                 }
             }
         } content:{
-            if let klasseIndex = valgtKlasseIndex, let valgtKlasse = klasseOversikt.klasser[klasseIndex] {
-                List(0..<valgtKlasse.prøver.count, selection: $valgtPrøveIndex, rowContent: { valgtPrøveIndex in
+            if let valgtKlasseID = valgtKlasseID, let valgtKlasse=klasseOversikt.finnKlasseFraId(id: valgtKlasseID) {
+                List(valgtKlasse.prøver, selection: $valgtPrøveID, rowContent: { valgtPrøve in
                     HStack {
-                        Text(klasseOversikt.klasser[valgtKlasseIndex!].prøver[valgtPrøveIndex].navn)
+                        Text(valgtPrøve.navn)
                     }
                     .font(.title).bold()
                 })
                 .navigationTitle("Prøver")
                 .toolbar(content: {
                     Button {
-                        visElevTilbakemelding = .leggTilNyKlasse
+                        visElevTilbakemelding = .leggTilNyPrøve
                     } label: {
                         Image(systemName: "plus.circle").foregroundColor(.green)
                     }
                 })
+                .sheet(item: $visElevTilbakemelding, onDismiss: { visElevTilbakemelding = nil }) { visElevTilbakemleding in
+                    switch visElevTilbakemleding{
+                    case .leggTilNyPrøve:
+                        leggTilNyPr_veVisning(klasseoversikt: klasseOversikt,KlasseID: valgtKlasseID,  visElevTilbakemelding: $visElevTilbakemelding)
+                    default:
+                        Text("Du skal aldri komme hit")
+                    }
+                }
             }
             else {
                 Text("Velg klasse")
             }
         } detail: {
-            if let prøveIndex = valgtPrøveIndex, let klasseIndex = valgtKlasseIndex {
+            if let valgtPrøveID = valgtPrøveID, let valgtKlasse = klasseOversikt.finnKlasseFraId(id: valgtKlasseID!), let valgtPrøve = valgtKlasse.finnPrøveFraId(id: valgtPrøveID) {
                 VStack {
                     Button{
                         klasseOversikt.lagreKlasser()
@@ -76,7 +78,7 @@ struct klasseVisning: View {
                         Text("Lagre")
                     }
                 }
-                ContentView(prøve: klasseOversikt.klasser[klasseIndex].prøver[prøveIndex])
+                ContentView(prøve: valgtPrøve)
             }
             else {
                 Text("Velg prøver")

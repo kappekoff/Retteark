@@ -13,6 +13,7 @@ enum VisElevTilbakemleding: Identifiable  {
     case velgtInstillinger
     case valgtKategorier
     case leggTilNyKlasse
+    case leggTilNyPrøve
     
     var id: String {
         switch self {
@@ -24,6 +25,8 @@ enum VisElevTilbakemleding: Identifiable  {
             return "valgtKategorier"
         case .leggTilNyKlasse:
             return "leggTilNyklasse"
+        case .leggTilNyPrøve:
+            return "leggtilNyPrøve"
             
         }
             

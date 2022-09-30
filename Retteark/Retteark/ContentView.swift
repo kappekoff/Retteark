@@ -9,11 +9,11 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @ObservedObject var prøve: Prøve
+    var prøve: Prøve
     @State var viserSheet: VisElevTilbakemleding? = nil
     
     var body: some View {
-        VStack {
+        VStack<<#Content: View#>> {
             Text(prøve.navn).font(.largeTitle)
             HStack {
                 Button("Kategorier") {
@@ -30,10 +30,8 @@ struct ContentView: View {
                     kategoriView(viserSheet: $viserSheet, prøve: prøve)
                 case .velgtInstillinger:
                     instillinger(prøve: prøve)
-                case .valgtElev(_):
-                    Text("Skal aldri komme hit .valgtElev(elev: prøve.elever[0]")
-                case .leggTilNyKlasse:
-                    Text("Skal aldri komme hit .leggTilNyKlasse")
+                default:
+                    Text("Du skal aldri komme hit")
                 }
             }
             poengTabellView(prøve: prøve)

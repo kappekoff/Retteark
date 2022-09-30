@@ -7,20 +7,20 @@
 
 import Foundation
 
-class Prøve: ObservableObject, Hashable, Identifiable, Codable{
+struct Prøve: Hashable, Identifiable, Codable{
     static func == (lhs: Prøve, rhs: Prøve) -> Bool {
         return (lhs.id == rhs.id)
     }
     
-    @Published var navn: String
+    var navn: String
     var id: String = UUID().uuidString
-    @Published var elever: [Elev] = []
-    @Published var oppgaver: [Oppgave] = []
-    @Published var poeng: [[Poeng]] = []
-    @Published var kategorier: [Kategori] = []
-    @Published var kategorierOgOppgaver: [[Bool]] = []
-    @Published var visEleverKarakter: Bool = true
-    @Published var tilbakemeldinger: [Tilbakemelding] = [Tilbakemelding(tekst: "Du viser høy kompetanse", nedreGrense: 66), Tilbakemelding(tekst: "Du viser middels kompetanse", nedreGrense: 33), Tilbakemelding(tekst: "Arbeid mer med", nedreGrense: 0)]
+    var elever: [Elev] = []
+    var oppgaver: [Oppgave] = []
+    var poeng: [[Poeng]] = []
+    var kategorier: [Kategori] = []
+    var kategorierOgOppgaver: [[Bool]] = []
+    var visEleverKarakter: Bool = true
+    var tilbakemeldinger: [Tilbakemelding] = [Tilbakemelding(tekst: "Du viser høy kompetanse", nedreGrense: 66), Tilbakemelding(tekst: "Du viser middels kompetanse", nedreGrense: 33), Tilbakemelding(tekst: "Arbeid mer med", nedreGrense: 0)]
     
 
     
@@ -29,7 +29,7 @@ class Prøve: ObservableObject, Hashable, Identifiable, Codable{
         hasher.combine(navn)
     }
     
-    enum CodingKeys: CodingKey {
+   /* enum CodingKeys: CodingKey {
         case navn
         case id
         case elever
@@ -66,6 +66,7 @@ class Prøve: ObservableObject, Hashable, Identifiable, Codable{
         try container.encode(tilbakemeldinger, forKey: .tilbakemeldinger)
         try container.encode(visEleverKarakter, forKey: .visEleverKarakter)
     }
+    */
     init(navn: String, elever: [Elev], oppgaver: [Oppgave], kategorier: [Kategori], visEleverKarakter: Bool) {
         
         self.elever = elever
@@ -89,8 +90,7 @@ class Prøve: ObservableObject, Hashable, Identifiable, Codable{
         }
     }
     
-    func endrePoengAlleElever(oppgaveIndeks: Int, endringsfaktor: Float){
-        self.objectWillChange.send()
+    mutating func endrePoengAlleElever(oppgaveIndeks: Int, endringsfaktor: Float){
         for i in 0..<self.elever.count {
             self.poeng[i][oppgaveIndeks].poeng = (self.poeng[i][oppgaveIndeks].poeng ?? 0) * endringsfaktor
             print(self.poeng[i][oppgaveIndeks].poeng ?? -1)

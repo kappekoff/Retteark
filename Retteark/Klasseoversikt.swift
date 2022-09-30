@@ -54,6 +54,11 @@ class Klasseoversikt: ObservableObject {
             print(error.localizedDescription)
         }
     }
+    
+    func finnKlasseFraId(id: String) -> Klasse? {
+        return self.klasser.first(where: {$0.id == id})
+    }
+    
 }
 
 var elever_test = [

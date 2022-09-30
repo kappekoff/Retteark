@@ -17,21 +17,10 @@ struct leggTilNyKlasseVisning: View {
     
     var body: some View {
         NavigationStack {
+            TextInputField(title: "Klassenavn", text: $klasseNavn)
+            TextInputField(title: "Skoleår", text: $skoleÅr)
             HStack {
-                Text("Klassenavn")
-                TextField("", text: $klasseNavn)
-                    .border(.black)
-            }
-            HStack {
-                Text("Skoleår")
-                TextField("", text: $skoleÅr)
-                    .border(.black)
-            }
-            HStack {
-                Text("Legg til elever")
-                TextField("Kopier inn undervisningsgruppe fra Visma inSchool", text: $tekstFraVisma, axis: .vertical)
-                    .frame(width: 200, height: 400, alignment: .leading)
-                    .border(.black)
+                TextInputField(title: "Legg til elever. Kopier undervisningsgruppe fra visma", text: $tekstFraVisma)
                 Button {
                     var navnTilElever = vismaTilElever(visma: tekstFraVisma)
                     elever = navnTilElever.enumerated().map({(index, navn) in return Elev(id: index, navn: navn)})
