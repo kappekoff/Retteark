@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Tilbakemelding: Codable {
+struct Tilbakemelding: Codable, Hashable {
     var tekst: String
     var nedreGrense: Float?
 }

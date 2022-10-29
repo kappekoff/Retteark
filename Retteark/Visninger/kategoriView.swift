@@ -10,7 +10,7 @@ import SwiftUI
 
 struct kategoriView: View {
     @Binding var viserSheet: VisElevTilbakemleding?
-    var prøve: Prøve
+    @ObservedObject var prøve: Prøve
     
     
     
@@ -24,14 +24,21 @@ struct kategoriView: View {
                         Text(oppgave.navn)
                     }.frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background(.green)
                 }
-                ForEach(0..<prøve.kategorier.count){ kategoriIndex in
-                    GridRow() {
-                        Text(prøve.kategorier[kategoriIndex].navn).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background(.orange)
-                        ForEach(0..<prøve.oppgaver.count){oppgaveIndex in
-                            Toggle("", isOn: $prøve.kategorierOgOppgaver[kategoriIndex][oppgaveIndex])
-                        }.frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary)
-                        
+                ForEach(prøve.kategorier){ kategori in
+                    if let kategoriIndex = prøve.kategoriIndex(kategoriId: kategori.id) {
+                        GridRow() {
+                            Text(prøve.kategorier[kategoriIndex].navn).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background(.orange)
+                            ForEach(prøve.oppgaver){oppgave in
+                                if let oppgaveIndex = prøve.oppgaveIndex(oppgaveId: oppgave.id) {
+                                    Toggle("", isOn: $prøve.kategorierOgOppgaver[kategoriIndex][oppgaveIndex].verdi)
+                                        .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary)
+                                }
+                                
+                            }
+                            
+                        }
                     }
+                    
                 }
             }
             Button("Tilbake") {

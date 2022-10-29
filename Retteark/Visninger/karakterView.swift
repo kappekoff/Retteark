@@ -24,8 +24,9 @@ struct karakterView: View {
                 .background(farge ? .white:.orange)
                 .multilineTextAlignment(.center)
                 .onAppear(perform: {elev.karakter = finnKarakter(sumPoeng: poeng.map({ (poeng) -> Float in return poeng.poeng ?? 0;}).reduce(0, +))})
-                
-        }
+                .onChange(of: poeng){poeng in
+                    elev.karakter = finnKarakter(sumPoeng: poeng.map({ (poeng) -> Float in return poeng.poeng ?? 0;}).reduce(0, +))}
+                }
         else{
             TextField("", text: $elev.karakter)
                 .font(.title3)

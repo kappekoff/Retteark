@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct klasseVisning: View {
-    @StateObject var klasseOversikt: Klasseoversikt
+    @StateObject var klasseoversikt: Klasseoversikt
     @State private var visSideKolonner = NavigationSplitViewVisibility.all
     @State private var valgtKlasseID: Klasse.ID?
     @State private var valgtPrøveID: Prøve.ID?
@@ -17,7 +17,7 @@ struct klasseVisning: View {
     
     var body: some View {
         NavigationSplitView(columnVisibility: $visSideKolonner){
-            List($klasseOversikt.klasser, selection: $valgtKlasseID) { valgtKlasse in
+            List($klasseoversikt.klasser, selection: $valgtKlasseID) { valgtKlasse in
                 HStack {
                     Text(valgtKlasse.navn.wrappedValue)
                     Spacer()
@@ -36,13 +36,13 @@ struct klasseVisning: View {
             .sheet(item: $visElevTilbakemelding, onDismiss: { visElevTilbakemelding = nil }) { visElevTilbakemleding in
                 switch visElevTilbakemleding{
                 case .leggTilNyKlasse:
-                    leggTilNyKlasseVisning(klasseoversikt: klasseOversikt, tekstFraVisma: "", klasseNavn: "", skoleÅr: "",  visElevTilbakemelding: $visElevTilbakemelding)
+                    leggTilNyKlasseVisning(tekstFraVisma: "", klasseNavn: "", skoleÅr: "",  visElevTilbakemelding: $visElevTilbakemelding)
                 default:
                     Text("Du skal aldri komme hit")
                 }
             }
         } content:{
-            if let valgtKlasseID = valgtKlasseID, let valgtKlasse=klasseOversikt.finnKlasseFraId(id: valgtKlasseID) {
+            if let valgtKlasseID = valgtKlasseID, let valgtKlasse=klasseoversikt.klasseFraId(id: valgtKlasseID) {
                 List(valgtKlasse.prøver, selection: $valgtPrøveID, rowContent: { valgtPrøve in
                     HStack {
                         Text(valgtPrøve.navn)
@@ -60,7 +60,7 @@ struct klasseVisning: View {
                 .sheet(item: $visElevTilbakemelding, onDismiss: { visElevTilbakemelding = nil }) { visElevTilbakemleding in
                     switch visElevTilbakemleding{
                     case .leggTilNyPrøve:
-                        leggTilNyPr_veVisning(klasseoversikt: klasseOversikt,KlasseID: valgtKlasseID,  visElevTilbakemelding: $visElevTilbakemelding)
+                        Text("leggTilNyPr_veVisning(KlasseID: valgtKlasseID,  visElevTilbakemelding: $visElevTilbakemelding)")
                     default:
                         Text("Du skal aldri komme hit")
                     }
@@ -70,19 +70,7 @@ struct klasseVisning: View {
                 Text("Velg klasse")
             }
         } detail: {
-            if let valgtPrøveID = valgtPrøveID, let valgtKlasse = klasseOversikt.finnKlasseFraId(id: valgtKlasseID!), let valgtPrøve = valgtKlasse.finnPrøveFraId(id: valgtPrøveID) {
-                VStack {
-                    Button{
-                        klasseOversikt.lagreKlasser()
-                    } label: {
-                        Text("Lagre")
-                    }
-                }
-                ContentView(prøve: valgtPrøve)
-            }
-            else {
-                Text("Velg prøver")
-            }
+            ContentView(klasseoversikt: klasseoversikt, valgtKlasseID: valgtKlasseID, valgtPrøveID: valgtPrøveID)
         }
     }
 }

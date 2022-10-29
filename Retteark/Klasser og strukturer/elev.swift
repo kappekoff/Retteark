@@ -10,14 +10,13 @@ import Foundation
 
 struct Elev: Identifiable, Hashable, Codable {
     
-    let id: Int
+    var id: String = UUID().uuidString
     var navn: String
     var karakter: String
     var låstKarakter: Bool
     var framovermelding: String = ""
     
-    init(id: Int, navn: String, karakter: String = "1"){
-        self.id = id
+    init(navn: String, karakter: String = "1"){
         self.navn  = navn
         self.karakter = karakter
         self.låstKarakter = true

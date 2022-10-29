@@ -10,13 +10,12 @@ import Foundation
 
 struct Oppgave: Identifiable, Hashable, Codable {
     
-    let id: Int
+    var id: String = UUID().uuidString
     var navn: String
     var maksPoeng: Float?
     var maksPoengGammelVerdi: Float
     
-    init (id: Int, navn: String, maksPoeng: Float ) {
-        self.id = id
+    init (navn: String, maksPoeng: Float ) {
         self.navn = navn
         self.maksPoeng = maksPoeng
         self.maksPoengGammelVerdi = maksPoeng

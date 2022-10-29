@@ -10,9 +10,10 @@ import SwiftUI
 
 @main
 struct RettearkApp: App {
+    @StateObject var ko: Klasseoversikt = Klasseoversikt()
     var body: some Scene {
         WindowGroup {
-            klasseVisning(klasseOversikt: Klasseoversikt())
+            klasseVisning(klasseoversikt: Klasseoversikt())
         }
     }
 }

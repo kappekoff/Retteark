@@ -8,7 +8,7 @@
 import SwiftUI
     
 struct leggTilNyKlasseVisning: View {
-    var klasseoversikt: Klasseoversikt
+    @EnvironmentObject var klasseoversikt: Klasseoversikt
     @State var tekstFraVisma: String
     @State var klasseNavn: String
     @State var skoleÅr: String
@@ -22,8 +22,8 @@ struct leggTilNyKlasseVisning: View {
             HStack {
                 TextInputField(title: "Legg til elever. Kopier undervisningsgruppe fra visma", text: $tekstFraVisma)
                 Button {
-                    var navnTilElever = vismaTilElever(visma: tekstFraVisma)
-                    elever = navnTilElever.enumerated().map({(index, navn) in return Elev(id: index, navn: navn)})
+                    let navnTilElever = vismaTilElever(visma: tekstFraVisma)
+                    elever = navnTilElever.enumerated().map({(index, navn) in return Elev(navn: navn)})
                     print(navnTilElever)
                 } label: {
                     Image(systemName: "arrow.right.square.fill")
@@ -34,7 +34,7 @@ struct leggTilNyKlasseVisning: View {
                     }
                     .onDelete(perform: slettElevFraListe)
                     Button {
-                        elever.append(Elev(id: elever.count+1, navn: ""))
+                        elever.append(Elev(navn: ""))
                     } label: {
                         Image(systemName: "plus.circle").foregroundColor(.green)
                     }

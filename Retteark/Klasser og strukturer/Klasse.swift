@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct Klasse:  Identifiable, Hashable, Codable {
     
@@ -22,7 +23,10 @@ struct Klasse:  Identifiable, Hashable, Codable {
         self.navn = navn
         self.elever = elever
         self.skoleÅr = skoleÅr
-        self.prøver = [Prøve(navn: "Heldagsprøve", elever: elever_test, oppgaver: oppgaver_test, kategorier: kategoier_test, visEleverKarakter: true)]
+        self.prøver = [Prøve(navn: "Heldagsprøve", elever: elever_test_1, oppgaver: oppgaver_test_1, kategorier: kategoier_test, visEleverKarakter: true),
+                       Prøve(navn: "Heldagsprøve", elever: elever_test_1, oppgaver: oppgaver_test_2, kategorier: kategoier_test, visEleverKarakter: true),
+                       Prøve(navn: "Heldagsprøve", elever: elever_test_1, oppgaver: oppgaver_test_3, kategorier: kategoier_test, visEleverKarakter: true),
+                    ]
     }
     
     static func == (lhs: Klasse, rhs: Klasse) -> Bool {

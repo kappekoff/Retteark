@@ -7,20 +7,20 @@
 
 import Foundation
 
-struct Prøve: Hashable, Identifiable, Codable{
+class Prøve: Hashable, Identifiable, Codable, ObservableObject{
     static func == (lhs: Prøve, rhs: Prøve) -> Bool {
         return (lhs.id == rhs.id)
     }
     
-    var navn: String
+    @Published var navn: String
     var id: String = UUID().uuidString
-    var elever: [Elev] = []
-    var oppgaver: [Oppgave] = []
-    var poeng: [[Poeng]] = []
-    var kategorier: [Kategori] = []
-    var kategorierOgOppgaver: [[Bool]] = []
-    var visEleverKarakter: Bool = true
-    var tilbakemeldinger: [Tilbakemelding] = [Tilbakemelding(tekst: "Du viser høy kompetanse", nedreGrense: 66), Tilbakemelding(tekst: "Du viser middels kompetanse", nedreGrense: 33), Tilbakemelding(tekst: "Arbeid mer med", nedreGrense: 0)]
+    @Published var elever: [Elev] = []
+    @Published var oppgaver: [Oppgave] = []
+    @Published var poeng: [[Poeng]] = []
+    @Published var kategorier: [Kategori] = []
+    @Published var kategorierOgOppgaver: [[BoolOgId]] = []
+    @Published var visEleverKarakter: Bool = true
+    @Published var tilbakemeldinger: [Tilbakemelding] = [Tilbakemelding(tekst: "Du viser høy kompetanse", nedreGrense: 66), Tilbakemelding(tekst: "Du viser middels kompetanse", nedreGrense: 33), Tilbakemelding(tekst: "Arbeid mer med", nedreGrense: 0)]
     
 
     
@@ -29,7 +29,7 @@ struct Prøve: Hashable, Identifiable, Codable{
         hasher.combine(navn)
     }
     
-   /* enum CodingKeys: CodingKey {
+   enum CodingKeys: CodingKey {
         case navn
         case id
         case elever
@@ -49,7 +49,7 @@ struct Prøve: Hashable, Identifiable, Codable{
         oppgaver = try container.decode([Oppgave].self, forKey: .oppgaver)
         poeng = try container.decode([[Poeng]].self, forKey: .poeng)
         kategorier = try container.decode([Kategori].self, forKey: .kategorier)
-        kategorierOgOppgaver = try container.decode([[Bool]].self, forKey: .kategorierOgOppgaver)
+        kategorierOgOppgaver = try container.decode([[BoolOgId]].self, forKey: .kategorierOgOppgaver)
         tilbakemeldinger = try container.decode([Tilbakemelding].self, forKey: .tilbakemeldinger)
         visEleverKarakter = try container.decode(Bool.self, forKey: .visEleverKarakter)
     }
@@ -66,7 +66,7 @@ struct Prøve: Hashable, Identifiable, Codable{
         try container.encode(tilbakemeldinger, forKey: .tilbakemeldinger)
         try container.encode(visEleverKarakter, forKey: .visEleverKarakter)
     }
-    */
+    
     init(navn: String, elever: [Elev], oppgaver: [Oppgave], kategorier: [Kategori], visEleverKarakter: Bool) {
         
         self.elever = elever
@@ -78,19 +78,19 @@ struct Prøve: Hashable, Identifiable, Codable{
         for i in 0..<elever.count {
             self.poeng.append([])
             for j  in 0..<oppgaver.count {
-                self.poeng[i].append(Poeng(id: [i, j], poeng: 0))
+                self.poeng[i].append(Poeng(id: [i, j], poeng: 0, elevId: elever[i].id, OppgaveId: oppgaver[j].id))
             }
         }
         
         for i in 0..<self.kategorier.count{
             self.kategorierOgOppgaver .append([])
-            for _ in 0..<self.oppgaver.count {
-                kategorierOgOppgaver[i].append(false)
+            for j in 0..<self.oppgaver.count {
+                kategorierOgOppgaver[i].append(BoolOgId(verdi: false, kategoriId: kategorier[i].id, oppgaveId: oppgaver[j].id))
             }
         }
     }
     
-    mutating func endrePoengAlleElever(oppgaveIndeks: Int, endringsfaktor: Float){
+    func endrePoengAlleElever(oppgaveIndeks: Int, endringsfaktor: Float){
         for i in 0..<self.elever.count {
             self.poeng[i][oppgaveIndeks].poeng = (self.poeng[i][oppgaveIndeks].poeng ?? 0) * endringsfaktor
             print(self.poeng[i][oppgaveIndeks].poeng ?? -1)
@@ -99,27 +99,58 @@ struct Prøve: Hashable, Identifiable, Codable{
     }
     
     func printPoeng() {
-        print(self.poeng)
+        for rad in poeng {
+            for element in rad {
+                print(element.poeng!)
+            }
+            print("\n")
+        }
+        print("Ferdig")
+    }
+    
+    func poengRad(elevId: String) -> Int? {
+        for i in 0..<poeng.count {
+            if(poeng[i][0].elevId == elevId) {
+                return i
+            }
+        }
+        return nil
+    }
+    
+    func oppgave(elevIndeks: Int, oppgaveId: String) -> Int? {
+        for i in 0..<poeng[elevIndeks].count {
+            if(poeng[elevIndeks][i].oppgaveId == oppgaveId){
+                return i
+            }
+        }
+        return nil
+    }
+    
+    func kategoriIndex(kategoriId: String) -> Int? {
+        for i in 0..<kategorierOgOppgaver.count{
+            if(kategorierOgOppgaver[i][0].kategoriId == kategoriId){
+                return i
+            }
+        }
+        return nil
+    }
+    
+    func oppgaveIndex(oppgaveId: String) -> Int? {
+        for i in 0..<kategorierOgOppgaver[0].count{
+            if(kategorierOgOppgaver[0][i].oppgaveId == oppgaveId){
+                return i
+            }
+        }
+        return nil
+    }
+    
+    func leggTilKategori() {
+        self.kategorier.append(Kategori(navn: "Ny kategori"))
+        self.kategorierOgOppgaver.append([])
+        for oppgave in self.oppgaver {
+            self.kategorierOgOppgaver[self.kategorierOgOppgaver.count-1].append(BoolOgId(verdi: false, kategoriId: self.kategorier.last!.id, oppgaveId: oppgave.id))
+        }
     }
 }
 
 
-var oppgaver_test = [
-    Oppgave(id: 1, navn: "1a", maksPoeng: 0.5),
-    Oppgave(id: 2, navn: "1b", maksPoeng: 1),
-    Oppgave(id: 3, navn: "1c", maksPoeng: 3),
-    Oppgave(id: 4, navn: "2", maksPoeng: 2),
-    Oppgave(id: 5, navn: "3", maksPoeng: 5.5),
-    Oppgave(id: 6, navn: "4a", maksPoeng: 3.5),
-    Oppgave(id: 7, navn: "4b", maksPoeng: 2.5),
-    Oppgave(id: 8, navn: "5", maksPoeng: 1.5),
-    Oppgave(id: 9, navn: "6", maksPoeng: 10)
-    ]
-    
-
-var kategoier_test = [
-    Kategori(navn: "Algebra", id: 1),
-    Kategori(navn: "Geometri", id: 2),
-    Kategori(navn: "Del 1", id: 3),
-    Kategori(navn: "Del 2", id: 4)
-    ]

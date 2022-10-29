@@ -25,7 +25,7 @@ struct sumCelle: View {
 }
 
 struct sumCelle_Previews: PreviewProvider {
-    @State static var poeng: [Poeng] = [Poeng(id: [0], poeng: 2.3)]
+    @State static var poeng: [Poeng] = [Poeng(id: [0], poeng: 2.3, elevId: UUID().uuidString, OppgaveId: UUID().uuidString)]
     static var previews: some View {
         sumCelle(poeng: $poeng)
     }

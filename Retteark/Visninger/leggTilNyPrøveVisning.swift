@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct leggTilNyPr_veVisning: View {
-    var klasseoversikt: Klasseoversikt
+/*struct leggTilNyPr_veVisning: View {
+    @EnvironmentObject var ko: Klasseoversikt
     var KlasseID: String
     @Binding var visElevTilbakemelding: VisElevTilbakemleding?
     
@@ -47,10 +47,10 @@ struct leggTilNyPr_veVisning: View {
             }
            
             Button("Legg til") {
-                let klasseIndex = klasseoversikt.klasser.firstIndex(where: {$0.id == KlasseID})
+                let klasseIndex = ko.klasser.firstIndex(where: {$0.id == KlasseID})
                 if (klasseIndex != nil) {
-                    klasseoversikt.klasser[klasseIndex!].prøver.append(Prøve(navn: prøveNavn, elever: klasseoversikt.klasser[klasseIndex!].elever, oppgaver: oppgaver, kategorier: [], visEleverKarakter: visEleverKarakter))
-                    klasseoversikt.lagreKlasser()
+                    ko.klasser[klasseIndex!].prøver.append(Prøve(navn: prøveNavn, elever: ko.klasser[klasseIndex!].elever, oppgaver: oppgaver, kategorier: [], visEleverKarakter: visEleverKarakter))
+                    ko.lagreKlasser()
                     visElevTilbakemelding = nil
                 }
                 else {
@@ -65,4 +65,4 @@ struct leggTilNyPr_veVisning: View {
     func slettOppgaveFraListe(at offsets: IndexSet){
         oppgaver.remove(atOffsets: offsets)    }
 }
-
+*/

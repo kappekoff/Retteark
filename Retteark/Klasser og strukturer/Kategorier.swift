@@ -9,10 +9,9 @@ import Foundation
 
 struct Kategori: Hashable, Identifiable, Codable{
     var navn: String
-    let id: Int
+    var id: String = UUID().uuidString
     
-    init(navn: String, id: Int) {
+    init(navn: String) {
         self.navn = navn
-        self.id = id
     }
 }

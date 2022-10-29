@@ -14,7 +14,9 @@ class Klasseoversikt: ObservableObject {
     
     init(){
         
-        self.klasser = [Klasse(navn: "2IMT", elever: elever_test, skoleÅr: "22/23")]
+        self.klasser = [Klasse(navn: "1IMT", elever: elever_test_1, skoleÅr: "22/23"),
+                        Klasse(navn: "2IMT", elever: elever_test_2, skoleÅr: "22/23"),
+                        Klasse(navn: "3IMT", elever: elever_test_3, skoleÅr: "22/23")]
         if(FileManager().documentDoesExist(named: filnavn)){
             lastInnKlasser()
         }
@@ -55,21 +57,9 @@ class Klasseoversikt: ObservableObject {
         }
     }
     
-    func finnKlasseFraId(id: String) -> Klasse? {
+    func klasseFraId(id: String) -> Klasse? {
         return self.klasser.first(where: {$0.id == id})
     }
     
 }
 
-var elever_test = [
-    Elev(id: 1, navn: "Petter"),
-    Elev(id: 2, navn: "Åse"),
-    Elev(id: 3, navn: "Stein"),
-    Elev(id: 4, navn: "Per"),
-    Elev(id: 5, navn: "Lise"),
-    Elev(id: 6, navn: "Jinbo"),
-    Elev(id: 7, navn: "Ronja"),
-    Elev(id: 8, navn: "Ask"),
-    Elev(id: 9, navn: "Fredrik"),
-    Elev(id: 10, navn: "Adam")
-    ]
