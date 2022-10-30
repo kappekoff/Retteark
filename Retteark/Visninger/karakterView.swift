@@ -21,7 +21,7 @@ struct karakterView: View {
                 .fontWeight(.bold)
                 .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
                 .border(.black)
-                .background(farge ? .white:.orange)
+                .background(farge ? Color(UIColor.systemBackground):.orange)
                 .multilineTextAlignment(.center)
                 .onAppear(perform: {elev.karakter = finnKarakter(sumPoeng: poeng.map({ (poeng) -> Float in return poeng.poeng ?? 0;}).reduce(0, +))})
                 .onChange(of: poeng){poeng in

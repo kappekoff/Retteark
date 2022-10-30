@@ -41,7 +41,7 @@ struct kategoriView: View {
                     
                 }
             }
-            Button("Tilbake") {
+            Button("Lukk") {
                 viserSheet = nil
             }
         }

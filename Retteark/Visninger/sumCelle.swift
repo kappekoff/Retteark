@@ -19,7 +19,7 @@ struct sumCelle: View {
             .font(.title3)
             .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
             .border(.black)
-            .background(farge ? .white:.orange)
+            .background(farge ? Color(UIColor.systemBackground):.orange)
             .multilineTextAlignment(.center)
     }
 }

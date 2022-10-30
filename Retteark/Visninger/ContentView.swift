@@ -38,7 +38,7 @@ struct ContentView: View {
                     case .valgtKategorier:
                         kategoriView(viserSheet: $viserSheet, prøve: $valgtPrøve)
                     case .velgtInstillinger:
-                        instillinger(prøve: $valgtPrøve)
+                        instillinger(prøve: $valgtPrøve, visElevTilbakemleding: $viserSheet)
                     default:
                         Text("Du skal aldri komme hit")
                     }

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct instillinger: View {
     @ObservedObject var prøve: Prøve
+    @Binding var visElevTilbakemleding: VisElevTilbakemleding?
     
     var body: some View {
         List(){
@@ -34,6 +35,9 @@ struct instillinger: View {
             Section(header: Text("Om prøven")){
                 Toggle("Vis elever karakter", isOn: $prøve.visEleverKarakter)
             }
+        }
+        Button("Lukk") {
+            visElevTilbakemleding = nil
         }
     }
 }
