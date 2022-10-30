@@ -65,6 +65,7 @@
 		941205EC289006A500D7FA3C /* elev.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = elev.swift; sourceTree = "<group>"; };
 		941205EE2890071900D7FA3C /* oppgave.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = oppgave.swift; sourceTree = "<group>"; };
 		941205F028900ED700D7FA3C /* poeng.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = poeng.swift; sourceTree = "<group>"; };
+		948D050C290DAFFD00359FD8 /* Retteark.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Retteark.entitlements; sourceTree = "<group>"; };
 		94B82C4928CBCE010086368A /* Klasse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Klasse.swift; sourceTree = "<group>"; };
 		94B82C4B28CBCF350086368A /* klasseVisning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = klasseVisning.swift; sourceTree = "<group>"; };
 		94B82C4D28CBCFC20086368A /* Klasseoversikt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Klasseoversikt.swift; sourceTree = "<group>"; };
@@ -153,6 +154,7 @@
 		94DF82DD2878BB540054D5B8 /* Retteark */ = {
 			isa = PBXGroup;
 			children = (
+				948D050C290DAFFD00359FD8 /* Retteark.entitlements */,
 				94DF82DE2878BB540054D5B8 /* RettearkApp.swift */,
 				94DF82E22878BB560054D5B8 /* Assets.xcassets */,
 				94DF82E42878BB560054D5B8 /* Preview Content */,
@@ -554,12 +556,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Retteark/Retteark.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Retteark/Preview Content\"";
 				DEVELOPMENT_TEAM = 2NSD56573L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -573,11 +577,11 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.kappekoff.Retteark;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Debug;
 		};
@@ -586,12 +590,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Retteark/Retteark.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Retteark/Preview Content\"";
 				DEVELOPMENT_TEAM = 2NSD56573L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -605,11 +611,11 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.kappekoff.Retteark;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Release;
 		};

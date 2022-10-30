@@ -38,7 +38,6 @@ struct elevTilbakemeldingVisning: View {
         }
         ScrollView {
             VStack(alignment: .listRowSeparatorLeading){
-                
                 LazyVGrid(columns: columns, spacing: 30) {
                     ForEach(prøve.kategorier) { kategori in
                         if let kategoriIndex = prøve.kategoriIndex(kategoriId: kategori.id) {
@@ -61,8 +60,12 @@ struct elevTilbakemeldingVisning: View {
                     }
                 }
                 
-            }.padding(20)
+            }.padding(20).frame(width: 500)
         }
+        Button("Lukk") {
+            visElevTilbakemleding = nil
+        }
+
         
     }
     

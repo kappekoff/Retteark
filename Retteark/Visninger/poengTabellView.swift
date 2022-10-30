@@ -30,14 +30,14 @@ struct poengTabellView: View {
                 Image(systemName: "light.max")
                 ForEach($prøve.oppgaver){oppgave in
                     PoengView(poeng: oppgave.maksPoeng)
-                        onSubmit({
+                        /*onSubmit({
                             if let oppgaveIndeks = prøve.oppgave(elevIndeks: elevIndeks, oppgaveId: oppgave.id) {
                                 let endringsfaktor = (prøve.oppgaver[oppgaveIndeks].maksPoeng ?? 0) / prøve.oppgaver[oppgaveIndeks].maksPoengGammelVerdi
                                 prøve.oppgaver[oppgaveIndeks].maksPoengGammelVerdi = prøve.oppgaver[oppgaveIndeks].maksPoeng ?? 0
                                 
                                 prøve.endrePoengAlleElever(oppgaveIndeks: oppgaveIndeks, endringsfaktor: endringsfaktor)
                             }
-                        })
+                        })*/
                 }
                 Text(String(prøve.oppgaver.map({$0.maksPoeng ?? 0}).reduce(0, +)))
                 Text("6")
