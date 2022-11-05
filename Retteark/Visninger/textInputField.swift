@@ -20,7 +20,7 @@ struct TextInputField: View {
             TextField("", text: $text, axis: .vertical)
         }
         .padding(.top, 15)
-        .animation(.default)
+        .animation(.default, value: text)
     }
 }
 
