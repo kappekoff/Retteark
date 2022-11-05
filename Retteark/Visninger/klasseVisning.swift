@@ -36,7 +36,7 @@ struct klasseVisning: View {
             .sheet(item: $visElevTilbakemelding, onDismiss: { visElevTilbakemelding = nil }) { visElevTilbakemleding in
                 switch visElevTilbakemleding{
                 case .leggTilNyKlasse:
-                    leggTilNyKlasseVisning(tekstFraVisma: "", klasseNavn: "", skoleÅr: "",  visElevTilbakemelding: $visElevTilbakemelding)
+                    leggTilNyKlasseVisning(klasseoversikt: klasseoversikt,tekstFraVisma: "", klasseNavn: "", skoleÅr: "",  visElevTilbakemelding: $visElevTilbakemelding)
                 default:
                     Text("Du skal aldri komme hit")
                 }
@@ -60,7 +60,7 @@ struct klasseVisning: View {
                 .sheet(item: $visElevTilbakemelding, onDismiss: { visElevTilbakemelding = nil }) { visElevTilbakemleding in
                     switch visElevTilbakemleding{
                     case .leggTilNyPrøve:
-                        Text("leggTilNyPr_veVisning(KlasseID: valgtKlasseID,  visElevTilbakemelding: $visElevTilbakemelding)")
+                        leggTilNyPr_veVisning(klasseoversikt: klasseoversikt, KlasseID: valgtKlasseID,  visElevTilbakemelding: $visElevTilbakemelding)
                     default:
                         Text("Du skal aldri komme hit")
                     }

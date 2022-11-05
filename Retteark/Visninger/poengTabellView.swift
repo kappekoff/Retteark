@@ -13,6 +13,7 @@ struct poengTabellView: View {
     @State var visElevTilbakemleding: VisElevTilbakemleding? = nil
     @State var elevIndeks: Int? = nil
     @State var oppgaveIndeks: Int? = nil
+    @State var farge: Bool = false
     
     var body: some View {
         Grid(horizontalSpacing: 0, verticalSpacing: 0){
@@ -45,7 +46,7 @@ struct poengTabellView: View {
             }
             .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).font(.title).border(.primary).fontWeight(.bold).background(.gray)
             ForEach(prøve.elever){elev in
-                if let elevIndeks = prøve.poengRad(elevId: elev.id) {
+                if let elevIndeks = prøve.poengRad(elevId: elev.id){
                     GridRow(){
                         Button(elev.navn) {
                             visElevTilbakemleding = .valgtElev(elev: elev)
@@ -62,20 +63,21 @@ struct poengTabellView: View {
                         ForEach(prøve.oppgaver){ oppgave in
                             if let oppgaveIndeks = prøve.oppgave(elevIndeks: elevIndeks, oppgaveId: oppgave.id) {
                                 PoengView(poeng: $prøve.poeng[elevIndeks][oppgaveIndeks].poeng)
-                                    .background(elevIndeks % 2 != 0 ? Color(UIColor.systemBackground):.orange)
+                                    .background(elevIndeks % 2 == 1 ? Color(UIColor.systemBackground):.orange)
                             }
                             
                         }
-                        sumCelle(poeng: $prøve.poeng[elevIndeks], farge: elevIndeks % 2 != 0)
-                        karakterView(poeng: $prøve.poeng[elevIndeks], farge: elevIndeks % 2 != 0, maxPoeng: prøve.oppgaver.map({$0.maksPoeng ?? 0}).reduce(0, +), elev: $prøve.elever[elevIndeks])
-                            .background(elevIndeks % 2 != 0 ? Color(UIColor.systemBackground):.orange)
+                        sumCelle(poeng: $prøve.poeng[elevIndeks], farge: elevIndeks % 2 == 1)
+                        karakterView(poeng: $prøve.poeng[elevIndeks], farge: elevIndeks % 2 == 1, maxPoeng: prøve.oppgaver.map({$0.maksPoeng ?? 0}).reduce(0, +), elev: $prøve.elever[elevIndeks])
+                            .background(elevIndeks % 2 == 1 ? Color(UIColor.systemBackground):.orange)
                         Button(action: {
                             prøve.elever[elevIndeks].låstKarakter.toggle()
                         }, label: {
                             Image(systemName: prøve.elever[elevIndeks].låstKarakter ? "lock.open.fill" : "lock.fill")
                         })
+                        
                     }
-                    .font(.title3).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background(elevIndeks % 2 != 0 ? Color(UIColor.systemBackground):.orange)
+                    .font(.title3).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background(elevIndeks % 2 == 1 ? Color(UIColor.systemBackground):.orange)
                 }
             }
         }

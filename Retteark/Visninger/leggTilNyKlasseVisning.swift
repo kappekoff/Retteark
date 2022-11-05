@@ -8,7 +8,7 @@
 import SwiftUI
     
 struct leggTilNyKlasseVisning: View {
-    @EnvironmentObject var klasseoversikt: Klasseoversikt
+    @ObservedObject var klasseoversikt: Klasseoversikt
     @State var tekstFraVisma: String
     @State var klasseNavn: String
     @State var skoleÅr: String

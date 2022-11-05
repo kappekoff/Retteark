@@ -7,11 +7,10 @@
 
 import SwiftUI
 
-/*struct leggTilNyPr_veVisning: View {
-    @EnvironmentObject var ko: Klasseoversikt
+struct leggTilNyPr_veVisning: View {
+    @ObservedObject var klasseoversikt: Klasseoversikt
     var KlasseID: String
     @Binding var visElevTilbakemelding: VisElevTilbakemleding?
-    
     @State var prøveNavn: String = ""
     @State var oppgaver: [Oppgave] = [];
     @State var visEleverKarakter = true;
@@ -39,7 +38,7 @@ import SwiftUI
                     }
                     .onDelete(perform: slettOppgaveFraListe)
                     Button {
-                        oppgaver.append(Oppgave(id: oppgaver.count+1, navn: "", maksPoeng: 1))
+                        oppgaver.append(Oppgave(navn: "", maksPoeng: 1))
                     } label: {
                         Image(systemName: "plus.circle").foregroundColor(.green)
                     }
@@ -47,10 +46,10 @@ import SwiftUI
             }
            
             Button("Legg til") {
-                let klasseIndex = ko.klasser.firstIndex(where: {$0.id == KlasseID})
+                let klasseIndex = klasseoversikt.klasser.firstIndex(where: {$0.id == KlasseID})
                 if (klasseIndex != nil) {
-                    ko.klasser[klasseIndex!].prøver.append(Prøve(navn: prøveNavn, elever: ko.klasser[klasseIndex!].elever, oppgaver: oppgaver, kategorier: [], visEleverKarakter: visEleverKarakter))
-                    ko.lagreKlasser()
+                    klasseoversikt.klasser[klasseIndex!].prøver.append(Prøve(navn: prøveNavn, elever: klasseoversikt.klasser[klasseIndex!].elever, oppgaver: oppgaver, kategorier: [], visEleverKarakter: visEleverKarakter))
+                    klasseoversikt.lagreKlasser()
                     visElevTilbakemelding = nil
                 }
                 else {
@@ -65,4 +64,3 @@ import SwiftUI
     func slettOppgaveFraListe(at offsets: IndexSet){
         oppgaver.remove(atOffsets: offsets)    }
 }
-*/
