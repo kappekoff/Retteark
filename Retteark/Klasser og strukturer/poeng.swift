@@ -9,12 +9,12 @@ import Foundation
 
 struct Poeng: Identifiable, Hashable, Codable {
     let id: [Int]
-    var poeng: Float?
+    var poeng: String
     var elevId: String
     var oppgaveId: String
     
     
-    init(id: [Int], poeng: Float, elevId: String, OppgaveId: String) {
+    init(id: [Int], poeng: String, elevId: String, OppgaveId: String) {
         self.id = id;
         self.poeng = poeng
         self.elevId = elevId

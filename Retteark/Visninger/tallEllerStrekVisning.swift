@@ -72,10 +72,6 @@ struct tallEllerStrekVisning: View {
         else {
             tekst = tittel
         }
-        
-        let formatter = NumberFormatter()
-        
-        
     }
 }
 

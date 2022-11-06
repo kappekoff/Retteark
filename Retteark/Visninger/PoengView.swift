@@ -8,21 +8,15 @@
 import SwiftUI
 
 struct PoengView: View {
-    @Binding var poeng: Float?
+    @Binding var poeng: String
     
     var body: some View {
-        NumericTextField(String(poeng ?? 0), number: $poeng, isDecimalAllowed: true)
+        //NumericTextField(String(poeng ?? 0), number: $poeng, isDecimalAllowed: true)
+        tallEllerStrekVisning(tekst: $poeng, tittel: poeng)
             .font(.title3)
             .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
             .border(.black)
             .multilineTextAlignment(.center)
             
-    }
-}
-
-struct PoengView_Previews: PreviewProvider {
-    @State static var poeng: Float? = 2.3
-    static var previews: some View {
-        PoengView(poeng: $poeng)
     }
 }
