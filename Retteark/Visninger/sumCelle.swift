@@ -11,33 +11,26 @@ struct sumCelle: View {
     @Binding var poeng: [Poeng]
     var farge: Bool = false
     var formatter: NumberFormatter  = NumberFormatter()
-    @State
-    
+
     
     var body: some View {
-        Text(String(poeng
-                .map({ (poeng) -> Float in
-                    return poeng.poeng ?? 0;})
-                .reduce(0, +)))
+        Text(sumAvPoeng())
             .font(.title3)
             .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
             .border(.black)
             .background(farge ? Color(UIColor.systemBackground):.orange)
             .multilineTextAlignment(.center)
-            .onAppear() {
-                
-            }
     }
     
-    func sumAvPoeng() -> Float {
+    func sumAvPoeng() -> String {
 
-        let sum: Float = 0
+        var sum: Float = 0
         formatter.numberStyle = .decimal
         for element in poeng {
-            if let tall = formatter.number(from: element.poeng) {
-                
+            if let tall = formatter.number(from: element.poeng) as? Float {
+                sum += tall
             }
         }
-        return sum
+        return String(sum)
     }
 }

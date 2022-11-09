@@ -82,11 +82,16 @@ struct elevTilbakemeldingVisning: View {
     }
     
     func elevPoengKategori(elevIndex: Int, kategoriIndex: Int) -> Float {
+        let formatter: NumberFormatter = NumberFormatter()
+        formatter.numberStyle = .decimal
         var sum: Float = 0
         for oppgave in prøve.oppgaver {
             if let oppgaveIndex = prøve.oppgaveIndex(oppgaveId: oppgave.id) {
                 if(prøve.kategorierOgOppgaver[kategoriIndex][oppgaveIndex].verdi){
-                    sum += prøve.poeng[elevIndex][oppgaveIndex].poeng ?? 0
+                    var tall = formatter.number(from: prøve.poeng[elevIndex][oppgaveIndex].poeng) as? Float
+                    if(tall != nil) {
+                        sum += tall!
+                    }
                 }
             }
         }

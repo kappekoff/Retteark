@@ -14,7 +14,6 @@ struct tallEllerStrekVisning: View {
     
     var body: some View {
         TextField(tittel, text: $tekst)
-            .border(.black)
             .onChange(of: tekst, perform: endretTall(nyVerdi:))
 
         
@@ -66,7 +65,7 @@ struct tallEllerStrekVisning: View {
         }
         
         if let _ = nyVerdi.wholeMatch(of: tallEllerStrek) {
-            tekst = nyVerdi
+            tekst = nyVerdi.replacingOccurrences(of: ",", with: ".")
             tittel = tekst
         }
         else {

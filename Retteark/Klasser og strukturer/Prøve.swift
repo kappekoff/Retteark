@@ -78,7 +78,7 @@ class Prøve: Hashable, Identifiable, Codable, ObservableObject{
         for i in 0..<elever.count {
             self.poeng.append([])
             for j  in 0..<oppgaver.count {
-                self.poeng[i].append(Poeng(id: [i, j], poeng: 0, elevId: elever[i].id, OppgaveId: oppgaver[j].id))
+                self.poeng[i].append(Poeng(id: [i, j], poeng: "", elevId: elever[i].id, OppgaveId: oppgaver[j].id))
             }
         }
         
@@ -90,18 +90,18 @@ class Prøve: Hashable, Identifiable, Codable, ObservableObject{
         }
     }
     
-    func endrePoengAlleElever(oppgaveIndeks: Int, endringsfaktor: Float){
+    /*func endrePoengAlleElever(oppgaveIndeks: Int, endringsfaktor: Float){
         for i in 0..<self.elever.count {
             self.poeng[i][oppgaveIndeks].poeng = (self.poeng[i][oppgaveIndeks].poeng ?? 0) * endringsfaktor
             print(self.poeng[i][oppgaveIndeks].poeng ?? -1)
         }
         
-    }
+    }*/
     
     func printPoeng() {
         for rad in poeng {
             for element in rad {
-                print(element.poeng!)
+                print(element.poeng)
             }
             print("\n")
         }

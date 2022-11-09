@@ -12,21 +12,23 @@ struct karakterView: View {
     var farge: Bool = false
     var maxPoeng: Float
     @Binding var elev: Elev
+    let formatter: NumberFormatter = NumberFormatter()
     
     
     var body: some View {
         if(elev.låstKarakter) {
-            Text(finnKarakter(sumPoeng: poeng.map({ (poeng) -> Float in return poeng.poeng ?? 0;}).reduce(0, +)))
+            Text(finnKarakter(sumPoeng: sumAvPoeng()))
                 .font(.title3)
                 .fontWeight(.bold)
                 .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
                 .border(.black)
                 .background(farge ? Color(UIColor.systemBackground):.orange)
                 .multilineTextAlignment(.center)
-                .onAppear(perform: {elev.karakter = finnKarakter(sumPoeng: poeng.map({ (poeng) -> Float in return poeng.poeng ?? 0;}).reduce(0, +))})
-                .onChange(of: poeng){poeng in
-                    elev.karakter = finnKarakter(sumPoeng: poeng.map({ (poeng) -> Float in return poeng.poeng ?? 0;}).reduce(0, +))}
+                .onAppear(perform: {elev.karakter = finnKarakter(sumPoeng: sumAvPoeng())})
+                .onChange(of: poeng){_ in
+                    elev.karakter = finnKarakter(sumPoeng: sumAvPoeng())
                 }
+        }
         else{
             TextField("", text: $elev.karakter)
                 .font(.title3)
@@ -40,11 +42,22 @@ struct karakterView: View {
         
     }
     
+    func sumAvPoeng() -> Float {
+
+        var sum: Float = 0
+        formatter.numberStyle = .decimal
+        for element in poeng {
+            if let tall = formatter.number(from: element.poeng) as? Float {
+                sum += tall
+            }
+        }
+        return sum
+    }
+
+    
     func finnKarakter(sumPoeng: Float) -> String{
         
         let fått_til: Float = sumPoeng/maxPoeng
-        /*let desimalKarakter = fått_til*6
-        return String(Int(round(desimalKarakter)))*/
         if(fått_til > 1 || fått_til < 0) {
             return "?"
         }

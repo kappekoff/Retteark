@@ -28,9 +28,9 @@ struct poengTabellView: View {
             }
             .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).font(.title).fontWeight(.bold).border(.primary).background(.green).multilineTextAlignment(.center)
             GridRow{
-                Image(systemName: "light.max")
+                Image(systemName: "number")
                 ForEach($prøve.oppgaver){oppgave in
-                    PoengView(poeng: oppgave.maksPoeng)
+                    maxPoengVisning(poeng: oppgave.maksPoeng)
                         /*onSubmit({
                             if let oppgaveIndeks = prøve.oppgave(elevIndeks: elevIndeks, oppgaveId: oppgave.id) {
                                 let endringsfaktor = (prøve.oppgaver[oppgaveIndeks].maksPoeng ?? 0) / prøve.oppgaver[oppgaveIndeks].maksPoengGammelVerdi
@@ -70,7 +70,7 @@ struct poengTabellView: View {
                         sumCelle(poeng: $prøve.poeng[elevIndeks], farge: elevIndeks % 2 == 1)
                         karakterView(poeng: $prøve.poeng[elevIndeks], farge: elevIndeks % 2 == 1, maxPoeng: prøve.oppgaver.map({$0.maksPoeng ?? 0}).reduce(0, +), elev: $prøve.elever[elevIndeks])
                             .background(elevIndeks % 2 == 1 ? Color(UIColor.systemBackground):.orange)
-                        Button(action: {
+                       Button(action: {
                             prøve.elever[elevIndeks].låstKarakter.toggle()
                         }, label: {
                             Image(systemName: prøve.elever[elevIndeks].låstKarakter ? "lock.open.fill" : "lock.fill")
