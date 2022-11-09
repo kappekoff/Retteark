@@ -13,7 +13,7 @@ struct leggTilNyKlasseVisning: View {
     @State var klasseNavn: String
     @State var skoleÅr: String
     @State var elever: [Elev] = []
-    @Binding var visElevTilbakemelding: VisElevTilbakemleding?
+    @Binding var visLeggTilKlasser: Bool
     
     var body: some View {
         NavigationStack {
@@ -47,7 +47,7 @@ struct leggTilNyKlasseVisning: View {
         Button("Legg til") {
             klasseoversikt.klasser.append(Klasse(navn: klasseNavn, elever: elever, skoleÅr: skoleÅr))
             klasseoversikt.lagreKlasser()
-            visElevTilbakemelding = nil
+            visLeggTilKlasser = false
         }
     }
     func slettElevFraListe(at offsets: IndexSet){

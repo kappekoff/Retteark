@@ -10,7 +10,7 @@ import SwiftUI
 struct leggTilNyPr_veVisning: View {
     @ObservedObject var klasseoversikt: Klasseoversikt
     var KlasseID: String
-    @Binding var visElevTilbakemelding: VisElevTilbakemleding?
+    @Binding var visLeggTilPrøve: Bool
     @State var prøveNavn: String = ""
     @State var oppgaver: [Oppgave] = [];
     @State var visEleverKarakter = true;
@@ -50,10 +50,10 @@ struct leggTilNyPr_veVisning: View {
                 if (klasseIndex != nil) {
                     klasseoversikt.klasser[klasseIndex!].prøver.append(Prøve(navn: prøveNavn, elever: klasseoversikt.klasser[klasseIndex!].elever, oppgaver: oppgaver, kategorier: [], visEleverKarakter: visEleverKarakter))
                     klasseoversikt.lagreKlasser()
-                    visElevTilbakemelding = nil
+                    visLeggTilPrøve = false
                 }
                 else {
-                    visElevTilbakemelding = nil
+                    visLeggTilPrøve = false
                 }
                 
             }

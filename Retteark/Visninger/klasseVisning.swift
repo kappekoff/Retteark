@@ -12,7 +12,8 @@ struct klasseVisning: View {
     @State private var visSideKolonner = NavigationSplitViewVisibility.all
     @State private var valgtKlasseID: Klasse.ID?
     @State private var valgtPrøveID: Prøve.ID?
-    @State var visElevTilbakemelding: VisElevTilbakemleding? = nil
+    @State var visLeggTilKlasser: Bool = false
+    @State var visLeggTilPrøve: Bool = false
 
     
     var body: some View {
@@ -28,18 +29,13 @@ struct klasseVisning: View {
             .navigationTitle("Klasser")
             .toolbar(content: {
                 Button {
-                    visElevTilbakemelding = .leggTilNyKlasse
+                    visLeggTilKlasser = true
                 } label: {
                     Image(systemName: "plus.circle").foregroundColor(.green)
                 }
             })
-            .sheet(item: $visElevTilbakemelding, onDismiss: { visElevTilbakemelding = nil }) { visElevTilbakemleding in
-                switch visElevTilbakemleding{
-                case .leggTilNyKlasse:
-                    leggTilNyKlasseVisning(klasseoversikt: klasseoversikt,tekstFraVisma: "", klasseNavn: "", skoleÅr: "",  visElevTilbakemelding: $visElevTilbakemelding)
-                default:
-                    Text("Du skal aldri komme hit")
-                }
+            .sheet(isPresented: $visLeggTilKlasser, onDismiss: { visLeggTilKlasser = false }) {
+                    leggTilNyKlasseVisning(klasseoversikt: klasseoversikt,tekstFraVisma: "", klasseNavn: "", skoleÅr: "",  visLeggTilKlasser: $visLeggTilKlasser)
             }
         } content:{
             if let valgtKlasseID = valgtKlasseID, let valgtKlasse=klasseoversikt.klasseFraId(id: valgtKlasseID) {
@@ -52,18 +48,13 @@ struct klasseVisning: View {
                 .navigationTitle("Prøver")
                 .toolbar(content: {
                     Button {
-                        visElevTilbakemelding = .leggTilNyPrøve
+                        visLeggTilPrøve = true
                     } label: {
                         Image(systemName: "plus.circle").foregroundColor(.green)
                     }
                 })
-                .sheet(item: $visElevTilbakemelding, onDismiss: { visElevTilbakemelding = nil }) { visElevTilbakemleding in
-                    switch visElevTilbakemleding{
-                    case .leggTilNyPrøve:
-                        leggTilNyPr_veVisning(klasseoversikt: klasseoversikt, KlasseID: valgtKlasseID,  visElevTilbakemelding: $visElevTilbakemelding)
-                    default:
-                        Text("Du skal aldri komme hit")
-                    }
+                .sheet(isPresented: $visLeggTilPrøve, onDismiss: { visLeggTilPrøve = false }) {
+                        leggTilNyPr_veVisning(klasseoversikt: klasseoversikt, KlasseID: valgtKlasseID,  visLeggTilPrøve: $visLeggTilPrøve)
                 }
             }
             else {
