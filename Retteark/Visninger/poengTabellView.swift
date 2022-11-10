@@ -14,6 +14,7 @@ struct poengTabellView: View {
     @State var elevIndeks: Int? = nil
     @State var oppgaveIndeks: Int? = nil
     @State var farge: Bool = false
+    @FocusState private var fokus: Fokus?
     
     var body: some View {
         Grid(horizontalSpacing: 0, verticalSpacing: 0){
@@ -64,6 +65,7 @@ struct poengTabellView: View {
                             if let oppgaveIndeks = prøve.oppgave(elevIndeks: elevIndeks, oppgaveId: oppgave.id) {
                                 PoengView(poeng: $prøve.poeng[elevIndeks][oppgaveIndeks].poeng)
                                     .background(elevIndeks % 2 == 1 ? Color(UIColor.systemBackground):.orange)
+                                    .focused($fokus, equals: .poengFokus(id: $prøve.poeng[elevIndeks][oppgaveIndeks].id))
                             }
                             
                         }

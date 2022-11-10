@@ -38,6 +38,7 @@
 		DE85159C28DC9AAB0048913A /* finnEleverFraVisma.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE85159B28DC9AAB0048913A /* finnEleverFraVisma.swift */; };
 		DE87C38E28BF65D900E880A9 /* kakediagram.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE87C38D28BF65D900E880A9 /* kakediagram.swift */; };
 		DE993B2C291A726F004889EC /* maxPoengVisning.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE993B2B291A726F004889EC /* maxPoengVisning.swift */; };
+		DE993B2E291BC43D004889EC /* Fokus.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE993B2D291BC43D004889EC /* Fokus.swift */; };
 		DE9AB23D2916767B00B67FD7 /* tallEllerStrekVisning.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE9AB23C2916767B00B67FD7 /* tallEllerStrekVisning.swift */; };
 		DEB6BBCE28B36560008BBD31 /* Kategorier.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEB6BBCD28B36560008BBD31 /* Kategorier.swift */; };
 		DEB6BBD028B378EC008BBD31 /* BoolOgId.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEB6BBCF28B378EC008BBD31 /* BoolOgId.swift */; };
@@ -99,6 +100,7 @@
 		DE85159B28DC9AAB0048913A /* finnEleverFraVisma.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = finnEleverFraVisma.swift; sourceTree = "<group>"; };
 		DE87C38D28BF65D900E880A9 /* kakediagram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = kakediagram.swift; sourceTree = "<group>"; };
 		DE993B2B291A726F004889EC /* maxPoengVisning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = maxPoengVisning.swift; sourceTree = "<group>"; };
+		DE993B2D291BC43D004889EC /* Fokus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fokus.swift; sourceTree = "<group>"; };
 		DE9AB23C2916767B00B67FD7 /* tallEllerStrekVisning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tallEllerStrekVisning.swift; sourceTree = "<group>"; };
 		DEB6BBCD28B36560008BBD31 /* Kategorier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Kategorier.swift; sourceTree = "<group>"; };
 		DEB6BBCF28B378EC008BBD31 /* BoolOgId.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoolOgId.swift; sourceTree = "<group>"; };
@@ -195,6 +197,7 @@
 			isa = PBXGroup;
 			children = (
 				DE05745028C6073B001D487B /* VisElevTilbakemleding.swift */,
+				DE993B2D291BC43D004889EC /* Fokus.swift */,
 				94B82C4D28CBCFC20086368A /* Klasseoversikt.swift */,
 				941205EC289006A500D7FA3C /* elev.swift */,
 				941205F028900ED700D7FA3C /* poeng.swift */,
@@ -380,6 +383,7 @@
 				DE05745128C6073B001D487B /* VisElevTilbakemleding.swift in Sources */,
 				DEC071DF28C0EB11006622FA /* elevVurdering.swift in Sources */,
 				DE87C38E28BF65D900E880A9 /* kakediagram.swift in Sources */,
+				DE993B2E291BC43D004889EC /* Fokus.swift in Sources */,
 				DE05744F28C1F67E001D487B /* elevKategoriVisning.swift in Sources */,
 				DE0620D728D0981E008AF4EA /* filemanager_extension.swift in Sources */,
 				94CC300528953FD600A193F4 /* PoengView.swift in Sources */,

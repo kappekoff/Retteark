@@ -22,14 +22,17 @@ struct ContentView: View {
                     Button("Kategorier") {
                         viserSheet = .valgtKategorier
                     }
+                    .keyboardShortcut("k")
                     Button("Instillinger") {
                         viserSheet = .velgtInstillinger
                     }
+                    .keyboardShortcut("i")
                     Button{
                         klasseoversikt.lagreKlasser()
                     } label: {
                         Text("Lagre")
                     }
+                    .keyboardShortcut("s")
                 }
                 .buttonStyle(.borderedProminent)
                 

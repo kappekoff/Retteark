@@ -88,7 +88,7 @@ struct elevTilbakemeldingVisning: View {
         for oppgave in prøve.oppgaver {
             if let oppgaveIndex = prøve.oppgaveIndex(oppgaveId: oppgave.id) {
                 if(prøve.kategorierOgOppgaver[kategoriIndex][oppgaveIndex].verdi){
-                    var tall = formatter.number(from: prøve.poeng[elevIndex][oppgaveIndex].poeng) as? Float
+                    let tall = formatter.number(from: prøve.poeng[elevIndex][oppgaveIndex].poeng) as? Float
                     if(tall != nil) {
                         sum += tall!
                     }
