@@ -82,6 +82,14 @@ struct poengTabellView: View {
                     .font(.title3).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background(elevIndeks % 2 == 1 ? Color(UIColor.systemBackground):.orange)
                 }
             }
+        }.onAppear {
+            if (prøve.elever.count > 0 && prøve.oppgaver.count > 0) {
+                if let elevIndeks = prøve.poengRad(elevId: prøve.elever[0].id){
+                    if let oppgaveIndeks = prøve.oppgave(elevIndeks: elevIndeks, oppgaveId: prøve.oppgaver[0].id) {
+                        fokus = .poengFokus(id: prøve.poeng[elevIndeks][oppgaveIndeks].id)
+                    }
+                }
+            }
         }
     }
 }
