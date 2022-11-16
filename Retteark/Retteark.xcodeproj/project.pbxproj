@@ -25,6 +25,7 @@
 		94DF82FA2878BB570054D5B8 /* RettearkUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DF82F92878BB570054D5B8 /* RettearkUITests.swift */; };
 		94DF82FC2878BB570054D5B8 /* RettearkUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DF82FB2878BB570054D5B8 /* RettearkUITestsLaunchTests.swift */; };
 		94DF83092878BF4C0054D5B8 /* Prøve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DF83082878BF4C0054D5B8 /* Prøve.swift */; };
+		DE024DFB291E6E7B00F50E45 /* tastetrykk.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE024DFA291E6E7A00F50E45 /* tastetrykk.swift */; };
 		DE05744F28C1F67E001D487B /* elevKategoriVisning.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE05744E28C1F67E001D487B /* elevKategoriVisning.swift */; };
 		DE05745128C6073B001D487B /* VisElevTilbakemleding.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE05745028C6073B001D487B /* VisElevTilbakemleding.swift */; };
 		DE0620D728D0981E008AF4EA /* filemanager_extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE0620D628D0981E008AF4EA /* filemanager_extension.swift */; };
@@ -87,6 +88,7 @@
 		94DF82F92878BB570054D5B8 /* RettearkUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RettearkUITests.swift; sourceTree = "<group>"; };
 		94DF82FB2878BB570054D5B8 /* RettearkUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RettearkUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		94DF83082878BF4C0054D5B8 /* Prøve.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Prøve.swift"; sourceTree = "<group>"; };
+		DE024DFA291E6E7A00F50E45 /* tastetrykk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tastetrykk.swift; sourceTree = "<group>"; };
 		DE05744E28C1F67E001D487B /* elevKategoriVisning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = elevKategoriVisning.swift; sourceTree = "<group>"; };
 		DE05745028C6073B001D487B /* VisElevTilbakemleding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisElevTilbakemleding.swift; sourceTree = "<group>"; };
 		DE0620D628D0981E008AF4EA /* filemanager_extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = filemanager_extension.swift; sourceTree = "<group>"; };
@@ -238,6 +240,7 @@
 		DE425E1328EB5602009CAB3E /* Utvidelser og funksjoner */ = {
 			isa = PBXGroup;
 			children = (
+				DE024DFA291E6E7A00F50E45 /* tastetrykk.swift */,
 				94B82C5128D5D6210086368A /* pdf.swift */,
 				DE597E0D290A998000114B0B /* test_input.swift */,
 				DE0620D628D0981E008AF4EA /* filemanager_extension.swift */,
@@ -407,6 +410,7 @@
 				94B82C4E28CBCFC20086368A /* Klasseoversikt.swift in Sources */,
 				DE425E1028E19969009CAB3E /* textInputField.swift in Sources */,
 				94DF82DF2878BB540054D5B8 /* RettearkApp.swift in Sources */,
+				DE024DFB291E6E7B00F50E45 /* tastetrykk.swift in Sources */,
 				DEB6BBD428B39336008BBD31 /* kategoriView.swift in Sources */,
 				94B82C5228D5D6210086368A /* pdf.swift in Sources */,
 				DEB6BBCE28B36560008BBD31 /* Kategorier.swift in Sources */,

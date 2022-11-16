@@ -7,9 +7,10 @@
 
 import Foundation
 
-class Klasseoversikt: ObservableObject {
+class Klasseoversikt: ObservableObject, Equatable {
     
     @Published var klasser: [Klasse]
+    let id: String = UUID().uuidString
     var lagret_tidspunkt: Date?
     
     init(){
@@ -23,6 +24,10 @@ class Klasseoversikt: ObservableObject {
         lagret_tidspunkt = nil
         
         
+    }
+    
+    static func == (venstreSide: Klasseoversikt, høyreSide: Klasseoversikt) -> Bool {
+        return venstreSide.id == høyreSide.id
     }
     
     func lastInnKlasser() {

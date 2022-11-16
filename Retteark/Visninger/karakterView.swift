@@ -8,34 +8,32 @@
 import SwiftUI
 
 struct karakterView: View {
-    @Binding var poeng: [Poeng]
-    var farge: Bool = false
-    var maxPoeng: Float
-    @Binding var elev: Elev
+    @ObservedObject var prøve: Prøve
+    let elevIndeks: Int
     let formatter: NumberFormatter = NumberFormatter()
     
     
     var body: some View {
-        if(elev.låstKarakter) {
+        if(prøve.elever[elevIndeks].låstKarakter) {
             Text(finnKarakter(sumPoeng: sumAvPoeng()))
                 .font(.title3)
                 .fontWeight(.bold)
                 .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
                 .border(.black)
-                .background(farge ? Color(UIColor.systemBackground):.orange)
+                .background(elevIndeks % 2 == 1 ? Color(UIColor.systemBackground):.orange)
                 .multilineTextAlignment(.center)
-                .onAppear(perform: {elev.karakter = finnKarakter(sumPoeng: sumAvPoeng())})
-                .onChange(of: poeng){_ in
-                    elev.karakter = finnKarakter(sumPoeng: sumAvPoeng())
+                .onAppear(perform: {prøve.elever[elevIndeks].karakter = finnKarakter(sumPoeng: sumAvPoeng())})
+                .onChange(of: prøve){_ in
+                    prøve.elever[elevIndeks].karakter = finnKarakter(sumPoeng: sumAvPoeng())
                 }
         }
         else{
-            TextField("", text: $elev.karakter)
+            TextField("", text: $prøve.elever[elevIndeks].karakter)
                 .font(.title3)
                 .fontWeight(.bold)
                 .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
                 .border(.black)
-                .background(farge ? .white:.orange)
+                .background(elevIndeks % 2 == 1  ? .white:.orange)
                 .multilineTextAlignment(.center)
         }
             
@@ -46,9 +44,11 @@ struct karakterView: View {
 
         var sum: Float = 0
         formatter.numberStyle = .decimal
-        for element in poeng {
-            if let tall = formatter.number(from: element.poeng) as? Float {
-                sum += tall
+        for oppgave in prøve.oppgaver {
+            if let oppgaveIndeks = prøve.oppgaveIndex(oppgaveId: oppgave.id){
+                if let tall = formatter.number(from: prøve.poeng[elevIndeks][oppgaveIndeks].poeng) as? Float {
+                    sum += tall
+                }
             }
         }
         return sum
@@ -56,7 +56,7 @@ struct karakterView: View {
 
     
     func finnKarakter(sumPoeng: Float) -> String{
-        
+        let maxPoeng = prøve.oppgaver.map({$0.maksPoeng ?? 0}).reduce(0, +)
         let fått_til: Float = sumPoeng/maxPoeng
         if(fått_til > 1 || fått_til < 0) {
             return "?"
@@ -141,9 +141,3 @@ struct karakterView: View {
         }
     }
 }
-
-/*struct karakterView_Previews: PreviewProvider {
-    static var previews: some View {
-        karakterView()
-    }
-}*/

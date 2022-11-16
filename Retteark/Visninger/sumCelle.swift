@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct sumCelle: View {
-    @Binding var poeng: [Poeng]
-    var farge: Bool = false
+    @ObservedObject var prøve: Prøve
+    var elevIndeks: Int
     var formatter: NumberFormatter  = NumberFormatter()
 
     
@@ -18,7 +18,7 @@ struct sumCelle: View {
             .font(.title3)
             .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
             .border(.black)
-            .background(farge ? Color(UIColor.systemBackground):.orange)
+            .background(elevIndeks % 2 == 1 ? Color(UIColor.systemBackground):.orange)
             .multilineTextAlignment(.center)
     }
     
@@ -26,9 +26,11 @@ struct sumCelle: View {
 
         var sum: Float = 0
         formatter.numberStyle = .decimal
-        for element in poeng {
-            if let tall = formatter.number(from: element.poeng) as? Float {
-                sum += tall
+        for oppgave in prøve.oppgaver {
+            if let oppgaveIndeks = prøve.oppgaveIndex(oppgaveId: oppgave.id){
+                if let tall = formatter.number(from: prøve.poeng[elevIndeks][oppgaveIndeks].poeng) as? Float {
+                    sum += tall
+                }
             }
         }
         return String(sum)

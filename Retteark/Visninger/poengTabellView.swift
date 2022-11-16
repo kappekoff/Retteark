@@ -69,9 +69,8 @@ struct poengTabellView: View {
                             }
                             
                         }
-                        sumCelle(poeng: $prøve.poeng[elevIndeks], farge: elevIndeks % 2 == 1)
-                        karakterView(poeng: $prøve.poeng[elevIndeks], farge: elevIndeks % 2 == 1, maxPoeng: prøve.oppgaver.map({$0.maksPoeng ?? 0}).reduce(0, +), elev: $prøve.elever[elevIndeks])
-                            .background(elevIndeks % 2 == 1 ? Color(UIColor.systemBackground):.orange)
+                        sumCelle(prøve: prøve, elevIndeks: elevIndeks)
+                        karakterView(prøve: prøve, elevIndeks: elevIndeks)
                        Button(action: {
                             prøve.elever[elevIndeks].låstKarakter.toggle()
                         }, label: {
@@ -83,6 +82,7 @@ struct poengTabellView: View {
                 }
             }
         }.onAppear {
+            print("poentabell View onAppear")
             if (prøve.elever.count > 0 && prøve.oppgaver.count > 0) {
                 if let elevIndeks = prøve.poengRad(elevId: prøve.elever[0].id){
                     if let oppgaveIndeks = prøve.oppgave(elevIndeks: elevIndeks, oppgaveId: prøve.oppgaver[0].id) {

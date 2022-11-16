@@ -47,6 +47,9 @@ struct ContentView: View {
                     }
                 }
                 poengTabellView(prøve: $valgtPrøve)
+                    .onChange(of: klasseoversikt) {
+                        klasseoversikt.lagreKlasser()
+                    }
                 
             }
         }
