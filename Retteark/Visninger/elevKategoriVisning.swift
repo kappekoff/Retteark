@@ -72,7 +72,7 @@ struct elevTilbakemeldingVisning: View {
     func maxPoengKategori(kategoriIndex: Int) -> Float {
         var sum: Float = 0
         for oppgave in prøve.oppgaver {
-            if let oppgaveIndex = prøve.oppgaveIndex(oppgaveId: oppgave.id){
+            if let oppgaveIndex = prøve.oppgaveIndexMedKjentKategori(oppgaveId: oppgave.id, kateogriIndex: kategoriIndex){
                 if(prøve.kategorierOgOppgaver[kategoriIndex][oppgaveIndex].verdi){
                     sum += prøve.oppgaver[oppgaveIndex].maksPoeng ?? 0
                 }
@@ -86,7 +86,7 @@ struct elevTilbakemeldingVisning: View {
         formatter.numberStyle = .decimal
         var sum: Float = 0
         for oppgave in prøve.oppgaver {
-            if let oppgaveIndex = prøve.oppgaveIndex(oppgaveId: oppgave.id) {
+            if let oppgaveIndex = prøve.oppgaveIndexMedKjentElev(oppgaveId: oppgave.id, elevIndex: elevIndex) {
                 if(prøve.kategorierOgOppgaver[kategoriIndex][oppgaveIndex].verdi){
                     let tall = formatter.number(from: prøve.poeng[elevIndex][oppgaveIndex].poeng) as? Float
                     if(tall != nil) {

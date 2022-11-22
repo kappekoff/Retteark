@@ -135,9 +135,18 @@ class Prøve: Hashable, Identifiable, Codable, ObservableObject{
         return nil
     }
     
-    func oppgaveIndex(oppgaveId: String) -> Int? {
-        for i in 0..<kategorierOgOppgaver[0].count{
-            if(kategorierOgOppgaver[0][i].oppgaveId == oppgaveId){
+    func oppgaveIndexMedKjentKategori(oppgaveId: String, kateogriIndex: Int) -> Int? {
+        for i in 0..<kategorierOgOppgaver[kateogriIndex].count{
+            if(kategorierOgOppgaver[kateogriIndex][i].oppgaveId == oppgaveId){
+                return i
+            }
+        }
+        return nil
+    }
+    
+    func oppgaveIndexMedKjentElev(oppgaveId: String, elevIndex: Int) -> Int? {
+        for i in 0..<poeng[elevIndex].count{
+            if(poeng[elevIndex][i].oppgaveId == oppgaveId){
                 return i
             }
         }

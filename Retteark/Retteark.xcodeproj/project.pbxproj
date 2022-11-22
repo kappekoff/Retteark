@@ -45,7 +45,6 @@
 		DEB6BBD028B378EC008BBD31 /* BoolOgId.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEB6BBCF28B378EC008BBD31 /* BoolOgId.swift */; };
 		DEB6BBD228B37B66008BBD31 /* poengTabellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEB6BBD128B37B66008BBD31 /* poengTabellView.swift */; };
 		DEB6BBD428B39336008BBD31 /* kategoriView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEB6BBD328B39336008BBD31 /* kategoriView.swift */; };
-		DEC071DF28C0EB11006622FA /* elevVurdering.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEC071DE28C0EB11006622FA /* elevVurdering.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -108,7 +107,6 @@
 		DEB6BBCF28B378EC008BBD31 /* BoolOgId.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoolOgId.swift; sourceTree = "<group>"; };
 		DEB6BBD128B37B66008BBD31 /* poengTabellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = poengTabellView.swift; sourceTree = "<group>"; };
 		DEB6BBD328B39336008BBD31 /* kategoriView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = kategoriView.swift; sourceTree = "<group>"; };
-		DEC071DE28C0EB11006622FA /* elevVurdering.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = elevVurdering.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -218,7 +216,6 @@
 			children = (
 				94B82C4B28CBCF350086368A /* klasseVisning.swift */,
 				DE425E0D28E193D4009CAB3E /* leggTilNyPrøveVisning.swift */,
-				DEC071DE28C0EB11006622FA /* elevVurdering.swift */,
 				DE85159928DB2AAA0048913A /* leggTilNyKlasseVisning.swift */,
 				DE425E0F28E19969009CAB3E /* textInputField.swift */,
 				DEB6BBD328B39336008BBD31 /* kategoriView.swift */,
@@ -384,7 +381,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				DE05745128C6073B001D487B /* VisElevTilbakemleding.swift in Sources */,
-				DEC071DF28C0EB11006622FA /* elevVurdering.swift in Sources */,
 				DE87C38E28BF65D900E880A9 /* kakediagram.swift in Sources */,
 				DE993B2E291BC43D004889EC /* Fokus.swift in Sources */,
 				DE05744F28C1F67E001D487B /* elevKategoriVisning.swift in Sources */,

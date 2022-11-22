@@ -82,7 +82,6 @@ struct poengTabellView: View {
                 }
             }
         }.onAppear {
-            print("poentabell View onAppear")
             if (prøve.elever.count > 0 && prøve.oppgaver.count > 0) {
                 if let elevIndeks = prøve.poengRad(elevId: prøve.elever[0].id){
                     if let oppgaveIndeks = prøve.oppgave(elevIndeks: elevIndeks, oppgaveId: prøve.oppgaver[0].id) {

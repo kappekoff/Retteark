@@ -27,7 +27,7 @@ struct sumCelle: View {
         var sum: Float = 0
         formatter.numberStyle = .decimal
         for oppgave in prøve.oppgaver {
-            if let oppgaveIndeks = prøve.oppgaveIndex(oppgaveId: oppgave.id){
+            if let oppgaveIndeks = prøve.oppgaveIndexMedKjentElev(oppgaveId: oppgave.id, elevIndex: elevIndeks){
                 if let tall = formatter.number(from: prøve.poeng[elevIndeks][oppgaveIndeks].poeng) as? Float {
                     sum += tall
                 }

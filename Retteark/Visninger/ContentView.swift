@@ -47,7 +47,7 @@ struct ContentView: View {
                     }
                 }
                 poengTabellView(prøve: $valgtPrøve)
-                    .onChange(of: klasseoversikt) {
+                    .onChange(of: $valgtPrøve) { _ in
                         klasseoversikt.lagreKlasser()
                     }
                 

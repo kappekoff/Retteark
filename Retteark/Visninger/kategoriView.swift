@@ -29,7 +29,7 @@ struct kategoriView: View {
                         GridRow() {
                             Text(prøve.kategorier[kategoriIndex].navn).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background(.orange)
                             ForEach(prøve.oppgaver){oppgave in
-                                if let oppgaveIndex = prøve.oppgaveIndex(oppgaveId: oppgave.id) {
+                                if let oppgaveIndex = prøve.oppgaveIndexMedKjentKategori(oppgaveId: oppgave.id, kateogriIndex: kategoriIndex) {
                                     Toggle("", isOn: $prøve.kategorierOgOppgaver[kategoriIndex][oppgaveIndex].verdi)
                                         .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary)
                                 }

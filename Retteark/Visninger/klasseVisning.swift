@@ -18,13 +18,16 @@ struct klasseVisning: View {
     
     var body: some View {
         NavigationSplitView(columnVisibility: $visSideKolonner){
-            List($klasseoversikt.klasser, selection: $valgtKlasseID) { valgtKlasse in
-                HStack {
-                    Text(valgtKlasse.navn.wrappedValue)
-                    Spacer()
-                    Text(valgtKlasse.skoleÅr.wrappedValue)
+            List(selection: $valgtKlasseID) {
+                ForEach($klasseoversikt.klasser){ valgtKlasse in
+                    HStack {
+                        Text(valgtKlasse.navn.wrappedValue)
+                        Spacer()
+                        Text(valgtKlasse.skoleÅr.wrappedValue)
+                    }
+                    .font(.title).bold()
                 }
-                .font(.title).bold()
+                .onDelete(perform: slettKlasseFraListe)
             }
             .navigationTitle("Klasser")
             .toolbar(content: {
@@ -63,6 +66,10 @@ struct klasseVisning: View {
         } detail: {
             ContentView(klasseoversikt: klasseoversikt, valgtKlasseID: valgtKlasseID, valgtPrøveID: valgtPrøveID)
         }
+    }
+    
+    func slettKlasseFraListe(at offsets: IndexSet){
+        klasseoversikt.klasser.remove(atOffsets: offsets)
     }
 }
 

@@ -97,17 +97,11 @@ func vismaTilElever(visma: String) -> [String] {
     let fornavn = Reference(Substring.self)
     
     let regex = Regex {
-        "\n"
         Capture(as: fornavn) {
             navn
         }
-        NegativeLookahead {
-            " "
-            storBokstav
-        }
     }
 
-    print("kom hit")
     let resultat = visma.matches(of: regex)
     var elever: [String] = []
     for elev in resultat {

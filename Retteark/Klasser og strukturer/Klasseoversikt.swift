@@ -15,9 +15,10 @@ class Klasseoversikt: ObservableObject, Equatable {
     
     init(){
         
-        self.klasser = [Klasse(navn: "1IMT", elever: elever_test_1, skoleÅr: "22/23"),
+       /* self.klasser = [Klasse(navn: "1IMT", elever: elever_test_1, skoleÅr: "22/23"),
                         Klasse(navn: "2IMT", elever: elever_test_2, skoleÅr: "22/23"),
-                        Klasse(navn: "3IMT", elever: elever_test_3, skoleÅr: "22/23")]
+                        Klasse(navn: "3IMT", elever: elever_test_3, skoleÅr: "22/23")]*/
+        self.klasser = []
         if(FileManager().documentDoesExist(named: filnavn)){
             lastInnKlasser()
         }
@@ -36,7 +37,7 @@ class Klasseoversikt: ObservableObject, Equatable {
             case .success(let data):
                 let decoder = JSONDecoder()
                 do {
-                    klasser = try decoder.decode([Klasse].self, from: data)
+                    self.klasser = try decoder.decode([Klasse].self, from: data)
                 } catch {
                     print(error.localizedDescription)
                 }
