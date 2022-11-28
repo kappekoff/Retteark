@@ -30,6 +30,8 @@
 		DE05745128C6073B001D487B /* VisElevTilbakemleding.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE05745028C6073B001D487B /* VisElevTilbakemleding.swift */; };
 		DE0620D728D0981E008AF4EA /* filemanager_extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE0620D628D0981E008AF4EA /* filemanager_extension.swift */; };
 		DE0620D928D1F482008AF4EA /* Tilbakemelding.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE0620D828D1F482008AF4EA /* Tilbakemelding.swift */; };
+		DE118C7C292E29B100351BC4 /* skrivInnOppgaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE118C7B292E29B000351BC4 /* skrivInnOppgaver.swift */; };
+		DE118C7E292F6CF200351BC4 /* collection_extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE118C7D292F6CF200351BC4 /* collection_extension.swift */; };
 		DE24DD0628FEC72B008F8A77 /* instillinger.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE24DD0528FEC72B008F8A77 /* instillinger.swift */; };
 		DE37053428AA2A0200EAC29F /* karakterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE37053328AA2A0100EAC29F /* karakterView.swift */; };
 		DE425E0E28E193D4009CAB3E /* leggTilNyPrøveVisning.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE425E0D28E193D4009CAB3E /* leggTilNyPrøveVisning.swift */; };
@@ -92,6 +94,8 @@
 		DE05745028C6073B001D487B /* VisElevTilbakemleding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisElevTilbakemleding.swift; sourceTree = "<group>"; };
 		DE0620D628D0981E008AF4EA /* filemanager_extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = filemanager_extension.swift; sourceTree = "<group>"; };
 		DE0620D828D1F482008AF4EA /* Tilbakemelding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tilbakemelding.swift; sourceTree = "<group>"; };
+		DE118C7B292E29B000351BC4 /* skrivInnOppgaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = skrivInnOppgaver.swift; sourceTree = "<group>"; };
+		DE118C7D292F6CF200351BC4 /* collection_extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = collection_extension.swift; sourceTree = "<group>"; };
 		DE24DD0528FEC72B008F8A77 /* instillinger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = instillinger.swift; sourceTree = "<group>"; };
 		DE37053328AA2A0100EAC29F /* karakterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = karakterView.swift; sourceTree = "<group>"; };
 		DE425E0D28E193D4009CAB3E /* leggTilNyPrøveVisning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "leggTilNyPrøveVisning.swift"; sourceTree = "<group>"; };
@@ -238,10 +242,12 @@
 			isa = PBXGroup;
 			children = (
 				DE024DFA291E6E7A00F50E45 /* tastetrykk.swift */,
+				DE118C7B292E29B000351BC4 /* skrivInnOppgaver.swift */,
 				94B82C5128D5D6210086368A /* pdf.swift */,
 				DE597E0D290A998000114B0B /* test_input.swift */,
 				DE0620D628D0981E008AF4EA /* filemanager_extension.swift */,
 				DE85159B28DC9AAB0048913A /* finnEleverFraVisma.swift */,
+				DE118C7D292F6CF200351BC4 /* collection_extension.swift */,
 			);
 			path = "Utvidelser og funksjoner";
 			sourceTree = "<group>";
@@ -389,6 +395,7 @@
 				DE597E0E290A998000114B0B /* test_input.swift in Sources */,
 				94DF82E12878BB540054D5B8 /* ContentView.swift in Sources */,
 				DE425E0E28E193D4009CAB3E /* leggTilNyPrøveVisning.swift in Sources */,
+				DE118C7C292E29B100351BC4 /* skrivInnOppgaver.swift in Sources */,
 				94CC3009289D951D00A193F4 /* sumCelle.swift in Sources */,
 				DE37053428AA2A0200EAC29F /* karakterView.swift in Sources */,
 				DEB6BBD028B378EC008BBD31 /* BoolOgId.swift in Sources */,
@@ -409,6 +416,7 @@
 				DE024DFB291E6E7B00F50E45 /* tastetrykk.swift in Sources */,
 				DEB6BBD428B39336008BBD31 /* kategoriView.swift in Sources */,
 				94B82C5228D5D6210086368A /* pdf.swift in Sources */,
+				DE118C7E292F6CF200351BC4 /* collection_extension.swift in Sources */,
 				DEB6BBCE28B36560008BBD31 /* Kategorier.swift in Sources */,
 				941205F128900ED700D7FA3C /* poeng.swift in Sources */,
 				DEB6BBD228B37B66008BBD31 /* poengTabellView.swift in Sources */,

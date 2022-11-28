@@ -14,17 +14,29 @@ struct leggTilNyPr_veVisning: View {
     @State var prøveNavn: String = ""
     @State var oppgaver: [Oppgave] = [];
     @State var visEleverKarakter = true;
+    @State var nyeOppgaver: String = "";
     
     
     
     
     var body: some View {
         NavigationStack {
+            Text("Legg til ny prøve").font(.largeTitle)
             Section("Om prøven"){
                 TextInputField(title: "Prøvenavn", text: $prøveNavn)
                 Toggle("Vis karakter til elever", isOn: $visEleverKarakter)
             }
             Section("Oppgaver") {
+                HStack {
+                    TextField("Oppgavenavn: 1-15, 1.a-d", text: $nyeOppgaver)
+                        .onSubmit {
+                            leggTilNyeOppgaver()
+                        }
+                    Button("Legg til") {
+                        leggTilNyeOppgaver()
+                    }
+                    
+                }
                 List() {
                     ForEach($oppgaver) { oppgave in
                         HStack {
@@ -61,6 +73,14 @@ struct leggTilNyPr_veVisning: View {
         }
         .navigationTitle("Legg til Ny prøve")
     }
+    
     func slettOppgaveFraListe(at offsets: IndexSet){
-        oppgaver.remove(atOffsets: offsets)    }
+        oppgaver.remove(atOffsets: offsets)
+    }
+    
+    func leggTilNyeOppgaver() {
+        let listeMedNyeOppgaver:[Oppgave] = lagOppgaver(input: nyeOppgaver)
+        oppgaver.append(contentsOf: listeMedNyeOppgaver)
+        nyeOppgaver = ""
+    }
 }
