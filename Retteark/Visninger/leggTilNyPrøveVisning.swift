@@ -79,7 +79,7 @@ struct leggTilNyPr_veVisning: View {
     }
     
     func leggTilNyeOppgaver() {
-        let listeMedNyeOppgaver:[Oppgave] = lagOppgaver(input: nyeOppgaver)
+        let listeMedNyeOppgaver:[Oppgave] = oppgaverFraListeMedOppgavenavn(listeMedOppgavenavn: lagOppgaver(input: nyeOppgaver))
         oppgaver.append(contentsOf: listeMedNyeOppgaver)
         nyeOppgaver = ""
     }

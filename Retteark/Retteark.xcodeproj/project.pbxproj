@@ -47,6 +47,7 @@
 		DEB6BBD028B378EC008BBD31 /* BoolOgId.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEB6BBCF28B378EC008BBD31 /* BoolOgId.swift */; };
 		DEB6BBD228B37B66008BBD31 /* poengTabellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEB6BBD128B37B66008BBD31 /* poengTabellView.swift */; };
 		DEB6BBD428B39336008BBD31 /* kategoriView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEB6BBD328B39336008BBD31 /* kategoriView.swift */; };
+		DEECF8B929364525007B59FF /* Karaktergrense.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEECF8B829364525007B59FF /* Karaktergrense.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -111,6 +112,7 @@
 		DEB6BBCF28B378EC008BBD31 /* BoolOgId.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoolOgId.swift; sourceTree = "<group>"; };
 		DEB6BBD128B37B66008BBD31 /* poengTabellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = poengTabellView.swift; sourceTree = "<group>"; };
 		DEB6BBD328B39336008BBD31 /* kategoriView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = kategoriView.swift; sourceTree = "<group>"; };
+		DEECF8B829364525007B59FF /* Karaktergrense.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Karaktergrense.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -203,6 +205,7 @@
 				DE05745028C6073B001D487B /* VisElevTilbakemleding.swift */,
 				DE993B2D291BC43D004889EC /* Fokus.swift */,
 				94B82C4D28CBCFC20086368A /* Klasseoversikt.swift */,
+				DEECF8B829364525007B59FF /* Karaktergrense.swift */,
 				941205EC289006A500D7FA3C /* elev.swift */,
 				941205F028900ED700D7FA3C /* poeng.swift */,
 				DEB6BBCF28B378EC008BBD31 /* BoolOgId.swift */,
@@ -421,6 +424,7 @@
 				941205F128900ED700D7FA3C /* poeng.swift in Sources */,
 				DEB6BBD228B37B66008BBD31 /* poengTabellView.swift in Sources */,
 				DE85159A28DB2AAA0048913A /* leggTilNyKlasseVisning.swift in Sources */,
+				DEECF8B929364525007B59FF /* Karaktergrense.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,7 +8,7 @@
 import Foundation
 import RegexBuilder
 
-func lagOppgaver(input: String) -> [Oppgave] {
+func lagOppgaver(input: String) -> [String] {
     
     let storBokstav = Regex {
         ChoiceOf {
@@ -159,24 +159,32 @@ func lagOppgaver(input: String) -> [Oppgave] {
     else if(grensene[optional: 0]?.isUppercase == true){
         grensene[1] = (grensene[optional: 1] ?? grensene[0]).uppercased()
     }
-    var oppgaver:[Oppgave] = []
+    var oppgaver:[String] = []
     if let nedreGrense = Int(grensene[optional: 0] ?? ""), let øvreGrense = Int(grensene[optional: 1] ?? ""){
         for tallVerdi in nedreGrense...øvreGrense {
-            oppgaver.append(Oppgave(navn: (oppgavenavn[optional: 0] ?? "") + String(tallVerdi), maksPoeng: 1))
+            oppgaver.append((oppgavenavn[optional: 0] ?? "") + String(tallVerdi))
         }
         
     }
     else if let nedreGrense = grensene[optional: 0], let øvreGrense = grensene[optional: 1] {
         for skalarverdi in UnicodeScalar(nedreGrense)!.value...UnicodeScalar(øvreGrense)!.value {
-            oppgaver.append(Oppgave(navn: (oppgavenavn[optional: 0] ?? "") + String(UnicodeScalar(skalarverdi)!), maksPoeng: 1))
+            oppgaver.append((oppgavenavn[optional: 0] ?? "") + String(UnicodeScalar(skalarverdi)!))
             
         }
     }
     else {
         if(!input.isEmpty){
-            oppgaver.append(Oppgave(navn: input, maksPoeng: 1))
+            oppgaver.append(input)
         }
     }
     
+    return oppgaver
+}
+
+func oppgaverFraListeMedOppgavenavn(listeMedOppgavenavn: [String]) -> [Oppgave] {
+    var oppgaver:[Oppgave] = []
+    for oppgavenavn in listeMedOppgavenavn {
+        oppgaver.append(Oppgave(navn: oppgavenavn, maksPoeng: 1))
+    }
     return oppgaver
 }

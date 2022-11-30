@@ -32,6 +32,15 @@ struct instillinger: View {
                         }
                     }
                 }
+                Section("Karaktergrenser") {
+                    ForEach($prøve.karaktergrenser, id: \.self){ karaktergrense in
+                        HStack {
+                            TextField("Karaktergrense", text: karaktergrense.karakter)
+                            NumericTextField("Grense", number: karaktergrense.grense, isDecimalAllowed: false).frame(width: 25, alignment: .trailing)
+                            Text("%")
+                        }
+                    }
+                }
                 Section("Oppgaver") {
                     ForEach($prøve.oppgaver) { oppgave in
                         HStack {

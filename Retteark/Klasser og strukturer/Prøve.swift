@@ -21,6 +21,7 @@ class Prøve: Hashable, Identifiable, Codable, ObservableObject{
     @Published var kategorierOgOppgaver: [[BoolOgId]] = []
     @Published var visEleverKarakter: Bool = true
     @Published var tilbakemeldinger: [Tilbakemelding] = [Tilbakemelding(tekst: "Du viser høy kompetanse", nedreGrense: 66), Tilbakemelding(tekst: "Du viser middels kompetanse", nedreGrense: 33), Tilbakemelding(tekst: "Arbeid mer med", nedreGrense: 0)]
+    @Published var karaktergrenser: [Karaktergrense] = karaktergrenser_test
     
 
     
@@ -159,6 +160,124 @@ class Prøve: Hashable, Identifiable, Codable, ObservableObject{
         for oppgave in self.oppgaver {
             self.kategorierOgOppgaver[self.kategorierOgOppgaver.count-1].append(BoolOgId(verdi: false, kategoriId: self.kategorier.last!.id, oppgaveId: oppgave.id))
         }
+    }
+    
+    func sumAvPoeng(elevIndeks: Int) -> Float {
+
+        var sum: Float = 0
+        let formatter: NumberFormatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        for oppgave in oppgaver {
+            if let oppgaveIndeks = oppgaveIndexMedKjentElev(oppgaveId: oppgave.id, elevIndex: elevIndeks){
+                if let tall = formatter.number(from: poeng[elevIndeks][oppgaveIndeks].poeng) as? Float {
+                    sum += tall
+                }
+            }
+        }
+        return sum
+    }
+
+    
+    func finnKarakter(elevIndeks: Int) -> String {
+        let maxPoeng = oppgaver.map({$0.maksPoeng ?? 0}).reduce(0, +)
+        let sumPoeng = sumAvPoeng(elevIndeks: elevIndeks)
+        let fått_til = sumPoeng/maxPoeng
+        
+        if (fått_til > 1 || fått_til < 0) {
+            return "?"
+        }
+        for karaktergrense in karaktergrenser {
+            guard(karaktergrense.grense != nil) else {
+                continue
+            }
+            if(fått_til >= karaktergrense.grense!/100) {
+                return karaktergrense.karakter
+            }
+        }
+        
+        return "??"
+        
+        /*if(fått_til > 1 || fått_til < 0) {
+            return "?"
+        }
+        else if(fått_til >= 0.9967){
+            return "6"
+        }
+        else if(fått_til >= 0.9355){
+            return "6-"
+        }
+        else if(fått_til >= 0.9032){
+            return "6/5"
+        }
+        else if(fått_til >= 0.8710){
+            return "5/6"
+        }
+        else if(fått_til >= 0.8387){
+            return "5+"
+        }
+        else if(fått_til >= 0.8065){
+            return "5"
+        }
+        else if(fått_til >= 0.7742){
+            return "5-"
+        }
+        else if(fått_til >= 0.7419){
+            return "5/4"
+        }
+        else if(fått_til >= 0.7097){
+            return "4/5"
+        }
+        else if(fått_til >= 0.6774){
+            return "4+"
+        }
+        else if(fått_til >= 0.6452){
+            return "4"
+        }
+        else if(fått_til >= 0.6129){
+            return "4-"
+        }
+        else if(fått_til >= 0.5806){
+            return "4/3"
+        }
+        else if(fått_til >= 0.5484){
+            return "3/4"
+        }
+        else if(fått_til >= 0.5161){
+            return "3+"
+        }
+        else if(fått_til >= 0.4839){
+            return "3"
+        }
+        else if(fått_til >= 0.4516){
+            return "3-"
+        }
+        else if(fått_til >= 0.4194){
+            return "3/2"
+        }
+        else if(fått_til >= 0.3871){
+            return "2/3"
+        }
+        else if(fått_til >= 0.3548){
+            return "2+"
+        }
+        else if(fått_til >= 0.3226){
+            return "2"
+        }
+        else if(fått_til >= 0.2903){
+            return "2-"
+        }
+        else if(fått_til >= 0.2581){
+            return "2/1"
+        }
+        else if(fått_til >= 0.2258){
+            return "1/2"
+        }
+        else if(fått_til >= 0.1935){
+            return "1+"
+        }
+        else {
+            return "1"
+        }*/
     }
 }
 

@@ -14,8 +14,8 @@
             filePath = "Klasser og strukturer/Pr&#xf8;ve.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "162"
-            endingLineNumber = "162"
+            startingLineNumber = "163"
+            endingLineNumber = "163"
             landmarkName = "leggTilKategori()"
             landmarkType = "7">
          </BreakpointContent>
@@ -30,8 +30,8 @@
             filePath = "Klasser og strukturer/Pr&#xf8;ve.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "139"
-            endingLineNumber = "139"
+            startingLineNumber = "140"
+            endingLineNumber = "140"
             landmarkName = "oppgaveIndexMedKjentKategori(oppgaveId:kateogriIndex:)"
             landmarkType = "7">
          </BreakpointContent>

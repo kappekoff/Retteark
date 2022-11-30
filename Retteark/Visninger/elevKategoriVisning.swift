@@ -9,11 +9,11 @@ import SwiftUI
 
 struct elevTilbakemeldingVisning: View {
     var elev: Elev
-    
     @Binding var visElevTilbakemleding:VisElevTilbakemleding?
     @ObservedObject var prøve: Prøve
+    
     let columns = [
-        GridItem(.fixed(150)), GridItem(.fixed(150)), GridItem(.fixed(150))
+        GridItem(.fixed(220)), GridItem(.fixed(220))
         ]
     let farger: [Color] = [Color.teal, Color.red, Color.green, Color.indigo, Color.brown, Color.mint, Color.orange, Color.pink, Color.purple, Color.yellow, Color.gray, Color.cyan]
     
@@ -44,7 +44,7 @@ struct elevTilbakemeldingVisning: View {
                             if(maxPoengKategori(kategoriIndex: kategoriIndex) > 0) {
                                 VStack {
                                     Text(prøve.kategorier[kategoriIndex].navn)
-                                    kakediagram(desimaltall: Double(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex)), farge:farger[kategoriIndex % farger.count]).frame(width: 150, height: 150, alignment: .center)
+                                    kakediagram(desimaltall: Double(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex)), farge:farger[kategoriIndex % farger.count]).frame(width: 200, height: 200, alignment: .center)
                                     Text(String(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)) + "/" + String(maxPoengKategori(kategoriIndex: kategoriIndex)))
                                 }
                             }
@@ -53,10 +53,17 @@ struct elevTilbakemeldingVisning: View {
                 }
                 Text(lagElevtilbakemelding()).frame(alignment: .leading)
                 TextField("Framovermelding", text: $prøve.elever[prøve.elever.firstIndex{$0.id == elev.id}!].framovermelding, axis: .vertical)
+                
+                
                 if(prøve.visEleverKarakter){
                     HStack {
                         Text("Karakter ")
-                        Text(elev.karakter)
+                        if(elev.låstKarakter) {
+                            Text(prøve.finnKarakter(elevIndeks: prøve.elever.firstIndex{$0.id == elev.id}!))
+                        }
+                        else {
+                            Text(elev.karakter)
+                        }
                     }
                 }
                 
