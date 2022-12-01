@@ -14,25 +14,9 @@
             filePath = "Klasser og strukturer/Pr&#xf8;ve.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "163"
-            endingLineNumber = "163"
+            startingLineNumber = "166"
+            endingLineNumber = "166"
             landmarkName = "leggTilKategori()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "E6430FF5-F49F-4EFD-AD76-F55725B34533"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Klasser og strukturer/Pr&#xf8;ve.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "140"
-            endingLineNumber = "140"
-            landmarkName = "oppgaveIndexMedKjentKategori(oppgaveId:kateogriIndex:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

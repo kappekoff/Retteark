@@ -13,7 +13,7 @@ struct elevTilbakemeldingVisning: View {
     @ObservedObject var prøve: Prøve
     
     let columns = [
-        GridItem(.fixed(220)), GridItem(.fixed(220))
+        GridItem(.fixed(150)), GridItem(.fixed(150)), GridItem(.fixed(150))
         ]
     let farger: [Color] = [Color.teal, Color.red, Color.green, Color.indigo, Color.brown, Color.mint, Color.orange, Color.pink, Color.purple, Color.yellow, Color.gray, Color.cyan]
     
@@ -44,14 +44,14 @@ struct elevTilbakemeldingVisning: View {
                             if(maxPoengKategori(kategoriIndex: kategoriIndex) > 0) {
                                 VStack {
                                     Text(prøve.kategorier[kategoriIndex].navn)
-                                    kakediagram(desimaltall: Double(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex)), farge:farger[kategoriIndex % farger.count]).frame(width: 200, height: 200, alignment: .center)
+                                    kakediagram(desimaltall: Double(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex)), farge:farger[kategoriIndex % farger.count]).frame(width: 150, height: 150, alignment: .center)
                                     Text(String(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)) + "/" + String(maxPoengKategori(kategoriIndex: kategoriIndex)))
                                 }
                             }
                         }
                     }
                 }
-                Text(lagElevtilbakemelding()).frame(alignment: .leading)
+                Text(.init(lagElevtilbakemelding())).frame(alignment: .leading)
                 TextField("Framovermelding", text: $prøve.elever[prøve.elever.firstIndex{$0.id == elev.id}!].framovermelding, axis: .vertical)
                 
                 
@@ -106,9 +106,9 @@ struct elevTilbakemeldingVisning: View {
     }
     
     func lagElevtilbakemelding() -> String {
-        var høy: String = prøve.tilbakemeldinger[0].tekst + ": "
-        var middels: String = prøve.tilbakemeldinger[1].tekst + ": "
-        var lav: String = prøve.tilbakemeldinger[2].tekst + ": "
+        var høy: String = "**" + prøve.tilbakemeldinger[0].tekst + ":** "
+        var middels: String = "**" + prøve.tilbakemeldinger[1].tekst + ":** "
+        var lav: String = "**" + prøve.tilbakemeldinger[2].tekst + ":** "
         for kategori in prøve.kategorier {
             if let kategoriIndex = prøve.kategoriIndex(kategoriId: kategori.id){
                 if(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex) > (prøve.tilbakemeldinger[0].nedreGrense ?? 66) / 100) {
@@ -126,9 +126,9 @@ struct elevTilbakemeldingVisning: View {
         }
         
         middels = String(middels.dropLast(2))
-        middels += "\n"
+        middels += "\n \n"
         høy = String(høy.dropLast(2))
-        høy += "\n"
+        høy += "\n \n"
         lav = String(lav.dropLast(2))
         lav += "\n"
         return (høy + middels + lav)

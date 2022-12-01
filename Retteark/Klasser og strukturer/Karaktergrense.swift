@@ -8,7 +8,8 @@
 import Foundation
 
 
-class Karaktergrense: Hashable {
+class Karaktergrense: Hashable, Codable, Identifiable {
+    var id = UUID().uuidString
     var karakter: String
     var grense: Float?
     
@@ -24,6 +25,7 @@ class Karaktergrense: Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(karakter)
         hasher.combine(grense)
+        hasher.combine(id)
     }
     
 }

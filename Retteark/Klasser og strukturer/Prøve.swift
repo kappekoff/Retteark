@@ -40,6 +40,7 @@ class Prøve: Hashable, Identifiable, Codable, ObservableObject{
         case kategorierOgOppgaver
         case tilbakemeldinger
         case visEleverKarakter
+        case karaktergrenser
     }
     
     required init(from decoder: Decoder) throws {
@@ -53,6 +54,7 @@ class Prøve: Hashable, Identifiable, Codable, ObservableObject{
         kategorierOgOppgaver = try container.decode([[BoolOgId]].self, forKey: .kategorierOgOppgaver)
         tilbakemeldinger = try container.decode([Tilbakemelding].self, forKey: .tilbakemeldinger)
         visEleverKarakter = try container.decode(Bool.self, forKey: .visEleverKarakter)
+        karaktergrenser = try container.decode([Karaktergrense].self, forKey: .karaktergrenser)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -66,6 +68,7 @@ class Prøve: Hashable, Identifiable, Codable, ObservableObject{
         try container.encode(kategorierOgOppgaver, forKey: .kategorierOgOppgaver)
         try container.encode(tilbakemeldinger, forKey: .tilbakemeldinger)
         try container.encode(visEleverKarakter, forKey: .visEleverKarakter)
+        try container.encode(karaktergrenser, forKey: .karaktergrenser)
     }
     
     init(navn: String, elever: [Elev], oppgaver: [Oppgave], kategorier: [Kategori], visEleverKarakter: Bool) {
