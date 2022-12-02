@@ -36,8 +36,10 @@ extension View {
         
         
         let docuementDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
-        let outputfileURL = docuementDirectory.appendingPathComponent("\(filnavn).pdf")
-        
+        let outputfileURL: URL? = docuementDirectory.appendingPathComponent("\(filnavn).pdf")
+        #if os(macOS)
+            outputfileURL = showOpenPanel
+        #endif
         let pdfView = convertToScrollView {
             content()
         }
@@ -51,7 +53,7 @@ extension View {
         let renderer = UIGraphicsPDFRenderer(bounds: CGRect(x: 0, y: 0, width: size.width, height: size.height))
         
         do{
-            try renderer.writePDF(to: outputfileURL, withActions: { context in
+            try renderer.writePDF(to: outputfileURL!, withActions: { context in
                 context.beginPage()
                 pdfView.layer.render(in: context.cgContext)
             })
@@ -69,6 +71,20 @@ extension View {
             
         })
     }
+    
+    #if os(macOS)
+     
+        func showOpenPanel() -> URL? {
+            let openPanel = NSOpenPanel()
+            openPanel.allowedFileTypes = ["txt"]
+            openPanel.allowsMultipleSelection = false
+            openPanel.canChooseDirectories = false
+            openPanel.canChooseFiles = true
+            let response = openPanel.runModal()
+            return response == .OK ? openPanel.url : nil
+        }
+    
+    #endif
     
     func screenBounds()->CGRect {
         return UIScreen.main.bounds
