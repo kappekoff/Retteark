@@ -9,26 +9,27 @@ import Foundation
 
 class Klasseoversikt: ObservableObject, Equatable {
     
-    @Published var klasser: [Klasse]
-    let id: String = UUID().uuidString
-    var lagret_tidspunkt: Date?
+    struct Klasseinformasjon: Codable {
+        var klasser: [Klasse]
+        var id: String = UUID().uuidString
+        var lagret_tidspunkt: Date?
+    }
     
+    
+    @Published var klasseinformasjon: Klasseinformasjon
+
     init(){
-        
        /* self.klasser = [Klasse(navn: "1IMT", elever: elever_test_1, skoleÅr: "22/23"),
                         Klasse(navn: "2IMT", elever: elever_test_2, skoleÅr: "22/23"),
                         Klasse(navn: "3IMT", elever: elever_test_3, skoleÅr: "22/23")]*/
-        self.klasser = []
+        klasseinformasjon = Klasseinformasjon(klasser: [])
         if(FileManager().documentDoesExist(named: filnavn)){
             lastInnKlasser()
         }
-        lagret_tidspunkt = nil
-        
-        
     }
     
     static func == (venstreSide: Klasseoversikt, høyreSide: Klasseoversikt) -> Bool {
-        return venstreSide.id == høyreSide.id
+        return venstreSide.klasseinformasjon.id == høyreSide.klasseinformasjon.id
     }
     
     func lastInnKlasser() {
@@ -37,7 +38,7 @@ class Klasseoversikt: ObservableObject, Equatable {
             case .success(let data):
                 let decoder = JSONDecoder()
                 do {
-                    self.klasser = try decoder.decode([Klasse].self, from: data)
+                    self.klasseinformasjon = try decoder.decode(Klasseinformasjon.self, from: data)
                 } catch {
                     print(error.localizedDescription)
                 }
@@ -49,14 +50,16 @@ class Klasseoversikt: ObservableObject, Equatable {
     
     func lagreKlasser() {
         let enkoder = JSONEncoder()
+        print(klasseinformasjon.lagret_tidspunkt?.formatted() ?? "Dato ikke satt")
         do {
-            let data = try enkoder.encode(klasser)
+            let data = try enkoder.encode(klasseinformasjon)
             let jsonString = String(decoding: data, as: UTF8.self)
             FileManager().saveDocument(contents: jsonString, documentname: filnavn) { (error) in
                 if let error = error {
                     print(error.localizedDescription)
                 }
             }
+            klasseinformasjon.lagret_tidspunkt = Date()
         }
         catch {
             print(error.localizedDescription)
@@ -64,7 +67,7 @@ class Klasseoversikt: ObservableObject, Equatable {
     }
     
     func klasseFraId(id: String) -> Klasse? {
-        return self.klasser.first(where: {$0.id == id})
+        return self.klasseinformasjon.klasser.first(where: {$0.id == id})
     }
     
 }

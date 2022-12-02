@@ -19,7 +19,7 @@ struct klasseVisning: View {
     var body: some View {
         NavigationSplitView(columnVisibility: $visSideKolonner){
             List(selection: $valgtKlasseID) {
-                ForEach($klasseoversikt.klasser){ valgtKlasse in
+                ForEach($klasseoversikt.klasseinformasjon.klasser){ valgtKlasse in
                     HStack {
                         Text(valgtKlasse.navn.wrappedValue)
                         Spacer()
@@ -31,11 +31,18 @@ struct klasseVisning: View {
             }
             .navigationTitle("Klasser")
             .toolbar(content: {
-                Button {
-                    visLeggTilKlasser = true
-                } label: {
-                    Image(systemName: "plus.circle").foregroundColor(.green)
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        visLeggTilKlasser = true
+                    } label: {
+                        Image(systemName: "plus.circle").foregroundColor(.green)
+                    }
                 }
+                
+                ToolbarItem(placement: .bottomBar) {
+                    Text(.init("**Sist lagret:** " + (klasseoversikt.klasseinformasjon.lagret_tidspunkt?.formatted() ?? "")))
+                }
+                
             })
             .sheet(isPresented: $visLeggTilKlasser, onDismiss: { visLeggTilKlasser = false }) {
                     leggTilNyKlasseVisning(klasseoversikt: klasseoversikt,tekstFraVisma: "", klasseNavn: "", skoleÅr: "",  visLeggTilKlasser: $visLeggTilKlasser)
@@ -69,7 +76,7 @@ struct klasseVisning: View {
     }
     
     func slettKlasseFraListe(at offsets: IndexSet){
-        klasseoversikt.klasser.remove(atOffsets: offsets)
+        klasseoversikt.klasseinformasjon.klasser.remove(atOffsets: offsets)
     }
 }
 

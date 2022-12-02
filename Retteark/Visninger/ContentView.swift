@@ -19,19 +19,26 @@ struct ContentView: View {
         if let valgtPrøveID = valgtPrøveID, let valgtKlasse = klasseoversikt.klasseFraId(id: valgtKlasseID!), let $valgtPrøve = valgtKlasse.finnPrøveFraId(id: valgtPrøveID) {
             VStack {
                 HStack {
-                    Button("Kategorier") {
+                    Button(action: {
                         viserSheet = .valgtKategorier
-                    }
+                        
+                    }, label: {
+                        Image(systemName: "squareshape.split.3x3")
+                    })
                     .keyboardShortcut("k")
-                    Button("Instillinger") {
+                    Button(action: {
                         viserSheet = .velgtInstillinger
-                    }
+                        
+                    }, label: {
+                        Image(systemName: "gear")
+                    })
                     .keyboardShortcut("i")
-                    Button{
+                    Button(action: {
                         klasseoversikt.lagreKlasser()
-                    } label: {
-                        Text("Lagre")
-                    }
+                        
+                    }, label: {
+                        Image(systemName: "square.and.arrow.down")
+                    })
                     .keyboardShortcut("s")
                 }
                 .buttonStyle(.borderedProminent)
@@ -54,7 +61,7 @@ struct ContentView: View {
             }
         }
         else {
-            Text("Velg prøver")
+            Text("Velg prøve")
         }
         
     }

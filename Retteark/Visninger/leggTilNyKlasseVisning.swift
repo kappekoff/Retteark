@@ -45,7 +45,7 @@ struct leggTilNyKlasseVisning: View {
             }
         }
         Button("Legg til") {
-            klasseoversikt.klasser.append(Klasse(navn: klasseNavn, elever: elever, skoleÅr: skoleÅr))
+            klasseoversikt.klasseinformasjon.klasser.append(Klasse(navn: klasseNavn, elever: elever, skoleÅr: skoleÅr))
             klasseoversikt.lagreKlasser()
             visLeggTilKlasser = false
         }
