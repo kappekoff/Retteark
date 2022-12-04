@@ -19,7 +19,7 @@ struct karakterView: View {
                 .fontWeight(.bold)
                 .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
                 .border(.black)
-                .background(elevIndeks % 2 == 1 ? Color(UIColor.systemBackground):.orange)
+                .background(elevIndeks % 2 == 1 ? Color.background:.orange)
                 .multilineTextAlignment(.center)
         }
         else{

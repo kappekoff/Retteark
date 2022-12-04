@@ -10,6 +10,7 @@
 		941205ED289006A500D7FA3C /* elev.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941205EC289006A500D7FA3C /* elev.swift */; };
 		941205EF2890071900D7FA3C /* oppgave.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941205EE2890071900D7FA3C /* oppgave.swift */; };
 		941205F128900ED700D7FA3C /* poeng.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941205F028900ED700D7FA3C /* poeng.swift */; };
+		949429E5293D243C00543B19 /* bakgrunsfarger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949429E4293D243C00543B19 /* bakgrunsfarger.swift */; };
 		94B82C4A28CBCE010086368A /* Klasse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B82C4928CBCE010086368A /* Klasse.swift */; };
 		94B82C4C28CBCF350086368A /* klasseVisning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B82C4B28CBCF350086368A /* klasseVisning.swift */; };
 		94B82C4E28CBCFC20086368A /* Klasseoversikt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B82C4D28CBCFC20086368A /* Klasseoversikt.swift */; };
@@ -72,6 +73,7 @@
 		941205EE2890071900D7FA3C /* oppgave.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = oppgave.swift; sourceTree = "<group>"; };
 		941205F028900ED700D7FA3C /* poeng.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = poeng.swift; sourceTree = "<group>"; };
 		948D050C290DAFFD00359FD8 /* Retteark.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Retteark.entitlements; sourceTree = "<group>"; };
+		949429E4293D243C00543B19 /* bakgrunsfarger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bakgrunsfarger.swift; sourceTree = "<group>"; };
 		94B82C4928CBCE010086368A /* Klasse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Klasse.swift; sourceTree = "<group>"; };
 		94B82C4B28CBCF350086368A /* klasseVisning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = klasseVisning.swift; sourceTree = "<group>"; };
 		94B82C4D28CBCFC20086368A /* Klasseoversikt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Klasseoversikt.swift; sourceTree = "<group>"; };
@@ -251,6 +253,7 @@
 				DE0620D628D0981E008AF4EA /* filemanager_extension.swift */,
 				DE85159B28DC9AAB0048913A /* finnEleverFraVisma.swift */,
 				DE118C7D292F6CF200351BC4 /* collection_extension.swift */,
+				949429E4293D243C00543B19 /* bakgrunsfarger.swift */,
 			);
 			path = "Utvidelser og funksjoner";
 			sourceTree = "<group>";
@@ -414,6 +417,7 @@
 				94B82C4A28CBCE010086368A /* Klasse.swift in Sources */,
 				94CC3007289B046800A193F4 /* NumericTextField.swift in Sources */,
 				94B82C4E28CBCFC20086368A /* Klasseoversikt.swift in Sources */,
+				949429E5293D243C00543B19 /* bakgrunsfarger.swift in Sources */,
 				DE425E1028E19969009CAB3E /* textInputField.swift in Sources */,
 				94DF82DF2878BB540054D5B8 /* RettearkApp.swift in Sources */,
 				DE024DFB291E6E7B00F50E45 /* tastetrykk.swift in Sources */,

@@ -31,7 +31,7 @@ struct klasseVisning: View {
             }
             .navigationTitle("Klasser")
             .toolbar(content: {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .automatic) {
                     Button {
                         visLeggTilKlasser = true
                     } label: {
@@ -39,7 +39,7 @@ struct klasseVisning: View {
                     }
                 }
                 
-                ToolbarItem(placement: .bottomBar) {
+                ToolbarItem(placement: .automatic) {
                     Text(.init("**Sist lagret:** " + (klasseoversikt.klasseinformasjon.lagret_tidspunkt?.formatted() ?? "")))
                 }
                 

@@ -5,6 +5,7 @@
 //  Created by Stein Angel Braseth on 17/09/2022.
 //
 
+#if os(iOS)
 import SwiftUI
 import UIKit
 
@@ -36,10 +37,8 @@ extension View {
         
         
         let docuementDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
-        let outputfileURL: URL? = docuementDirectory.appendingPathComponent("\(filnavn).pdf")
-        #if os(macOS)
-            outputfileURL = showOpenPanel
-        #endif
+        var outputfileURL: URL? = docuementDirectory.appendingPathComponent("\(filnavn).pdf")
+
         let pdfView = convertToScrollView {
             content()
         }
@@ -72,20 +71,6 @@ extension View {
         })
     }
     
-    #if os(macOS)
-     
-        func showOpenPanel() -> URL? {
-            let openPanel = NSOpenPanel()
-            openPanel.allowedFileTypes = ["txt"]
-            openPanel.allowsMultipleSelection = false
-            openPanel.canChooseDirectories = false
-            openPanel.canChooseFiles = true
-            let response = openPanel.runModal()
-            return response == .OK ? openPanel.url : nil
-        }
-    
-    #endif
-    
     func screenBounds()->CGRect {
         return UIScreen.main.bounds
     }
@@ -104,3 +89,56 @@ extension View {
     
 }
 
+#elseif os(macOS)
+import SwiftUI
+import AppKit
+
+extension View {
+    
+    func exportPDF<Content: View>(filnavn: String, @ViewBuilder content: @escaping ()->Content,completion: @escaping (Bool, URL?)->()) {
+        let pi = NSPrintInfo.shared
+        pi.topMargin = 0.0
+        pi.bottomMargin = 0.0
+        pi.leftMargin = 0.0
+        pi.rightMargin = 0.0
+        pi.orientation = .landscape
+        pi.isHorizontallyCentered = false
+        pi.isVerticallyCentered = false
+        pi.scalingFactor = 1.0
+                        
+        let rootView = content()
+        let view = NSHostingView(rootView: rootView)
+        let contentRect = NSRect(x: 0, y: 0, width: 300, height: 300)
+        view.frame.size = contentRect.size
+
+        let newWindow = NSWindow(
+            contentRect: contentRect,
+            styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
+            backing: .buffered, defer: false)
+        newWindow.contentView = view
+
+        let myNSBitMapRep = newWindow.contentView!.bitmapImageRepForCachingDisplay(in: contentRect)!
+        newWindow.contentView!.cacheDisplay(in: contentRect, to: myNSBitMapRep)
+
+        let myNSImage = NSImage(size: myNSBitMapRep.size)
+        myNSImage.addRepresentation(myNSBitMapRep)
+
+        let nsImageView = NSImageView(frame: contentRect)
+        nsImageView.image = myNSImage
+
+        let po = NSPrintOperation(view: nsImageView, printInfo: pi)
+        po.printInfo.orientation = .landscape
+        po.showsPrintPanel = true
+        po.showsProgressPanel = true
+        
+        po.printPanel.options.insert(NSPrintPanel.Options.showsPaperSize)
+        po.printPanel.options.insert(NSPrintPanel.Options.showsOrientation)
+        
+        if po.run() {
+            print("In Print completion")
+        }
+        
+    }
+    
+}
+#endif

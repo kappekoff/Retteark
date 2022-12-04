@@ -34,7 +34,6 @@ struct elevTilbakemeldingVisning: View {
             } label: {
                 Image(systemName: "square.and.arrow.up.fill")
             }
-
         }
         ScrollView {
             VStack(alignment: .listRowSeparatorLeading){

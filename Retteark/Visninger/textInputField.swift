@@ -14,7 +14,7 @@ struct TextInputField: View {
     var body: some View {
         ZStack(alignment: .leading){
             Text(title)
-                .foregroundColor(text.isEmpty ? Color(.placeholderText) : .accentColor )
+                .foregroundColor(text.isEmpty ? Color.placeholderText : .accentColor )
                 .offset(y: text.isEmpty ? 0: -35)
                 .scaleEffect(text.isEmpty ? 1 : 0.7, anchor: .leading)
             TextField("", text: $text, axis: .vertical)

@@ -49,9 +49,27 @@ struct poengTabellView: View {
             ForEach(prøve.elever){elev in
                 if let elevIndeks = prøve.poengRad(elevId: elev.id){
                     GridRow(){
-                        Button(elev.navn) {
+                        Button(action: {
                             visElevTilbakemleding = .valgtElev(elev: elev)
+                        }, label: {
+                            Text(elev.navn)
+                        })
+                        
+                        ForEach(prøve.oppgaver){ oppgave in
+                            if let oppgaveIndeks = prøve.oppgave(elevIndeks: elevIndeks, oppgaveId: oppgave.id) {
+                                PoengView(poeng: $prøve.poeng[elevIndeks][oppgaveIndeks].poeng)
+                                    .background(elevIndeks % 2 == 1 ? Color.background:.orange)
+                                    .focused($fokus, equals: .poengFokus(id: $prøve.poeng[elevIndeks][oppgaveIndeks].id))
+                            }
+                            
                         }
+                        sumCelle(prøve: prøve, elevIndeks: elevIndeks)
+                        karakterView(prøve: prøve, elevIndeks: elevIndeks)
+                        Button(action: {
+                            elev.låstKarakter.toggle()
+                        }, label: {
+                            Image(systemName: elev.låstKarakter ? "lock.open.fill" : "lock.fill")
+                        })
                         .sheet(item: $visElevTilbakemleding, onDismiss: { visElevTilbakemleding = nil }) { visElevTilbakemleding in
                             switch visElevTilbakemleding{
                             case .valgtElev(let elev):
@@ -61,24 +79,8 @@ struct poengTabellView: View {
                             }
                         }
                         
-                        ForEach(prøve.oppgaver){ oppgave in
-                            if let oppgaveIndeks = prøve.oppgave(elevIndeks: elevIndeks, oppgaveId: oppgave.id) {
-                                PoengView(poeng: $prøve.poeng[elevIndeks][oppgaveIndeks].poeng)
-                                    .background(elevIndeks % 2 == 1 ? Color(UIColor.systemBackground):.orange)
-                                    .focused($fokus, equals: .poengFokus(id: $prøve.poeng[elevIndeks][oppgaveIndeks].id))
-                            }
-                            
-                        }
-                        sumCelle(prøve: prøve, elevIndeks: elevIndeks)
-                        karakterView(prøve: prøve, elevIndeks: elevIndeks)
-                       Button(action: {
-                            prøve.elever[elevIndeks].låstKarakter.toggle()
-                        }, label: {
-                            Image(systemName: prøve.elever[elevIndeks].låstKarakter ? "lock.open.fill" : "lock.fill")
-                        })
-                        
                     }
-                    .font(.title3).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background(elevIndeks % 2 == 1 ? Color(UIColor.systemBackground):.orange)
+                    .font(.title3).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background(elevIndeks % 2 == 1 ? Color.background:.orange)
                 }
             }
         }.onAppear {
