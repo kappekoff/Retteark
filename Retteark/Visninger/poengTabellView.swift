@@ -50,26 +50,31 @@ struct poengTabellView: View {
                 if let elevIndeks = prøve.poengRad(elevId: elev.id){
                     GridRow(){
                         Button(action: {
-                            visElevTilbakemleding = .valgtElev(elev: elev)
+                            visElevTilbakemleding = .valgtElev(elev:  prøve.elever.first(where: { elevv in
+                              return elevv.id == prøve.poeng[elevIndeks][optional: 0]?.elevId
+                            })!)
                         }, label: {
-                            Text(elev.navn)
+                            Text( prøve.elever.first(where: { elevv in
+                              return elevv.id == prøve.poeng[elevIndeks][optional: 0]?.elevId
+                            })!.navn)
                         })
                         
                         ForEach(prøve.oppgaver){ oppgave in
                             if let oppgaveIndeks = prøve.oppgave(elevIndeks: elevIndeks, oppgaveId: oppgave.id) {
                                 PoengView(poeng: $prøve.poeng[elevIndeks][oppgaveIndeks].poeng)
-                                    .background(elevIndeks % 2 == 1 ? Color.background:.orange)
                                     .focused($fokus, equals: .poengFokus(id: $prøve.poeng[elevIndeks][oppgaveIndeks].id))
                             }
                             
                         }
                         sumCelle(prøve: prøve, elevIndeks: elevIndeks)
                         karakterView(prøve: prøve, elevIndeks: elevIndeks)
-                        Button(action: {
-                            elev.låstKarakter.toggle()
+                        /*Button(action: {
+                          prøve.elever.first(where: { elevv in
+                            return elevv.id == prøve.poeng[elevIndeks][optional: 0]?.elevId
+                          })!.låstKarakter.toggle()
                         }, label: {
                             Image(systemName: elev.låstKarakter ? "lock.open.fill" : "lock.fill")
-                        })
+                        })*/
                         .sheet(item: $visElevTilbakemleding, onDismiss: { visElevTilbakemleding = nil }) { visElevTilbakemleding in
                             switch visElevTilbakemleding{
                             case .valgtElev(let elev):
