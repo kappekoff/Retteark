@@ -68,13 +68,17 @@ struct poengTabellView: View {
                         }
                         sumCelle(prøve: prøve, elevIndeks: elevIndeks)
                         karakterView(prøve: prøve, elevIndeks: elevIndeks)
-                        /*Button(action: {
-                            elev.låstKarakter.toggle()
+                        Button(action: {
+                            for i in 0..<prøve.elever.count {
+                                if prøve.elever[i].id == prøve.poeng[elevIndeks][optional: 0]?.elevId {
+                                    prøve.elever[i].låstKarakter = !prøve.elever[i].låstKarakter
+                                }
+                            }
                         }, label: {
                             Image(systemName: prøve.elever.first(where: { elevv in
                                 return elevv.id == prøve.poeng[elevIndeks][optional: 0]?.elevId
                               })!.låstKarakter ? "lock.open.fill" : "lock.fill")
-                        })*/
+                        })
                         .sheet(item: $visElevTilbakemleding, onDismiss: { visElevTilbakemleding = nil }) { visElevTilbakemleding in
                             switch visElevTilbakemleding{
                             case .valgtElev(let elev):
