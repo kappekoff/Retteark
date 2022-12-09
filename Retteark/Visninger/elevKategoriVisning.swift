@@ -56,7 +56,7 @@ struct elevTilbakemeldingVisning: View {
                 
                 if(prøve.visEleverKarakter){
                     HStack {
-                        Text("Karakter ")
+                        Text("Karakter").fontWeight(.bold)
                         if(elev.låstKarakter) {
                             Text(prøve.finnKarakter(elevIndeks: prøve.elever.firstIndex{$0.id == elev.id}!))
                         }
@@ -90,6 +90,8 @@ struct elevTilbakemeldingVisning: View {
     func elevPoengKategori(elevIndex: Int, kategoriIndex: Int) -> Float {
         let formatter: NumberFormatter = NumberFormatter()
         formatter.numberStyle = .decimal
+        formatter.decimalSeparator = "."
+        formatter.groupingSeparator = ""
         var sum: Float = 0
         for oppgave in prøve.oppgaver {
             if let oppgaveIndex = prøve.oppgaveIndexMedKjentElev(oppgaveId: oppgave.id, elevIndex: elevIndex) {
@@ -108,18 +110,24 @@ struct elevTilbakemeldingVisning: View {
         var høy: String = "**" + prøve.tilbakemeldinger[0].tekst + ":** "
         var middels: String = "**" + prøve.tilbakemeldinger[1].tekst + ":** "
         var lav: String = "**" + prøve.tilbakemeldinger[2].tekst + ":** "
+        var taMedHøy: Bool = false
+        var taMedMiddels: Bool = false
+        var taMedLav: Bool = false
         for kategori in prøve.kategorier {
             if let kategoriIndex = prøve.kategoriIndex(kategoriId: kategori.id){
                 if(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex) > (prøve.tilbakemeldinger[0].nedreGrense ?? 66) / 100) {
                     høy += prøve.kategorier[kategoriIndex].navn + ", "
+                    taMedHøy = true
                 }
                 
                 else if(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex) > (prøve.tilbakemeldinger[1].nedreGrense ?? 33) / 100) {
                     middels += prøve.kategorier[kategoriIndex].navn + ", "
+                    taMedMiddels = true
                 }
                 
                 else if(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex) >= (prøve.tilbakemeldinger[2].nedreGrense ?? 0)/100) {
                     lav += prøve.kategorier[kategoriIndex].navn + ", "
+                    taMedLav = true
                 }
             }
         }
@@ -130,6 +138,17 @@ struct elevTilbakemeldingVisning: View {
         høy += "\n \n"
         lav = String(lav.dropLast(2))
         lav += "\n"
-        return (høy + middels + lav)
+        
+        var tilbakemelding: String = ""
+        if(taMedHøy) {
+            tilbakemelding += høy
+        }
+        if(taMedMiddels) {
+            tilbakemelding += middels
+        }
+        if(taMedLav) {
+            tilbakemelding += lav
+        }
+        return tilbakemelding
     }
 }

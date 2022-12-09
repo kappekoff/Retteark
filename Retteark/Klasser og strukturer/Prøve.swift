@@ -94,13 +94,32 @@ class Prøve: Hashable, Identifiable, Codable, ObservableObject{
         }
     }
     
-    /*func endrePoengAlleElever(oppgaveIndeks: Int, endringsfaktor: Float){
-        for i in 0..<self.elever.count {
-            self.poeng[i][oppgaveIndeks].poeng = (self.poeng[i][oppgaveIndeks].poeng ?? 0) * endringsfaktor
-            print(self.poeng[i][oppgaveIndeks].poeng ?? -1)
+    func endrePoengAlleElever(oppgaveId: String){
+        let formatter: NumberFormatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.decimalSeparator = "."
+        formatter.groupingSeparator = ""
+        let endringsfaktor = (self.oppgaver.first(where: { $0.id == oppgaveId})?.maksPoeng ?? 0) / (self.oppgaver.first(where: { $0.id == oppgaveId})?.maksPoengGammelVerdi ?? 1)
+        for elev in self.elever {
+            if let elevIndeks = self.poengRad(elevId: elev.id) {
+                if let oppgaveIndeks = oppgaveIndexMedKjentElev(oppgaveId: oppgaveId, elevIndex: elevIndeks){
+                    if let gammelVerdi = (formatter.number(from: self.poeng[elevIndeks][oppgaveIndeks].poeng) as? Float) {
+                        let  nyVerdi = gammelVerdi * endringsfaktor
+                        self.poeng[elevIndeks][oppgaveIndeks].poeng = String(nyVerdi)
+                    }
+                }
+            }
+            
         }
         
-    }*/
+        for i in 0..<self.oppgaver.count {
+            if(self.oppgaver[i].id == oppgaveId){
+                self.oppgaver[i].maksPoengGammelVerdi = self.oppgaver[i].maksPoeng ?? 1
+            }
+        }
+        self.objectWillChange.send()
+        
+    }
     
     func printPoeng() {
         for rad in poeng {
@@ -170,6 +189,8 @@ class Prøve: Hashable, Identifiable, Codable, ObservableObject{
         var sum: Float = 0
         let formatter: NumberFormatter = NumberFormatter()
         formatter.numberStyle = .decimal
+        formatter.decimalSeparator = "."
+        formatter.groupingSeparator = ""
         for oppgave in oppgaver {
             if let oppgaveIndeks = oppgaveIndexMedKjentElev(oppgaveId: oppgave.id, elevIndex: elevIndeks){
                 if let tall = formatter.number(from: poeng[elevIndeks][oppgaveIndeks].poeng) as? Float {
@@ -200,87 +221,6 @@ class Prøve: Hashable, Identifiable, Codable, ObservableObject{
         
         return "??"
         
-        /*if(fått_til > 1 || fått_til < 0) {
-            return "?"
-        }
-        else if(fått_til >= 0.9967){
-            return "6"
-        }
-        else if(fått_til >= 0.9355){
-            return "6-"
-        }
-        else if(fått_til >= 0.9032){
-            return "6/5"
-        }
-        else if(fått_til >= 0.8710){
-            return "5/6"
-        }
-        else if(fått_til >= 0.8387){
-            return "5+"
-        }
-        else if(fått_til >= 0.8065){
-            return "5"
-        }
-        else if(fått_til >= 0.7742){
-            return "5-"
-        }
-        else if(fått_til >= 0.7419){
-            return "5/4"
-        }
-        else if(fått_til >= 0.7097){
-            return "4/5"
-        }
-        else if(fått_til >= 0.6774){
-            return "4+"
-        }
-        else if(fått_til >= 0.6452){
-            return "4"
-        }
-        else if(fått_til >= 0.6129){
-            return "4-"
-        }
-        else if(fått_til >= 0.5806){
-            return "4/3"
-        }
-        else if(fått_til >= 0.5484){
-            return "3/4"
-        }
-        else if(fått_til >= 0.5161){
-            return "3+"
-        }
-        else if(fått_til >= 0.4839){
-            return "3"
-        }
-        else if(fått_til >= 0.4516){
-            return "3-"
-        }
-        else if(fått_til >= 0.4194){
-            return "3/2"
-        }
-        else if(fått_til >= 0.3871){
-            return "2/3"
-        }
-        else if(fått_til >= 0.3548){
-            return "2+"
-        }
-        else if(fått_til >= 0.3226){
-            return "2"
-        }
-        else if(fått_til >= 0.2903){
-            return "2-"
-        }
-        else if(fått_til >= 0.2581){
-            return "2/1"
-        }
-        else if(fått_til >= 0.2258){
-            return "1/2"
-        }
-        else if(fått_til >= 0.1935){
-            return "1+"
-        }
-        else {
-            return "1"
-        }*/
     }
 }
 
