@@ -40,6 +40,31 @@ struct ContentView: View {
                         Image(systemName: "square.and.arrow.down")
                     })
                     .keyboardShortcut("s")
+                    Button(action: {
+                        for elev in $valgtPrøve.elever {
+                            exportPDF(filnavn: $valgtPrøve.navn + " " + elev.navn){
+                                elevTilbakemeldingVisning(elev: elev, visElevTilbakemleding: $viserSheet , prøve: $valgtPrøve)
+                            } completion: { status, url in
+                                if let url = url,status{
+                                    print(url)
+                                }
+                                else {
+                                    print("Klarte ikke produsere pdf")
+                                }
+                            }
+                        }
+                        
+                    }, label: {
+                        Image(systemName: "square.and.arrow.up")
+                    })
+                    .keyboardShortcut("p")
+                    Button(action: {
+                        viserSheet = .velgtKlassesammendrag
+                        
+                    }, label: {
+                        Image(systemName: "chart.bar.xaxis")
+                    })
+                    .keyboardShortcut("p")
                 }
                 .buttonStyle(.borderedProminent)
                 
@@ -49,6 +74,8 @@ struct ContentView: View {
                         kategoriView(viserSheet: $viserSheet, prøve: $valgtPrøve)
                     case .velgtInstillinger:
                         instillinger(prøve: $valgtPrøve, visElevTilbakemleding: $viserSheet)
+                    case .velgtKlassesammendrag:
+                        Stolpediagram(visElevTilbakemleding: $viserSheet, prøve: $valgtPrøve)
                     default:
                         Text("Du skal aldri komme hit")
                     }

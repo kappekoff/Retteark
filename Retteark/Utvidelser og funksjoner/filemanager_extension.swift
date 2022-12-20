@@ -38,7 +38,8 @@ extension FileManager {
     }
     
     func documentDoesExist(named docname: String) -> Bool {
-        fileExists(atPath: Self.docDirURL.appendingPathComponent(docname).path)
+        print(Self.docDirURL.appendingPathComponent(docname).path)
+        return fileExists(atPath: Self.docDirURL.appendingPathComponent(docname).path)
     }
     
 }

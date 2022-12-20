@@ -48,6 +48,7 @@
 		DEB6BBD028B378EC008BBD31 /* BoolOgId.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEB6BBCF28B378EC008BBD31 /* BoolOgId.swift */; };
 		DEB6BBD228B37B66008BBD31 /* poengTabellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEB6BBD128B37B66008BBD31 /* poengTabellView.swift */; };
 		DEB6BBD428B39336008BBD31 /* kategoriView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEB6BBD328B39336008BBD31 /* kategoriView.swift */; };
+		DEE939872951D2DE002F292F /* klassesammendrag.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE939862951D2DE002F292F /* klassesammendrag.swift */; };
 		DEECF8B929364525007B59FF /* Karaktergrense.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEECF8B829364525007B59FF /* Karaktergrense.swift */; };
 /* End PBXBuildFile section */
 
@@ -114,6 +115,7 @@
 		DEB6BBCF28B378EC008BBD31 /* BoolOgId.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoolOgId.swift; sourceTree = "<group>"; };
 		DEB6BBD128B37B66008BBD31 /* poengTabellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = poengTabellView.swift; sourceTree = "<group>"; };
 		DEB6BBD328B39336008BBD31 /* kategoriView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = kategoriView.swift; sourceTree = "<group>"; };
+		DEE939862951D2DE002F292F /* klassesammendrag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = klassesammendrag.swift; sourceTree = "<group>"; };
 		DEECF8B829364525007B59FF /* Karaktergrense.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Karaktergrense.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -239,6 +241,7 @@
 				DE9AB23C2916767B00B67FD7 /* tallEllerStrekVisning.swift */,
 				94CC300428953FD600A193F4 /* PoengView.swift */,
 				DE37053328AA2A0100EAC29F /* karakterView.swift */,
+				DEE939862951D2DE002F292F /* klassesammendrag.swift */,
 			);
 			path = Visninger;
 			sourceTree = "<group>";
@@ -411,6 +414,7 @@
 				941205EF2890071900D7FA3C /* oppgave.swift in Sources */,
 				941205ED289006A500D7FA3C /* elev.swift in Sources */,
 				DE24DD0628FEC72B008F8A77 /* instillinger.swift in Sources */,
+				DEE939872951D2DE002F292F /* klassesammendrag.swift in Sources */,
 				94DF83092878BF4C0054D5B8 /* Prøve.swift in Sources */,
 				DE0620D928D1F482008AF4EA /* Tilbakemelding.swift in Sources */,
 				94B82C4C28CBCF350086368A /* klasseVisning.swift in Sources */,

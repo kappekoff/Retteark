@@ -12,9 +12,11 @@ struct elevTilbakemeldingVisning: View {
     @Binding var visElevTilbakemleding:VisElevTilbakemleding?
     @ObservedObject var prøve: Prøve
     
-    let columns = [
+    let kategoriKolonner = [
         GridItem(.fixed(150)), GridItem(.fixed(150)), GridItem(.fixed(150))
         ]
+    let poengKolonner = [GridItem(.flexible(minimum: 40), spacing: 0),GridItem(.flexible(minimum: 40), spacing: 0), GridItem(.flexible(minimum: 40), spacing: 0),GridItem(.flexible(minimum: 40), spacing: 0), GridItem(.flexible(minimum: 40), spacing: 0), GridItem(.flexible(minimum: 40), spacing: 0),GridItem(.flexible(minimum: 40), spacing: 0), GridItem(.flexible(minimum: 40), spacing: 0)]
+    
     let farger: [Color] = [Color.teal, Color.red, Color.green, Color.indigo, Color.brown, Color.mint, Color.orange, Color.pink, Color.purple, Color.yellow, Color.gray, Color.cyan]
     
     var body: some View {
@@ -36,8 +38,23 @@ struct elevTilbakemeldingVisning: View {
             }
         }
         ScrollView {
+            
             VStack(alignment: .listRowSeparatorLeading){
-                LazyVGrid(columns: columns, spacing: 30) {
+                LazyVGrid(columns: poengKolonner, alignment: .leading, spacing: 15) {
+                    ForEach(prøve.oppgaver) { oppgave in
+                        if let elevIndeks = prøve.poengRad(elevId: elev.id){
+                            if let oppgaveIndeks = prøve.oppgaveIndexMedKjentElev(oppgaveId: oppgave.id, elevIndex: elevIndeks) {
+                                VStack(spacing: 0) {
+                                    Text(oppgave.navn).frame(width: 30, height: 20, alignment: .center).background(.green).border(.primary).fontWeight(.bold)
+                                    Text(String(oppgave.maksPoeng ?? -1)).frame(width: 30, height: 20, alignment: .center).border(.primary).background(.orange)
+                                    Text(prøve.poeng[elevIndeks][oppgaveIndeks].poeng).frame(width: 30, height: 20, alignment: .center).border(.primary)
+                                }
+                            }
+                            
+                        }
+                    }
+                }
+                LazyVGrid(columns: kategoriKolonner, spacing: 30) {
                     ForEach(prøve.kategorier) { kategori in
                         if let kategoriIndex = prøve.kategoriIndex(kategoriId: kategori.id) {
                             if(maxPoengKategori(kategoriIndex: kategoriIndex) > 0) {

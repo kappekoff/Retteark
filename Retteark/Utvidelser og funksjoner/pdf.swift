@@ -37,7 +37,7 @@ extension View {
         
         
         let docuementDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
-        var outputfileURL: URL? = docuementDirectory.appendingPathComponent("\(filnavn).pdf")
+        let outputfileURL: URL? = docuementDirectory.appendingPathComponent("\(filnavn).pdf")
 
         let pdfView = convertToScrollView {
             content()
