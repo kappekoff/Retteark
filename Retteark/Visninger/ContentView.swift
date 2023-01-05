@@ -75,7 +75,7 @@ struct ContentView: View {
                     case .velgtInstillinger:
                         instillinger(prøve: $valgtPrøve, visElevTilbakemleding: $viserSheet)
                     case .velgtKlassesammendrag:
-                        Stolpediagram(visElevTilbakemleding: $viserSheet, prøve: $valgtPrøve)
+                        Klassesammendrag(visElevTilbakemleding: $viserSheet, prøve: $valgtPrøve)
                     default:
                         Text("Du skal aldri komme hit")
                     }
