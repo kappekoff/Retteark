@@ -39,7 +39,7 @@ struct klasseVisning: View {
                     }
                 }
                 
-                ToolbarItem(placement: .automatic) {
+                ToolbarItem(placement: .bottomBar) {
                     Text(.init("**Sist lagret:** " + (klasseoversikt.klasseinformasjon.lagret_tidspunkt?.formatted() ?? "")))
                 }
                 

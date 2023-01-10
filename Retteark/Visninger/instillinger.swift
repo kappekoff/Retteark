@@ -12,6 +12,7 @@ struct instillinger: View {
     @Binding var visElevTilbakemleding: VisElevTilbakemleding?
     
     var body: some View {
+            Text("Instillinger").font(.largeTitle)
             List(){
                 Section("Kategorier"){
                     ForEach($prøve.kategorier){ kategori in

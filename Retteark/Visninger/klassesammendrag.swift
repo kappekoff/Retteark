@@ -14,7 +14,7 @@ struct Klassesammendrag: View {
     
     var body: some View {
         VStack {
-            Text("Klassesammendrag").font(.title)
+            Text("Klassesammendrag").font(.largeTitle)
             Stolpediagram(prøve: prøve)
             Button {
                 visElevTilbakemleding = nil
@@ -64,8 +64,53 @@ struct Stolpediagram: View {
                             .font(.title2)
                         }
                 }
-            }
+                AxisGridLine(
+                    centered: true,
+                    stroke: StrokeStyle(dash: [2]))
+                        .foregroundStyle(Color.gray)
+                }
         })
+    }
+    
+    func gjennomsnittsElev() -> [Float]{
+        var antallElever: Float = 0
+        let formatter: NumberFormatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.decimalSeparator = "."
+        formatter.groupingSeparator = ""
+        var oppgaver:[Float] = []
+        for elev in prøve.elever {
+            if let elevIndeks = prøve.poengRad(elevId: elev.id) {
+                if(elevHarLevert(elevIndeks: elevIndeks)) {
+                    antallElever += 1
+                    for i in 0..<prøve.oppgaver.count {
+                        if let oppgaveIndeks = prøve.oppgaveIndexMedKjentElev(oppgaveId: prøve.oppgaver[i].id, elevIndex: elevIndeks) {
+                            let tall = formatter.number(from: prøve.poeng[elevIndeks][oppgaveIndeks].poeng) as? Float
+                            if(tall != nil) {
+                               oppgaver[i]  += tall!
+                            }
+                        }
+                    }
+                    
+                }
+            }
+        }
+        oppgaver = oppgaver.map { $0/antallElever}
+        return oppgaver
+    }
+    
+    func elevHarLevert(elevIndeks: Int) -> Bool {
+        for oppgave in prøve.oppgaver {
+            if let oppgaveIndeks = prøve.oppgaveIndexMedKjentElev(oppgaveId: oppgave.id, elevIndex: elevIndeks) {
+                for tegn in prøve.poeng[elevIndeks][oppgaveIndeks].poeng {
+                    if tegn.isNumber {
+                        return true
+                    }
+                    
+                }
+            }
+        }
+        return false
     }
                 
                 
