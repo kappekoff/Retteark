@@ -8,15 +8,21 @@
 import SwiftUI
 
 struct PoengView: View {
-    @Binding var poeng: String
+    @ObservedObject var prøve: Prøve
+    @Binding var poeng: Poeng
+    
+   
     
     var body: some View {
         //NumericTextField(String(poeng ?? 0), number: $poeng, isDecimalAllowed: true)
-        tallEllerStrekVisning(tekst: $poeng, tittel: poeng)
+        tallEllerStrekVisning(tekst: $poeng.poeng, tittel: poeng.poeng)
             .font(.title3)
             .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
             .border(.black)
             .multilineTextAlignment(.center)
+            .onSubmit {
+                poeng.poeng = String((prøve.oppgaver[optional: prøve.oppgaver.firstIndex(where: {$0.id == poeng.oppgaveId})!]?.maksPoeng!)!)
+            }
             
     }
 }

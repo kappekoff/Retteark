@@ -56,7 +56,7 @@ struct poengTabellView: View {
                         
                         ForEach(prøve.oppgaver){ oppgave in
                             if let oppgaveIndeks = prøve.oppgave(elevIndeks: elevIndeks, oppgaveId: oppgave.id) {
-                                PoengView(poeng: $prøve.poeng[elevIndeks][oppgaveIndeks].poeng)
+                                PoengView(prøve: prøve, poeng: $prøve.poeng[elevIndeks][oppgaveIndeks])
                                     .focused($fokus, equals: .poengFokus(id: $prøve.poeng[elevIndeks][oppgaveIndeks].id))
                             }
                             
@@ -74,7 +74,7 @@ struct poengTabellView: View {
                                 return elevv.id == prøve.poeng[elevIndeks][optional: 0]?.elevId
                               })!.låstKarakter ? "lock.open.fill" : "lock.fill")
                         })
-                        .sheet(item: $visElevTilbakemleding, onDismiss: { visElevTilbakemleding = nil }) { visElevTilbakemleding in
+                        .fullScreenCover(item: $visElevTilbakemleding, onDismiss: { visElevTilbakemleding = nil }) { visElevTilbakemleding in
                             switch visElevTilbakemleding{
                             case .valgtElev(let elev):
                                 elevTilbakemeldingVisning(elev: elev, visElevTilbakemleding: $visElevTilbakemleding, prøve: prøve)

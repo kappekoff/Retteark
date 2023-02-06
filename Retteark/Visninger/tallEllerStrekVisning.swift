@@ -53,7 +53,6 @@ struct tallEllerStrekVisning: View {
             ChoiceOf {
                 "-"
                 "–"
-                "—"
             }
         }
         let tallEllerStrek = Regex {

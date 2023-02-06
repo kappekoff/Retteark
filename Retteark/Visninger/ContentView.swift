@@ -68,7 +68,7 @@ struct ContentView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 
-                .sheet(item: $viserSheet, onDismiss: {viserSheet = nil}){ viserSheet in
+                .fullScreenCover(item: $viserSheet, onDismiss: {viserSheet = nil}){ viserSheet in
                     switch viserSheet{
                     case .valgtKategorier:
                         kategoriView(viserSheet: $viserSheet, prøve: $valgtPrøve)
@@ -76,14 +76,18 @@ struct ContentView: View {
                         instillinger(prøve: $valgtPrøve, visElevTilbakemleding: $viserSheet)
                     case .velgtKlassesammendrag:
                         Klassesammendrag(visElevTilbakemleding: $viserSheet, prøve: $valgtPrøve)
+                            .presentationDetents([.large])
                     default:
                         Text("Du skal aldri komme hit")
                     }
                 }
-                poengTabellView(prøve: $valgtPrøve)
-                    .onChange(of: $valgtPrøve) { _ in
-                        klasseoversikt.lagreKlasser()
-                    }
+                ScrollView(.horizontal) {
+                    poengTabellView(prøve: $valgtPrøve)
+                        
+                        .onChange(of: $valgtPrøve) { _ in
+                            klasseoversikt.lagreKlasser()
+                        }
+                }
                 
             }
         }

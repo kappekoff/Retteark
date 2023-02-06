@@ -15,7 +15,7 @@ struct elevTilbakemeldingVisning: View {
     let kategoriKolonner = [
         GridItem(.fixed(150)), GridItem(.fixed(150)), GridItem(.fixed(150))
         ]
-    let poengKolonner = [GridItem(.flexible(minimum: 40), spacing: 0),GridItem(.flexible(minimum: 40), spacing: 0), GridItem(.flexible(minimum: 40), spacing: 0),GridItem(.flexible(minimum: 40), spacing: 0), GridItem(.flexible(minimum: 40), spacing: 0), GridItem(.flexible(minimum: 40), spacing: 0),GridItem(.flexible(minimum: 40), spacing: 0), GridItem(.flexible(minimum: 40), spacing: 0)]
+    let poengKolonner = [GridItem(.flexible(minimum: 50), spacing: 0),GridItem(.flexible(minimum: 50), spacing: 0), GridItem(.flexible(minimum: 50), spacing: 0),GridItem(.flexible(minimum: 50), spacing: 0), GridItem(.flexible(minimum: 50), spacing: 0), GridItem(.flexible(minimum: 50), spacing: 0),GridItem(.flexible(minimum: 50), spacing: 0), GridItem(.flexible(minimum: 50), spacing: 0)]
     
     let farger: [Color] = [Color.teal, Color.red, Color.green, Color.indigo, Color.brown, Color.mint, Color.orange, Color.pink, Color.purple, Color.yellow, Color.gray, Color.cyan]
     
@@ -45,9 +45,9 @@ struct elevTilbakemeldingVisning: View {
                         if let elevIndeks = prøve.poengRad(elevId: elev.id){
                             if let oppgaveIndeks = prøve.oppgaveIndexMedKjentElev(oppgaveId: oppgave.id, elevIndex: elevIndeks) {
                                 VStack(spacing: 0) {
-                                    Text(oppgave.navn).frame(width: 30, height: 20, alignment: .center).background(.green).border(.primary).fontWeight(.bold)
-                                    Text(String(oppgave.maksPoeng ?? -1)).frame(width: 30, height: 20, alignment: .center).border(.primary).background(.orange)
-                                    Text(prøve.poeng[elevIndeks][oppgaveIndeks].poeng).frame(width: 30, height: 20, alignment: .center).border(.primary)
+                                    Text(oppgave.navn).frame(width: 50, height: 20, alignment: .center).background(.green).border(.primary).fontWeight(.bold)
+                                    Text(String(oppgave.maksPoeng ?? -1)).frame(width: 50, height: 20, alignment: .center).border(.primary).background(.orange)
+                                    Text(prøve.poeng[elevIndeks][oppgaveIndeks].poeng).frame(width: 50, height: 20, alignment: .center).border(.primary)
                                 }
                             }
                             
