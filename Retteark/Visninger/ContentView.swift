@@ -13,7 +13,6 @@ struct ContentView: View {
     var valgtKlasseID: Klasse.ID?
     var valgtPrøveID: Prøve.ID?
     @State var viserSheet: VisElevTilbakemleding? = nil
-    @State var tabellBredde: CGFloat = 0.0
     
     var body: some View {
         if let valgtPrøveID = valgtPrøveID, let valgtKlasse = klasseoversikt.klasseFraId(id: valgtKlasseID!), let $valgtPrøve = valgtKlasse.finnPrøveFraId(id: valgtPrøveID) {
@@ -83,8 +82,7 @@ struct ContentView: View {
                 }
                 ScrollView(.horizontal) {
                     poengTabellView(prøve: $valgtPrøve)
-                        
-                        .onChange(of: $valgtPrøve) { _ in
+                        .onChange(of: valgtPrøveID) { _ in
                             klasseoversikt.lagreKlasser()
                         }
                 }

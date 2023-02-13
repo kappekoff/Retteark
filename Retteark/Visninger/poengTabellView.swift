@@ -14,7 +14,9 @@ struct poengTabellView: View {
     @State var elevIndeks: Int? = nil
     @State var oppgaveIndeks: Int? = nil
     @State var farge: Bool = false
+    @State var fokus_posisjon: [Int] = [0, 0]
     @FocusState private var fokus: Fokus?
+
     
     var body: some View {
         Grid(horizontalSpacing: 0, verticalSpacing: 0){
@@ -91,7 +93,8 @@ struct poengTabellView: View {
             if (prøve.elever.count > 0 && prøve.oppgaver.count > 0) {
                 if let elevIndeks = prøve.poengRad(elevId: prøve.elever[0].id){
                     if let oppgaveIndeks = prøve.oppgave(elevIndeks: elevIndeks, oppgaveId: prøve.oppgaver[0].id) {
-                        fokus = .poengFokus(id: prøve.poeng[elevIndeks][oppgaveIndeks].id)
+                        fokus_posisjon = [elevIndeks, oppgaveIndeks]
+                        fokus = .poengFokus(id: fokus_posisjon)
                     }
                 }
             }
