@@ -16,4 +16,10 @@ enum Fokus: Hashable, Identifiable {
             return "poengFokus"
         }
     }
+    func get() -> [Int] {
+            switch self {
+            case .poengFokus(let posisjon):
+                return posisjon
+            }
+        }
 }

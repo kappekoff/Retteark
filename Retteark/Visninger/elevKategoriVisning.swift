@@ -22,12 +22,27 @@ struct elevTilbakemeldingVisning: View {
     var body: some View {
         HStack {
             Text(elev.navn).font(.largeTitle).frame(alignment: .center)
+                /*.fileExporter(isPresented: $visFileexporter, document: data!, contentType: .PDF) { resultat in
+                    switch resultat {
+                    case .success(let url):
+                        print("Saved to \(url)")
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                    }
+                }*/
+            
             Button {
-                exportPDF(filnavn: prøve.navn + " " + elev.navn){
+                let docuementDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+                let outputfileURL: URL? = docuementDirectory.appendingPathComponent("\(prøve.navn + " " + elev.navn).pdf")
+                exportPDF(outputfileURL: outputfileURL){
                     elevTilbakemeldingVisning(elev: elev, visElevTilbakemleding:$visElevTilbakemleding , prøve: prøve)
                 } completion: { status, url in
                     if let url = url,status{
+                        print("exportPDF: ")
                         print(url)
+                        let controller = UIDocumentPickerViewController(forExporting: [url], asCopy: false) // 5
+                        //UIApplication.shared.windows.first?.rootViewController?.present(controller, animated: true)
+                        UIApplication.shared.windows.last?.rootViewController?.present(controller, animated: true)
                     }
                     else {
                         print("Klarte ikke produsere pdf")

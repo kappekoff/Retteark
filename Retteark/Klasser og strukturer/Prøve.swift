@@ -23,8 +23,6 @@ class Prøve: Hashable, Identifiable, Codable, ObservableObject{
     @Published var tilbakemeldinger: [Tilbakemelding] = [Tilbakemelding(tekst: "Du viser høy kompetanse", nedreGrense: 66), Tilbakemelding(tekst: "Du viser middels kompetanse", nedreGrense: 33), Tilbakemelding(tekst: "Arbeid mer med", nedreGrense: 0)]
     @Published var karaktergrenser: [Karaktergrense] = karaktergrenser_test
     
-
-    
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
         hasher.combine(navn)
@@ -177,7 +175,7 @@ class Prøve: Hashable, Identifiable, Codable, ObservableObject{
     }
     
     func leggTilKategori() {
-        self.kategorier.append(Kategori(navn: "Ny kategori"))
+        self.kategorier.append(Kategori(navn: ""))
         self.kategorierOgOppgaver.append([])
         for oppgave in self.oppgaver {
             self.kategorierOgOppgaver[self.kategorierOgOppgaver.count-1].append(BoolOgId(verdi: false, kategoriId: self.kategorier.last!.id, oppgaveId: oppgave.id))

@@ -15,7 +15,7 @@ struct poengTabellView: View {
     @State var oppgaveIndeks: Int? = nil
     @State var farge: Bool = false
     @State var fokus_posisjon: [Int] = [0, 0]
-    @FocusState private var fokus: Fokus?
+    @FocusState var fokus: Fokus?
 
     
     var body: some View {
@@ -58,8 +58,19 @@ struct poengTabellView: View {
                         
                         ForEach(prøve.oppgaver){ oppgave in
                             if let oppgaveIndeks = prøve.oppgave(elevIndeks: elevIndeks, oppgaveId: oppgave.id) {
-                                PoengView(prøve: prøve, poeng: $prøve.poeng[elevIndeks][oppgaveIndeks])
+                                PoengView(poeng: $prøve.poeng[elevIndeks][oppgaveIndeks])
                                     .focused($fokus, equals: .poengFokus(id: $prøve.poeng[elevIndeks][oppgaveIndeks].id))
+                                    .onSubmit {
+                                        if(prøve.poeng[elevIndeks][oppgaveIndeks].poeng == "") {
+                                            prøve.poeng[elevIndeks][oppgaveIndeks].poeng = String((oppgave.maksPoeng!))
+                                            var fokus_posisjon = [elevIndeks, oppgaveIndeks+1]
+                                            if(fokus?.get()[1] ?? 0 >= prøve.oppgaver.count - 1) {
+                                                fokus_posisjon = [(fokus?.get()[0] ?? 0) + 1, 0]
+                                            }
+                                            fokus = .poengFokus(id: fokus_posisjon)
+                                        }
+                                        
+                                    }
                             }
                             
                         }

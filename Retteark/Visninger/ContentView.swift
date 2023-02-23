@@ -13,6 +13,7 @@ struct ContentView: View {
     var valgtKlasseID: Klasse.ID?
     var valgtPrøveID: Prøve.ID?
     @State var viserSheet: VisElevTilbakemleding? = nil
+    @State var viserAlert: Bool = false
     
     var body: some View {
         if let valgtPrøveID = valgtPrøveID, let valgtKlasse = klasseoversikt.klasseFraId(id: valgtKlasseID!), let $valgtPrøve = valgtKlasse.finnPrøveFraId(id: valgtPrøveID) {
@@ -40,23 +41,39 @@ struct ContentView: View {
                     })
                     .keyboardShortcut("s")
                     Button(action: {
+                        let docuementDirectory = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first!
+                        let dataPath = docuementDirectory.appendingPathComponent("\($valgtPrøve.navn)")
+                        if !FileManager.default.fileExists(atPath: dataPath.path) {
+                            do {
+                                try FileManager.default.createDirectory(atPath: dataPath.path, withIntermediateDirectories: true, attributes: nil)
+                            } catch {
+                                print(error.localizedDescription)
+                            }
+                        }
                         for elev in $valgtPrøve.elever {
-                            exportPDF(filnavn: $valgtPrøve.navn + " " + elev.navn){
+                            var outputfileURL: URL? = dataPath.appendingPathComponent("\($valgtPrøve.navn) \(elev.navn).pdf")
+                            exportPDF(outputfileURL: outputfileURL){
                                 elevTilbakemeldingVisning(elev: elev, visElevTilbakemleding: $viserSheet , prøve: $valgtPrøve)
                             } completion: { status, url in
                                 if let url = url,status{
                                     print(url)
+                                    //let controller = UIDocumentPickerViewController(forExporting: [url], asCopy: false) // 5
+                                    //UIApplication.shared.windows.first?.rootViewController?.present(controller, animated: true)
+                                    //UIApplication.shared.windows.last?.rootViewController?.present(controller, animated: true)
                                 }
                                 else {
                                     print("Klarte ikke produsere pdf")
                                 }
                             }
                         }
-                        
+                        viserAlert = true
                     }, label: {
                         Image(systemName: "square.and.arrow.up")
                     })
                     .keyboardShortcut("p")
+                    .alert("Se nedlastinger for pdfene", isPresented: $viserAlert) {
+                                Button("OK", role: .cancel) { }
+                            }
                     Button(action: {
                         viserSheet = .velgtKlassesammendrag
                         
@@ -85,6 +102,9 @@ struct ContentView: View {
                         .onChange(of: valgtPrøveID) { _ in
                             klasseoversikt.lagreKlasser()
                         }
+                        .onDisappear {
+                            klasseoversikt.lagreKlasser()
+                        }                    
                 }
                 
             }

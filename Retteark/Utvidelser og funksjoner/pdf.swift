@@ -33,11 +33,7 @@ extension View {
         return scrollView
     }
     
-    func exportPDF<Content: View>(filnavn: String, @ViewBuilder content: @escaping ()->Content,completion: @escaping (Bool, URL?)->()){
-        
-        
-        let docuementDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
-        let outputfileURL: URL? = docuementDirectory.appendingPathComponent("\(filnavn).pdf")
+    func exportPDF<Content: View>(outputfileURL: URL?, @ViewBuilder content: @escaping ()->Content,completion: @escaping (Bool, URL?)->()){
 
         let pdfView = convertToScrollView {
             content()
@@ -55,6 +51,7 @@ extension View {
             try renderer.writePDF(to: outputfileURL!, withActions: { context in
                 context.beginPage()
                 pdfView.layer.render(in: context.cgContext)
+
             })
             completion(true, outputfileURL)
         }
