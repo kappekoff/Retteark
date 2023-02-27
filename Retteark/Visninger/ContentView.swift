@@ -51,15 +51,12 @@ struct ContentView: View {
                             }
                         }
                         for elev in $valgtPrøve.elever {
-                            var outputfileURL: URL? = dataPath.appendingPathComponent("\($valgtPrøve.navn) \(elev.navn).pdf")
+                            let outputfileURL: URL? = dataPath.appendingPathComponent("\($valgtPrøve.navn) \(elev.navn).pdf")
                             exportPDF(outputfileURL: outputfileURL){
                                 elevTilbakemeldingVisning(elev: elev, visElevTilbakemleding: $viserSheet , prøve: $valgtPrøve)
                             } completion: { status, url in
                                 if let url = url,status{
                                     print(url)
-                                    //let controller = UIDocumentPickerViewController(forExporting: [url], asCopy: false) // 5
-                                    //UIApplication.shared.windows.first?.rootViewController?.present(controller, animated: true)
-                                    //UIApplication.shared.windows.last?.rootViewController?.present(controller, animated: true)
                                 }
                                 else {
                                     print("Klarte ikke produsere pdf")

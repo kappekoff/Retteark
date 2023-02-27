@@ -17,16 +17,18 @@ struct Klassesammendrag: View {
             HStack {
                 Text("Klassesammendrag").font(.largeTitle)
                 Button {
-                    let docuementDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+                    let docuementDirectory = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first!
                     let outputfileURL: URL? = docuementDirectory.appendingPathComponent("\(prøve.navn) klassesammendrag")
                     exportPDF(outputfileURL: outputfileURL){
                         Klassesammendrag(visElevTilbakemleding:$visElevTilbakemleding , prøve: prøve)
                     } completion: { status, url in
                         if let url = url,status{
                             print(url)
-                            let controller = UIDocumentPickerViewController(forExporting: [url], asCopy: false) // 5
-                            //UIApplication.shared.windows.first?.rootViewController?.present(controller, animated: true)
-                            UIApplication.shared.windows.last?.rootViewController?.present(controller, animated: true)
+                            let controller = UIDocumentPickerViewController(forExporting: [url], asCopy: false)
+                            let scenes = UIApplication.shared.connectedScenes
+                            let windowScene = scenes.first as? UIWindowScene
+                            let window = windowScene?.windows.last
+                            window?.rootViewController?.present(controller, animated: true)
                         }
                         else {
                             print("Klarte ikke produsere pdf")

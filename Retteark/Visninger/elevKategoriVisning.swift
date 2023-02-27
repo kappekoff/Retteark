@@ -32,7 +32,7 @@ struct elevTilbakemeldingVisning: View {
                 }*/
             
             Button {
-                let docuementDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+                let docuementDirectory = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first!
                 let outputfileURL: URL? = docuementDirectory.appendingPathComponent("\(prøve.navn + " " + elev.navn).pdf")
                 exportPDF(outputfileURL: outputfileURL){
                     elevTilbakemeldingVisning(elev: elev, visElevTilbakemleding:$visElevTilbakemleding , prøve: prøve)
@@ -40,9 +40,11 @@ struct elevTilbakemeldingVisning: View {
                     if let url = url,status{
                         print("exportPDF: ")
                         print(url)
-                        let controller = UIDocumentPickerViewController(forExporting: [url], asCopy: false) // 5
-                        //UIApplication.shared.windows.first?.rootViewController?.present(controller, animated: true)
-                        UIApplication.shared.windows.last?.rootViewController?.present(controller, animated: true)
+                        let controller = UIDocumentPickerViewController(forExporting: [url], asCopy: false)
+                        let scenes = UIApplication.shared.connectedScenes
+                        let windowScene = scenes.first as? UIWindowScene
+                        let window = windowScene?.windows.last
+                        window?.rootViewController?.present(controller, animated: true)
                     }
                     else {
                         print("Klarte ikke produsere pdf")
