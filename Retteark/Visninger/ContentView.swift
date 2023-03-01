@@ -96,12 +96,7 @@ struct ContentView: View {
                 }
                 ScrollView(.horizontal) {
                     poengTabellView(prøve: $valgtPrøve)
-                        .onChange(of: valgtPrøveID) { _ in
-                            klasseoversikt.lagreKlasser()
-                        }
-                        .onDisappear {
-                            klasseoversikt.lagreKlasser()
-                        }                    
+                        .padding([.bottom, .leading, .trailing])
                 }
                 
             }

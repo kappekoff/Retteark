@@ -26,11 +26,29 @@ struct klasseVisning: View {
                         Text(valgtKlasse.skoleÅr.wrappedValue)
                     }
                     .font(.title).bold()
+                    .swipeActions {
+                        Button(role: .destructive) {
+                            slettKlasseFraListe(klasse: valgtKlasse.wrappedValue)
+                            print("Slett Klasse")
+                        } label: {
+                            Image(systemName: "trash")
+                        }
+                        
+                        Button {
+                            print("Rediger Klasse")
+                        } label: {
+                            Image(systemName: "square.and.pencil")
+                        }
+                        .tint(.yellow)
+                    }
                 }
-                .onDelete(perform: slettKlasseFraListe)
+                .onDelete(perform: funksjonSomIkkeSletterNoe)
             }
             .navigationTitle("Klasser")
             .toolbar(content: {
+                ToolbarItem {
+                    EditButton()
+                }
                 ToolbarItem(placement: .automatic) {
                     Button {
                         visLeggTilKlasser = true
@@ -49,14 +67,31 @@ struct klasseVisning: View {
             }
         } content:{
             if let valgtKlasseID = valgtKlasseID, let valgtKlasse=klasseoversikt.klasseFraId(id: valgtKlasseID) {
-                List(valgtKlasse.prøver, selection: $valgtPrøveID, rowContent: { valgtPrøve in
-                    HStack {
-                        Text(valgtPrøve.navn)
+                List(selection: $valgtPrøveID) {
+                    ForEach(valgtKlasse.prøver){ valgtPrøve in
+                        Text(valgtPrøve.navn).font(.title).bold()
+                            .swipeActions {
+                                Button(role: .destructive) {
+                                    print("Slett prøve")
+                                    slettPrøveFraKlasse(prøve: valgtPrøve)
+                                } label: {
+                                    Image(systemName: "trash")
+                                }
+
+                                Button {
+                                    print("Rediger prøve")
+                                } label: {
+                                    Image(systemName: "square.and.pencil")
+                                }
+                                .tint(.yellow)
+
+                            }
                     }
-                    .font(.title).bold()
-                })
+                    .onDelete(perform: funksjonSomIkkeSletterNoe)
+                }
                 .navigationTitle("Prøver")
                 .toolbar(content: {
+                    EditButton()
                     Button {
                         visLeggTilPrøve = true
                     } label: {
@@ -75,8 +110,27 @@ struct klasseVisning: View {
         }
     }
     
-    func slettKlasseFraListe(at offsets: IndexSet){
-        klasseoversikt.klasseinformasjon.klasser.remove(atOffsets: offsets)
+    func slettKlasseFraListe(klasse: Klasse){
+        if let indeks = klasseoversikt.klasseinformasjon.klasser.firstIndex(where: {$0.id == valgtKlasseID}) {
+            klasseoversikt.klasseinformasjon.klasser.remove(at: indeks)
+        }
+    }
+    
+    func slettPrøveFraKlasse(prøve: Prøve){
+        if let valgtKlasseID = valgtKlasseID {
+            if let klasseIndeks = klasseoversikt.klasseinformasjon.klasser.firstIndex(where: {$0.id == valgtKlasseID}) {
+                if let prøveIndeks = klasseoversikt.klasseinformasjon.klasser[klasseIndeks].prøver.firstIndex(where: {$0.id == prøve.id}) {
+                    klasseoversikt.klasseinformasjon.klasser[klasseIndeks].prøver.remove(at: prøveIndeks)
+                }
+                    
+            }
+            
+            
+        }
+    }
+    
+    func funksjonSomIkkeSletterNoe(at indeksset: IndexSet) {
+        print("funksjonSomIkkeSletterNoe: Ingen skal noen gang komme hit. Hva gjør du her?")
     }
 }
 
