@@ -13,7 +13,7 @@ struct leggTilNyKlasseVisning: View {
     @State var klasseNavn: String
     @State var skoleÅr: String
     @State var elever: [Elev] = []
-    @Binding var visLeggTilKlasser: Bool
+    @Binding var visKlassevisningSheet: VisKlassevisningSheet?
     
     var body: some View {
         NavigationStack {
@@ -44,11 +44,17 @@ struct leggTilNyKlasseVisning: View {
                 .navigationTitle("Legg til ny klasse")
             }
         }
-        Button("Legg til") {
-            klasseoversikt.klasseinformasjon.klasser.append(Klasse(navn: klasseNavn, elever: elever, skoleÅr: skoleÅr))
-            klasseoversikt.lagreKlasser()
-            visLeggTilKlasser = false
+        HStack {
+            Button("Avbryt") {
+                visKlassevisningSheet = nil
+            }
+            Button("Legg til") {
+                klasseoversikt.klasseinformasjon.klasser.append(Klasse(navn: klasseNavn, elever: elever, skoleÅr: skoleÅr))
+                klasseoversikt.lagreKlasser()
+                visKlassevisningSheet = nil
+            }
         }
+        
     }
     func slettElevFraListe(at offsets: IndexSet){
         elever.remove(atOffsets: offsets)    }

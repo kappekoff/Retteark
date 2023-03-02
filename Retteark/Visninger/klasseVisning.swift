@@ -12,10 +12,8 @@ struct klasseVisning: View {
     @State private var visSideKolonner = NavigationSplitViewVisibility.all
     @State private var valgtKlasseID: Klasse.ID?
     @State private var valgtPrøveID: Prøve.ID?
-    @State var visLeggTilKlasser: Bool = false
-    @State var visLeggTilPrøve: Bool = false
+    @State var visKlassevisningSheet: VisKlassevisningSheet? = nil
 
-    
     var body: some View {
         NavigationSplitView(columnVisibility: $visSideKolonner){
             List(selection: $valgtKlasseID) {
@@ -35,7 +33,7 @@ struct klasseVisning: View {
                         }
                         
                         Button {
-                            print("Rediger Klasse")
+                            visKlassevisningSheet = .redigerKlasse(klasse: valgtKlasse.wrappedValue)
                         } label: {
                             Image(systemName: "square.and.pencil")
                         }
@@ -51,7 +49,7 @@ struct klasseVisning: View {
                 }
                 ToolbarItem(placement: .automatic) {
                     Button {
-                        visLeggTilKlasser = true
+                        visKlassevisningSheet = .leggTilKlasse
                     } label: {
                         Image(systemName: "plus.circle").foregroundColor(.green)
                     }
@@ -62,9 +60,9 @@ struct klasseVisning: View {
                 }
                 
             })
-            .sheet(isPresented: $visLeggTilKlasser, onDismiss: { visLeggTilKlasser = false }) {
-                    leggTilNyKlasseVisning(klasseoversikt: klasseoversikt,tekstFraVisma: "", klasseNavn: "", skoleÅr: "",  visLeggTilKlasser: $visLeggTilKlasser)
-            }
+            /*.fullScreenCover(item: $visKlassevisningSheet, onDismiss: { visKlassevisningSheet = nil }) {$visKlassevisningSheet in
+                    leggTilNyKlasseVisning(klasseoversikt: klasseoversikt,tekstFraVisma: "", klasseNavn: "", skoleÅr: "",  visKlassevisningSheet: $visKlassevisningSheet)
+            }*/
         } content:{
             if let valgtKlasseID = valgtKlasseID, let valgtKlasse=klasseoversikt.klasseFraId(id: valgtKlasseID) {
                 List(selection: $valgtPrøveID) {
@@ -80,6 +78,7 @@ struct klasseVisning: View {
 
                                 Button {
                                     print("Rediger prøve")
+                                    visKlassevisningSheet = .redigerPrøve(prøve: valgtPrøve)
                                 } label: {
                                     Image(systemName: "square.and.pencil")
                                 }
@@ -93,20 +92,35 @@ struct klasseVisning: View {
                 .toolbar(content: {
                     EditButton()
                     Button {
-                        visLeggTilPrøve = true
+                        visKlassevisningSheet = .leggTilPrøve
                     } label: {
                         Image(systemName: "plus.circle").foregroundColor(.green)
                     }
                 })
-                .sheet(isPresented: $visLeggTilPrøve, onDismiss: { visLeggTilPrøve = false }) {
-                        leggTilNyPr_veVisning(klasseoversikt: klasseoversikt, KlasseID: valgtKlasseID,  visLeggTilPrøve: $visLeggTilPrøve)
-                }
+                /*.sheet(isPresented: $visKlassevisningSheet, onDismiss: { visKlassevisningSheet = nil }) {
+                        leggTilNyPr_veVisning(klasseoversikt: klasseoversikt, KlasseID: valgtKlasseID,  visKlassevisningSheet: $visKlassevisningSheet)
+                }*/
             }
             else {
                 Text("Velg klasse")
             }
         } detail: {
             ContentView(klasseoversikt: klasseoversikt, valgtKlasseID: valgtKlasseID, valgtPrøveID: valgtPrøveID)
+        }
+        .fullScreenCover(item: $visKlassevisningSheet, onDismiss: {visKlassevisningSheet = nil}) { visKlassevisningSheet in
+            switch visKlassevisningSheet {
+            case .leggTilKlasse:
+                leggTilNyKlasseVisning(klasseoversikt: klasseoversikt,tekstFraVisma: "", klasseNavn: "", skoleÅr: "",  visKlassevisningSheet: $visKlassevisningSheet)
+            case .leggTilPrøve:
+                if let valgtKlasseID = valgtKlasseID {
+                    leggTilNyPr_veVisning(klasseoversikt: klasseoversikt, KlasseID: valgtKlasseID,  visKlassevisningSheet: $visKlassevisningSheet)
+                }
+            case .redigerKlasse(let klasse):
+                redigerKlasse(klasseId: klasse.id, klasseoversikt: klasseoversikt, visKlassevisningSheet: $visKlassevisningSheet)
+            case .redigerPrøve(let prøve):
+                Text("Rediger prøve")
+                
+            }
         }
     }
     

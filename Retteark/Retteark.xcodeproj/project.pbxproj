@@ -31,6 +31,7 @@
 		DE05745128C6073B001D487B /* VisElevTilbakemleding.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE05745028C6073B001D487B /* VisElevTilbakemleding.swift */; };
 		DE0620D728D0981E008AF4EA /* filemanager_extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE0620D628D0981E008AF4EA /* filemanager_extension.swift */; };
 		DE0620D928D1F482008AF4EA /* Tilbakemelding.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE0620D828D1F482008AF4EA /* Tilbakemelding.swift */; };
+		DE0B670729AF684000DB8662 /* redigerKlasse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE0B670629AF684000DB8662 /* redigerKlasse.swift */; };
 		DE118C7C292E29B100351BC4 /* skrivInnOppgaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE118C7B292E29B000351BC4 /* skrivInnOppgaver.swift */; };
 		DE118C7E292F6CF200351BC4 /* collection_extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE118C7D292F6CF200351BC4 /* collection_extension.swift */; };
 		DE24DD0628FEC72B008F8A77 /* instillinger.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE24DD0528FEC72B008F8A77 /* instillinger.swift */; };
@@ -98,6 +99,7 @@
 		DE05745028C6073B001D487B /* VisElevTilbakemleding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisElevTilbakemleding.swift; sourceTree = "<group>"; };
 		DE0620D628D0981E008AF4EA /* filemanager_extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = filemanager_extension.swift; sourceTree = "<group>"; };
 		DE0620D828D1F482008AF4EA /* Tilbakemelding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tilbakemelding.swift; sourceTree = "<group>"; };
+		DE0B670629AF684000DB8662 /* redigerKlasse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = redigerKlasse.swift; sourceTree = "<group>"; };
 		DE118C7B292E29B000351BC4 /* skrivInnOppgaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = skrivInnOppgaver.swift; sourceTree = "<group>"; };
 		DE118C7D292F6CF200351BC4 /* collection_extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = collection_extension.swift; sourceTree = "<group>"; };
 		DE24DD0528FEC72B008F8A77 /* instillinger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = instillinger.swift; sourceTree = "<group>"; };
@@ -228,6 +230,7 @@
 				94B82C4B28CBCF350086368A /* klasseVisning.swift */,
 				DE425E0D28E193D4009CAB3E /* leggTilNyPrøveVisning.swift */,
 				DE85159928DB2AAA0048913A /* leggTilNyKlasseVisning.swift */,
+				DE0B670629AF684000DB8662 /* redigerKlasse.swift */,
 				DE425E0F28E19969009CAB3E /* textInputField.swift */,
 				DEB6BBD328B39336008BBD31 /* kategoriView.swift */,
 				94CC3008289D951D00A193F4 /* sumCelle.swift */,
@@ -411,6 +414,7 @@
 				DE85159C28DC9AAB0048913A /* finnEleverFraVisma.swift in Sources */,
 				DE993B2C291A726F004889EC /* maxPoengVisning.swift in Sources */,
 				DE9AB23D2916767B00B67FD7 /* tallEllerStrekVisning.swift in Sources */,
+				DE0B670729AF684000DB8662 /* redigerKlasse.swift in Sources */,
 				941205EF2890071900D7FA3C /* oppgave.swift in Sources */,
 				941205ED289006A500D7FA3C /* elev.swift in Sources */,
 				DE24DD0628FEC72B008F8A77 /* instillinger.swift in Sources */,

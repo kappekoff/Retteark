@@ -10,7 +10,7 @@ import SwiftUI
 struct leggTilNyPr_veVisning: View {
     @ObservedObject var klasseoversikt: Klasseoversikt
     var KlasseID: String
-    @Binding var visLeggTilPrøve: Bool
+    @Binding var visKlassevisningSheet: VisKlassevisningSheet?
     @State var prøveNavn: String = ""
     @State var oppgaver: [Oppgave] = [];
     @State var visEleverKarakter = true;
@@ -56,20 +56,23 @@ struct leggTilNyPr_veVisning: View {
                     }
                 }
             }
-           
-            Button("Legg til") {
-                let klasseIndex = klasseoversikt.klasseinformasjon.klasser.firstIndex(where: {$0.id == KlasseID})
-                if (klasseIndex != nil) {
-                    klasseoversikt.klasseinformasjon.klasser[klasseIndex!].prøver.append(Prøve(navn: prøveNavn, elever: klasseoversikt.klasseinformasjon.klasser[klasseIndex!].elever, oppgaver: oppgaver, kategorier: [], visEleverKarakter: visEleverKarakter))
-                    klasseoversikt.lagreKlasser()
-                    visLeggTilPrøve = false
+            HStack {
+                Button("Avbryt") {
+                    visKlassevisningSheet = nil
                 }
-                else {
-                    visLeggTilPrøve = false
+                Button("Legg til") {
+                    let klasseIndex = klasseoversikt.klasseinformasjon.klasser.firstIndex(where: {$0.id == KlasseID})
+                    if (klasseIndex != nil) {
+                        klasseoversikt.klasseinformasjon.klasser[klasseIndex!].prøver.append(Prøve(navn: prøveNavn, elever: klasseoversikt.klasseinformasjon.klasser[klasseIndex!].elever, oppgaver: oppgaver, kategorier: [], visEleverKarakter: visEleverKarakter))
+                        klasseoversikt.lagreKlasser()
+                        visKlassevisningSheet = nil
+                    }
+                    else {
+                        visKlassevisningSheet = nil
+                    }
+                    
                 }
-                
             }
-            .buttonStyle(.borderedProminent)
         }
         .navigationTitle("Legg til Ny prøve")
     }

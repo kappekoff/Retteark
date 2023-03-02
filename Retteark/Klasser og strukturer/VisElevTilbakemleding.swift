@@ -29,3 +29,24 @@ enum VisElevTilbakemleding: Identifiable  {
             
     }
 }
+
+
+enum VisKlassevisningSheet: Identifiable{
+    case leggTilKlasse
+    case leggTilPrøve
+    case redigerKlasse(klasse: Klasse)
+    case redigerPrøve(prøve: Prøve)
+    
+    var id: String {
+        switch self {
+        case .leggTilKlasse:
+            return "leggTilKlasse"
+        case .leggTilPrøve:
+            return "leggTilPrøve"
+        case .redigerKlasse:
+            return "redigerKlasse"
+        case .redigerPrøve:
+            return "redigerPrøve"
+        }
+    }
+}
