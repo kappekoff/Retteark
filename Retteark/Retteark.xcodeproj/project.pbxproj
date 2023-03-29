@@ -32,6 +32,7 @@
 		DE0620D728D0981E008AF4EA /* filemanager_extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE0620D628D0981E008AF4EA /* filemanager_extension.swift */; };
 		DE0620D928D1F482008AF4EA /* Tilbakemelding.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE0620D828D1F482008AF4EA /* Tilbakemelding.swift */; };
 		DE0B670729AF684000DB8662 /* redigerKlasse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE0B670629AF684000DB8662 /* redigerKlasse.swift */; };
+		DE0B672529B0E78B00DB8662 /* redigerPrøve.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE0B672429B0E78B00DB8662 /* redigerPrøve.swift */; };
 		DE118C7C292E29B100351BC4 /* skrivInnOppgaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE118C7B292E29B000351BC4 /* skrivInnOppgaver.swift */; };
 		DE118C7E292F6CF200351BC4 /* collection_extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE118C7D292F6CF200351BC4 /* collection_extension.swift */; };
 		DE24DD0628FEC72B008F8A77 /* instillinger.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE24DD0528FEC72B008F8A77 /* instillinger.swift */; };
@@ -100,6 +101,7 @@
 		DE0620D628D0981E008AF4EA /* filemanager_extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = filemanager_extension.swift; sourceTree = "<group>"; };
 		DE0620D828D1F482008AF4EA /* Tilbakemelding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tilbakemelding.swift; sourceTree = "<group>"; };
 		DE0B670629AF684000DB8662 /* redigerKlasse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = redigerKlasse.swift; sourceTree = "<group>"; };
+		DE0B672429B0E78B00DB8662 /* redigerPrøve.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "redigerPrøve.swift"; sourceTree = "<group>"; };
 		DE118C7B292E29B000351BC4 /* skrivInnOppgaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = skrivInnOppgaver.swift; sourceTree = "<group>"; };
 		DE118C7D292F6CF200351BC4 /* collection_extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = collection_extension.swift; sourceTree = "<group>"; };
 		DE24DD0528FEC72B008F8A77 /* instillinger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = instillinger.swift; sourceTree = "<group>"; };
@@ -228,8 +230,8 @@
 			isa = PBXGroup;
 			children = (
 				94B82C4B28CBCF350086368A /* klasseVisning.swift */,
+				DE0B672429B0E78B00DB8662 /* redigerPrøve.swift */,
 				DE425E0D28E193D4009CAB3E /* leggTilNyPrøveVisning.swift */,
-				DE85159928DB2AAA0048913A /* leggTilNyKlasseVisning.swift */,
 				DE0B670629AF684000DB8662 /* redigerKlasse.swift */,
 				DE425E0F28E19969009CAB3E /* textInputField.swift */,
 				DEB6BBD328B39336008BBD31 /* kategoriView.swift */,
@@ -238,6 +240,7 @@
 				DEB6BBD128B37B66008BBD31 /* poengTabellView.swift */,
 				DE993B2B291A726F004889EC /* maxPoengVisning.swift */,
 				DE05744E28C1F67E001D487B /* elevKategoriVisning.swift */,
+				DE85159928DB2AAA0048913A /* leggTilNyKlasseVisning.swift */,
 				DE24DD0528FEC72B008F8A77 /* instillinger.swift */,
 				DE87C38D28BF65D900E880A9 /* kakediagram.swift */,
 				94CC3006289B046800A193F4 /* NumericTextField.swift */,
@@ -434,6 +437,7 @@
 				DE118C7E292F6CF200351BC4 /* collection_extension.swift in Sources */,
 				DEB6BBCE28B36560008BBD31 /* Kategorier.swift in Sources */,
 				941205F128900ED700D7FA3C /* poeng.swift in Sources */,
+				DE0B672529B0E78B00DB8662 /* redigerPrøve.swift in Sources */,
 				DEB6BBD228B37B66008BBD31 /* poengTabellView.swift in Sources */,
 				DE85159A28DB2AAA0048913A /* leggTilNyKlasseVisning.swift in Sources */,
 				DEECF8B929364525007B59FF /* Karaktergrense.swift in Sources */,

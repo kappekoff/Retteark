@@ -33,7 +33,7 @@ struct klasseVisning: View {
                         }
                         
                         Button {
-                            visKlassevisningSheet = .redigerKlasse(klasse: valgtKlasse.wrappedValue)
+                            visKlassevisningSheet = .redigerKlasse(klasseid: valgtKlasse.wrappedValue.id)
                         } label: {
                             Image(systemName: "square.and.pencil")
                         }
@@ -78,7 +78,7 @@ struct klasseVisning: View {
 
                                 Button {
                                     print("Rediger prøve")
-                                    visKlassevisningSheet = .redigerPrøve(prøve: valgtPrøve)
+                                    visKlassevisningSheet = .redigerPrøve(klasseid: valgtKlasse.id, prøveid: valgtPrøve.id)
                                 } label: {
                                     Image(systemName: "square.and.pencil")
                                 }
@@ -115,10 +115,10 @@ struct klasseVisning: View {
                 if let valgtKlasseID = valgtKlasseID {
                     leggTilNyPr_veVisning(klasseoversikt: klasseoversikt, KlasseID: valgtKlasseID,  visKlassevisningSheet: $visKlassevisningSheet)
                 }
-            case .redigerKlasse(let klasse):
-                redigerKlasse(klasseId: klasse.id, klasseoversikt: klasseoversikt, visKlassevisningSheet: $visKlassevisningSheet)
-            case .redigerPrøve(let prøve):
-                Text("Rediger prøve")
+            case .redigerKlasse(let klasseid):
+                redigerKlasse(klasseId: klasseid, klasseoversikt: klasseoversikt, visKlassevisningSheet: $visKlassevisningSheet)
+            case .redigerPrøve(let klasseid, let prøveid):
+                redigerPr_ve(prøveId: prøveid, klasseId: klasseid, klasseoversikt: klasseoversikt, visKlassevisningSheet: $visKlassevisningSheet)
                 
             }
         }

@@ -32,7 +32,7 @@ struct elevTilbakemeldingVisning: View {
                 }*/
             
             Button {
-                let docuementDirectory = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first!
+                let docuementDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
                 let outputfileURL: URL? = docuementDirectory.appendingPathComponent("\(prøve.navn + " " + elev.navn).pdf")
                 exportPDF(outputfileURL: outputfileURL){
                     elevTilbakemeldingVisning(elev: elev, visElevTilbakemleding:$visElevTilbakemleding , prøve: prøve)
