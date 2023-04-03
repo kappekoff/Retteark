@@ -126,18 +126,22 @@ struct elevTilbakemeldingVisning: View {
         formatter.numberStyle = .decimal
         formatter.decimalSeparator = "."
         formatter.groupingSeparator = ""
-        var sum: Float = 0
+        var sum: Double = 0
+        
+        
         for oppgave in prøve.oppgaver {
             if let oppgaveIndex = prøve.oppgaveIndexMedKjentElev(oppgaveId: oppgave.id, elevIndex: elevIndex) {
                 if(prøve.kategorierOgOppgaver[kategoriIndex][oppgaveIndex].verdi){
-                    let tall = formatter.number(from: prøve.poeng[elevIndex][oppgaveIndex].poeng) as? Float
+                    print(prøve.poeng[elevIndex][oppgaveIndex].poeng)
+                    print(formatter.number(from: prøve.poeng[elevIndex][oppgaveIndex].poeng) as? Double)
+                    let tall = formatter.number(from: prøve.poeng[elevIndex][oppgaveIndex].poeng) as? Double
                     if(tall != nil) {
                         sum += tall!
                     }
                 }
             }
         }
-        return sum
+        return Float(sum)
     }
     
     func lagElevtilbakemelding() -> String {
