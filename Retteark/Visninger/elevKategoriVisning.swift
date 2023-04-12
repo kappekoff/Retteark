@@ -22,15 +22,6 @@ struct elevTilbakemeldingVisning: View {
     var body: some View {
         HStack {
             Text(elev.navn).font(.largeTitle).frame(alignment: .center)
-                /*.fileExporter(isPresented: $visFileexporter, document: data!, contentType: .PDF) { resultat in
-                    switch resultat {
-                    case .success(let url):
-                        print("Saved to \(url)")
-                    case .failure(let error):
-                        print(error.localizedDescription)
-                    }
-                }*/
-            
             Button {
                 let docuementDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
                 let outputfileURL: URL? = docuementDirectory.appendingPathComponent("\(prøve.navn + " " + elev.navn).pdf")
@@ -132,8 +123,6 @@ struct elevTilbakemeldingVisning: View {
         for oppgave in prøve.oppgaver {
             if let oppgaveIndex = prøve.oppgaveIndexMedKjentElev(oppgaveId: oppgave.id, elevIndex: elevIndex) {
                 if(prøve.kategorierOgOppgaver[kategoriIndex][oppgaveIndex].verdi){
-                    print(prøve.poeng[elevIndex][oppgaveIndex].poeng)
-                    print(formatter.number(from: prøve.poeng[elevIndex][oppgaveIndex].poeng) as? Double)
                     let tall = formatter.number(from: prøve.poeng[elevIndex][oppgaveIndex].poeng) as? Double
                     if(tall != nil) {
                         sum += tall!

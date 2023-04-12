@@ -30,8 +30,8 @@ struct sumCelle: View {
         formatter.groupingSeparator = ""
         for oppgave in prøve.oppgaver {
             if let oppgaveIndeks = prøve.oppgaveIndexMedKjentElev(oppgaveId: oppgave.id, elevIndex: elevIndeks){
-                if let tall = formatter.number(from: prøve.poeng[elevIndeks][oppgaveIndeks].poeng) as? Float {
-                    sum += tall
+                if let tall = formatter.number(from: prøve.poeng[elevIndeks][oppgaveIndeks].poeng) as? Double {
+                    sum += Float(tall)
                 }
             }
         }
