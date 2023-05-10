@@ -24,7 +24,7 @@ class Karaktergrense: Hashable, Codable, Identifiable {
     }
     func hash(into hasher: inout Hasher) {
         hasher.combine(karakter)
-        hasher.combine(grense)
+        //hasher.combine(grense)
         hasher.combine(id)
     }
     
