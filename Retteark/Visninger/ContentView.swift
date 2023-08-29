@@ -9,13 +9,14 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @ObservedObject var klasseoversikt:Klasseoversikt
+    @Environment(Klasseoversikt.self) var klasseoversikt
     var valgtKlasseID: Klasse.ID?
     var valgtPrøveID: Prøve.ID?
     @State var viserSheet: VisElevTilbakemleding? = nil
     @State var viserAlert: Bool = false
     
     var body: some View {
+        @Bindable var klasseoversikt = klasseoversikt
         if let valgtKlasseID = valgtKlasseID {
             if let valgtPrøveID = valgtPrøveID, let valgtKlasse = klasseoversikt.klasseFraId(id: valgtKlasseID), let $valgtPrøve = valgtKlasse.finnPrøveFraId(id: valgtPrøveID) {
                 VStack {

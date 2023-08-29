@@ -8,7 +8,7 @@
 import SwiftUI
     
 struct leggTilNyKlasseVisning: View {
-    @ObservedObject var klasseoversikt: Klasseoversikt
+    @Environment(Klasseoversikt.self) var klasseoversikt
     @State var tekstFraVisma: String
     @State var klasseNavn: String
     @State var skoleÅr: String
@@ -16,6 +16,7 @@ struct leggTilNyKlasseVisning: View {
     @Binding var visKlassevisningSheet: VisKlassevisningSheet?
     
     var body: some View {
+        @Bindable var klasseoversikt = klasseoversikt
         NavigationStack {
             TextInputField(title: "Klassenavn", text: $klasseNavn)
             TextInputField(title: "Skoleår", text: $skoleÅr)

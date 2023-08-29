@@ -10,14 +10,14 @@ import SwiftUI
 struct redigerPr_ve: View {
     var prøveId: Prøve.ID
     var klasseId: Klasse.ID
-    @ObservedObject var klasseoversikt: Klasseoversikt
+    @Environment(Klasseoversikt.self) var klasseoversikt
     @Binding var visKlassevisningSheet:VisKlassevisningSheet?
     var klasseIndex: Int? {
         klasseoversikt.klasseinformasjon.klasser.firstIndex(where: {$0.id==klasseId})
     }
     var prøveIndex: Int? {
         if let klasseIndex = klasseIndex {
-            return klasseoversikt.klasseinformasjon.klasser[klasseIndex].prøver.firstIndex(where: {$0.id==klasseId})
+            return klasseoversikt.klasseinformasjon.klasser[klasseIndex].prøver.firstIndex(where: {$0.id==prøveId})
         }
         else {
             return nil
@@ -25,6 +25,7 @@ struct redigerPr_ve: View {
     }
     
     var body: some View {
+        @Bindable var klasseoversikt = klasseoversikt
         if let klasseIndex = klasseIndex, let prøveIndex = prøveIndex {
             NavigationStack {
                 Section("Om prøven"){
@@ -47,12 +48,13 @@ struct redigerPr_ve: View {
                             Image(systemName: "plus.circle").foregroundColor(.green)
                         }
                     }
-                }
-                HStack {
-                    Button("Lukk") {
-                        visKlassevisningSheet = nil
-                    }
                 }.navigationTitle("Legg til Ny prøve")
+            }
+        }
+        HStack {
+            Button("Lukk") {
+                klasseoversikt.lagreKlasser()
+                visKlassevisningSheet = nil
             }
         }
     }

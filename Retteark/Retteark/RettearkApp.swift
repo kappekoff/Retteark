@@ -12,7 +12,8 @@ import SwiftUI
 struct RettearkApp: App {
     var body: some Scene {
         WindowGroup {
-            klasseVisning(klasseoversikt: Klasseoversikt())
+            klasseVisning()
+                .environment(Klasseoversikt())
         }
     }
 }

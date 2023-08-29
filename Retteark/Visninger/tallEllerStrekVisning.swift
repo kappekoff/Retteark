@@ -14,9 +14,9 @@ struct tallEllerStrekVisning: View {
     
     var body: some View {
         TextField(tittel, text: $tekst)
-            .onChange(of: tekst, perform: endretTall(nyVerdi:))
-
-        
+            .onChange(of: tittel) {
+                endretTall(nyVerdi: tekst)
+            }
     }
     func endretTall(nyVerdi: String) {
         let tallSymbol = Regex {

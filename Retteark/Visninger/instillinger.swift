@@ -34,7 +34,7 @@ struct instillinger: View {
                     }
                 }
                 Section("Karaktergrenser") {
-                    ForEach($prøve.karaktergrenser, id: \.self){ karaktergrense in
+                    ForEach($prøve.karaktergrenser, id: \.id){ karaktergrense in
                         HStack {
                             TextField("Karaktergrense", text: karaktergrense.karakter)
                             NumericTextField("Grense", number: karaktergrense.grense, isDecimalAllowed: false).frame(width: 25, alignment: .trailing)

@@ -8,13 +8,14 @@
 import SwiftUI
 
 struct klasseVisning: View {
-    @StateObject var klasseoversikt: Klasseoversikt
+    @Environment(Klasseoversikt.self) var klasseoversikt
     @State private var visSideKolonner = NavigationSplitViewVisibility.all
     @State private var valgtKlasseID: Klasse.ID?
     @State private var valgtPrøveID: Prøve.ID?
     @State var visKlassevisningSheet: VisKlassevisningSheet? = nil
 
     var body: some View {
+        @Bindable var klasseoversikt = klasseoversikt
         NavigationSplitView(columnVisibility: $visSideKolonner){
             List(selection: $valgtKlasseID) {
                 ForEach($klasseoversikt.klasseinformasjon.klasser){ valgtKlasse in
@@ -60,9 +61,6 @@ struct klasseVisning: View {
                 }
                 
             })
-            /*.fullScreenCover(item: $visKlassevisningSheet, onDismiss: { visKlassevisningSheet = nil }) {$visKlassevisningSheet in
-                    leggTilNyKlasseVisning(klasseoversikt: klasseoversikt,tekstFraVisma: "", klasseNavn: "", skoleÅr: "",  visKlassevisningSheet: $visKlassevisningSheet)
-            }*/
         } content:{
             if let valgtKlasseID = valgtKlasseID, let valgtKlasse=klasseoversikt.klasseFraId(id: valgtKlasseID) {
                 List(selection: $valgtPrøveID) {
@@ -97,28 +95,25 @@ struct klasseVisning: View {
                         Image(systemName: "plus.circle").foregroundColor(.green)
                     }
                 })
-                /*.sheet(isPresented: $visKlassevisningSheet, onDismiss: { visKlassevisningSheet = nil }) {
-                        leggTilNyPr_veVisning(klasseoversikt: klasseoversikt, KlasseID: valgtKlasseID,  visKlassevisningSheet: $visKlassevisningSheet)
-                }*/
             }
             else {
                 Text("Velg klasse")
             }
         } detail: {
-            ContentView(klasseoversikt: klasseoversikt, valgtKlasseID: valgtKlasseID, valgtPrøveID: valgtPrøveID)
+            ContentView(valgtKlasseID: valgtKlasseID, valgtPrøveID: valgtPrøveID)
         }
         .fullScreenCover(item: $visKlassevisningSheet, onDismiss: {visKlassevisningSheet = nil}) { visKlassevisningSheet in
             switch visKlassevisningSheet {
             case .leggTilKlasse:
-                leggTilNyKlasseVisning(klasseoversikt: klasseoversikt,tekstFraVisma: "", klasseNavn: "", skoleÅr: "",  visKlassevisningSheet: $visKlassevisningSheet)
+                leggTilNyKlasseVisning(tekstFraVisma: "", klasseNavn: "", skoleÅr: "",  visKlassevisningSheet: $visKlassevisningSheet)
             case .leggTilPrøve:
                 if let valgtKlasseID = valgtKlasseID {
-                    leggTilNyPr_veVisning(klasseoversikt: klasseoversikt, KlasseID: valgtKlasseID,  visKlassevisningSheet: $visKlassevisningSheet)
+                    leggTilNyPr_veVisning(KlasseID: valgtKlasseID,  visKlassevisningSheet: $visKlassevisningSheet)
                 }
             case .redigerKlasse(let klasseid):
-                redigerKlasse(klasseId: klasseid, klasseoversikt: klasseoversikt, visKlassevisningSheet: $visKlassevisningSheet)
+                redigerKlasse(klasseId: klasseid, visKlassevisningSheet: $visKlassevisningSheet)
             case .redigerPrøve(let klasseid, let prøveid):
-                redigerPr_ve(prøveId: prøveid, klasseId: klasseid, klasseoversikt: klasseoversikt, visKlassevisningSheet: $visKlassevisningSheet)
+                redigerPr_ve(prøveId: prøveid, klasseId: klasseid, visKlassevisningSheet: $visKlassevisningSheet)
                 
             }
         }

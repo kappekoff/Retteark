@@ -6,8 +6,11 @@
 //
 
 import Foundation
+import Observation
 
-class Klasseoversikt: ObservableObject, Equatable {
+@available(iOS 17.0, *)
+@Observable
+class Klasseoversikt {
     
     struct Klasseinformasjon: Codable {
         var klasser: [Klasse]
@@ -16,7 +19,7 @@ class Klasseoversikt: ObservableObject, Equatable {
     }
     
     
-    @Published var klasseinformasjon: Klasseinformasjon
+    var klasseinformasjon: Klasseinformasjon
 
     init(){
        /* self.klasser = [Klasse(navn: "1IMT", elever: elever_test_1, skoleÅr: "22/23"),
@@ -26,10 +29,6 @@ class Klasseoversikt: ObservableObject, Equatable {
         if(FileManager().documentDoesExist(named: filnavn)){
             lastInnKlasser()
         }
-    }
-    
-    static func == (venstreSide: Klasseoversikt, høyreSide: Klasseoversikt) -> Bool {
-        return venstreSide.klasseinformasjon.id == høyreSide.klasseinformasjon.id
     }
     
     func lastInnKlasser() {
@@ -72,3 +71,8 @@ class Klasseoversikt: ObservableObject, Equatable {
     
 }
 
+extension Klasseoversikt {
+    static func == (venstreSide: Klasseoversikt, høyreSide: Klasseoversikt) -> Bool {
+        return venstreSide.klasseinformasjon.id == høyreSide.klasseinformasjon.id
+    }
+}

@@ -49,7 +49,10 @@ public struct NumericTextField: View {
 
     public var body: some View {
         return TextField(title, text: $string, onEditingChanged: onEditingChanged, onCommit: onCommit)
-            .onChange(of: string, perform: numberChanged(newValue:))
+            .onChange(of: string) {
+                numberChanged(newValue: string)
+            }
+        
     }
     private func numberChanged(newValue: String) {
         let numeric = newValue.numericValue(allowDecimalSeparator: isDecimalAllowed)

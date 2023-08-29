@@ -10,20 +10,23 @@ import SwiftUI
 struct redigerKlasse: View {
     
     var klasseId: Klasse.ID
-    @ObservedObject var klasseoversikt: Klasseoversikt
+    
+    @Environment(Klasseoversikt.self) var klasseoversikt
     @State private var tekstFraVisma: String = ""
+    
     @Binding var visKlassevisningSheet:VisKlassevisningSheet?
     var klasseIndex: Int? {
         klasseoversikt.klasseinformasjon.klasser.firstIndex(where: {$0.id==klasseId})
     }
-    
+    @State private var midlertidigeElever: [Elev] = []
     var body: some View {
+        @Bindable var klasseoversikt = klasseoversikt
         NavigationStack {
             if let klasseIndex = klasseIndex {
                 TextInputField(title: "Klassenavn", text: $klasseoversikt.klasseinformasjon.klasser[klasseIndex].navn)
                 TextInputField(title: "Skoleår", text: $klasseoversikt.klasseinformasjon.klasser[klasseIndex].skoleÅr)
                 List() {
-                    ForEach($klasseoversikt.klasseinformasjon.klasser[klasseIndex].elever, id: \.self) { elev in
+                    ForEach($midlertidigeElever, id: \.id) { elev in
                         TextField("Elevnavn", text: elev.navn)
                     }
                     .onDelete(perform: slettElevFraListe)
@@ -33,14 +36,22 @@ struct redigerKlasse: View {
                         Image(systemName: "plus.circle").foregroundColor(.green)
                     }
                 }
-                .frame(alignment: .leading)
-                .navigationTitle("Lagre endringer")
-                }
-                Button("Lukk") {
-                    visKlassevisningSheet = nil
+            }
+            Button("Lukk") {
+                klasseoversikt.lagreKlasser()
+                visKlassevisningSheet = nil
+            }
+            .onAppear {
+                midlertidigeElever = klasseoversikt.klasseinformasjon.klasser.first(where: {$0.id==klasseId})?.elever ?? []
+            }
+            .onChange(of: midlertidigeElever) {
+                if let klasseIndex = klasseIndex {
+                    klasseoversikt.klasseinformasjon.klasser[klasseIndex].elever = midlertidigeElever
                 }
             }
-            
+        }
+
+        
 
         
         

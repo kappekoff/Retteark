@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct leggTilNyPr_veVisning: View {
-    @ObservedObject var klasseoversikt: Klasseoversikt
+    @Environment(Klasseoversikt.self) var klasseoversikt
     var KlasseID: String
     @Binding var visKlassevisningSheet: VisKlassevisningSheet?
     @State var prøveNavn: String = ""
@@ -20,6 +20,7 @@ struct leggTilNyPr_veVisning: View {
     
     
     var body: some View {
+        @Bindable var klasseoversikt = klasseoversikt
         NavigationStack {
             Text("Legg til ny prøve").font(.largeTitle)
             Section("Om prøven"){
