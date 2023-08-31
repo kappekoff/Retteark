@@ -23,7 +23,7 @@ struct redigerKlasse: View {
                 TextInputField(title: "Klassenavn", text: $klasseoversikt.klasseinformasjon.klasser[klasseIndex].navn)
                 TextInputField(title: "Skoleår", text: $klasseoversikt.klasseinformasjon.klasser[klasseIndex].skoleÅr)
                 List() {
-                    ForEach($klasseoversikt.klasseinformasjon.klasser[klasseIndex].elever, id: \.self) { elev in
+                    ForEach($klasseoversikt.klasseinformasjon.klasser[klasseIndex].elever, id: \.id) { elev in
                         TextField("Elevnavn", text: elev.navn)
                     }
                     .onDelete(perform: slettElevFraListe)

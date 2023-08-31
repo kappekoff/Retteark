@@ -17,7 +17,7 @@ struct redigerPr_ve: View {
     }
     var prøveIndex: Int? {
         if let klasseIndex = klasseIndex {
-            return klasseoversikt.klasseinformasjon.klasser[klasseIndex].prøver.firstIndex(where: {$0.id==klasseId})
+            return klasseoversikt.klasseinformasjon.klasser[klasseIndex].prøver.firstIndex(where: {$0.id==prøveId})
         }
         else {
             return nil
