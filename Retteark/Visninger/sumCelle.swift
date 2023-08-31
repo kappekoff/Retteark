@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct sumCelle: View {
-    @ObservedObject var prøve: Prøve
+    @Bindable var prøve: Prøve
     var elevIndeks: Int
     var formatter: NumberFormatter  = NumberFormatter()
 

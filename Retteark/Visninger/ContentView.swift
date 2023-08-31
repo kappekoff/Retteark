@@ -18,7 +18,7 @@ struct ContentView: View {
     var body: some View {
         @Bindable var klasseoversikt = klasseoversikt
         if let valgtKlasseID = valgtKlasseID {
-            if let valgtPrøveID = valgtPrøveID, let valgtKlasse = klasseoversikt.klasseFraId(id: valgtKlasseID), let $valgtPrøve = valgtKlasse.finnPrøveFraId(id: valgtPrøveID) {
+            if let valgtPrøveID = valgtPrøveID, let valgtKlasse = klasseoversikt.klasseFraId(id: valgtKlasseID), let valgtPrøve = valgtKlasse.finnPrøveFraId(id: valgtPrøveID) {
                 VStack {
                     HStack {
                         Button(action: {
@@ -44,7 +44,7 @@ struct ContentView: View {
                         .keyboardShortcut("s")
                         Button(action: {
                             let docuementDirectory = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first!
-                            let dataPath = docuementDirectory.appendingPathComponent("\($valgtPrøve.navn)")
+                            let dataPath = docuementDirectory.appendingPathComponent("\(valgtPrøve.navn)")
                             if !FileManager.default.fileExists(atPath: dataPath.path) {
                                 do {
                                     try FileManager.default.createDirectory(atPath: dataPath.path, withIntermediateDirectories: true, attributes: nil)
@@ -52,10 +52,10 @@ struct ContentView: View {
                                     print(error.localizedDescription)
                                 }
                             }
-                            for elev in $valgtPrøve.elever {
-                                let outputfileURL: URL? = dataPath.appendingPathComponent("\($valgtPrøve.navn) \(elev.navn).pdf")
+                            for elev in valgtPrøve.elever {
+                                let outputfileURL: URL? = dataPath.appendingPathComponent("\(valgtPrøve.navn) \(elev.navn).pdf")
                                 exportPDF(outputfileURL: outputfileURL){
-                                    elevTilbakemeldingVisning(elev: elev, visElevTilbakemleding: $viserSheet , prøve: $valgtPrøve)
+                                    elevTilbakemeldingVisning(elev: elev, visElevTilbakemleding: $viserSheet , prøve: valgtPrøve)
                                 } completion: { status, url in
                                     if let url = url,status{
                                         print(url)
@@ -86,18 +86,18 @@ struct ContentView: View {
                     .fullScreenCover(item: $viserSheet, onDismiss: {viserSheet = nil}){ viserSheet in
                         switch viserSheet{
                         case .valgtKategorier:
-                            kategoriView(viserSheet: $viserSheet, prøve: $valgtPrøve)
+                            kategoriView(viserSheet: $viserSheet, prøve: valgtPrøve)
                         case .velgtInstillinger:
-                            instillinger(prøve: $valgtPrøve, visElevTilbakemleding: $viserSheet)
+                            instillinger(prøve: valgtPrøve, visElevTilbakemleding: $viserSheet)
                         case .velgtKlassesammendrag:
-                            Klassesammendrag(visElevTilbakemleding: $viserSheet, prøve: $valgtPrøve)
+                            Klassesammendrag(visElevTilbakemleding: $viserSheet, prøve: valgtPrøve)
                                 .presentationDetents([.large])
                         default:
                             Text("Du skal aldri komme hit")
                         }
                     }
                     ScrollView(.horizontal) {
-                        poengTabellView(prøve: $valgtPrøve)
+                        poengTabellView(prøve: valgtPrøve)
                             .padding([.bottom, .leading, .trailing])
                     }
                     

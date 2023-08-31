@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct instillinger: View {
-    @ObservedObject var prøve: Prøve
+    @Bindable var prøve: Prøve
     @Binding var visElevTilbakemleding: VisElevTilbakemleding?
     
     var body: some View {

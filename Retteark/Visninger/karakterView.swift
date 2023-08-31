@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct karakterView: View {
-    @ObservedObject var prøve: Prøve
+    @Bindable var prøve: Prøve
     let elevIndeks: Int
     
     

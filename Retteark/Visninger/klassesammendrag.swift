@@ -10,7 +10,7 @@ import Charts
 
 struct Klassesammendrag: View {
     @Binding var visElevTilbakemleding: VisElevTilbakemleding?
-    @ObservedObject var prøve: Prøve
+    @Bindable var prøve: Prøve
     
     var body: some View {
         VStack {
@@ -97,7 +97,7 @@ struct Klassesammendrag: View {
 
 struct Stolpediagram: View {
 
-    @ObservedObject var prøve: Prøve
+    @Bindable var prøve: Prøve
     var karakterer: [Karakter] {
         finnKarakterSammensetning()
     }
@@ -176,7 +176,7 @@ struct Karakter: Identifiable, Equatable  {
 
 struct kategoriSammendrag: View {
     
-    @ObservedObject var prøve: Prøve
+    @Bindable var prøve: Prøve
     let kategoriKolonner = [
         GridItem(.fixed(150)), GridItem(.fixed(150)), GridItem(.fixed(150))]
     let farger: [Color] = [Color.teal, Color.red, Color.green, Color.indigo, Color.brown, Color.mint, Color.orange, Color.pink, Color.purple, Color.yellow, Color.gray, Color.cyan]

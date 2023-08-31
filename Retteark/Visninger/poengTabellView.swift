@@ -9,7 +9,7 @@ import SwiftUI
 
 struct poengTabellView: View {
     
-    @ObservedObject var prøve: Prøve
+    @Bindable var prøve: Prøve
     @State var visElevTilbakemleding: VisElevTilbakemleding? = nil
     @State var elevIndeks: Int? = nil
     @State var oppgaveIndeks: Int? = nil

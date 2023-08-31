@@ -10,7 +10,7 @@ import SwiftUI
 struct elevTilbakemeldingVisning: View {
     var elev: Elev
     @Binding var visElevTilbakemleding:VisElevTilbakemleding?
-    @ObservedObject var prøve: Prøve
+    @Bindable var prøve: Prøve
     
     let kategoriKolonner = [
         GridItem(.fixed(150)), GridItem(.fixed(150)), GridItem(.fixed(150))

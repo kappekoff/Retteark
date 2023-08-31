@@ -6,22 +6,25 @@
 //
 
 import Foundation
+import Observation
 
-class Prøve: Hashable, Identifiable, Codable, ObservableObject{
+
+@Observable
+class Prøve: Hashable, Identifiable, Codable{
     static func == (lhs: Prøve, rhs: Prøve) -> Bool {
         return (lhs.id == rhs.id)
     }
     
-    @Published var navn: String
+    var navn: String
     var id: String = UUID().uuidString
-    @Published var elever: [Elev] = []
-    @Published var oppgaver: [Oppgave] = []
-    @Published var poeng: [[Poeng]] = []
-    @Published var kategorier: [Kategori] = []
-    @Published var kategorierOgOppgaver: [[BoolOgId]] = []
-    @Published var visEleverKarakter: Bool = true
-    @Published var tilbakemeldinger: [Tilbakemelding] = [Tilbakemelding(tekst: "Du viser høy kompetanse", nedreGrense: 66), Tilbakemelding(tekst: "Du viser middels kompetanse", nedreGrense: 33), Tilbakemelding(tekst: "Arbeid mer med", nedreGrense: 0)]
-    @Published var karaktergrenser: [Karaktergrense] = karaktergrenser_test
+    var elever: [Elev] = []
+    var oppgaver: [Oppgave] = []
+    var poeng: [[Poeng]] = []
+    var kategorier: [Kategori] = []
+    var kategorierOgOppgaver: [[BoolOgId]] = []
+    var visEleverKarakter: Bool = true
+    var tilbakemeldinger: [Tilbakemelding] = [Tilbakemelding(tekst: "Du viser høy kompetanse", nedreGrense: 66), Tilbakemelding(tekst: "Du viser middels kompetanse", nedreGrense: 33), Tilbakemelding(tekst: "Arbeid mer med", nedreGrense: 0)]
+    var karaktergrenser: [Karaktergrense] = karaktergrenser_test
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
@@ -115,7 +118,7 @@ class Prøve: Hashable, Identifiable, Codable, ObservableObject{
                 self.oppgaver[i].maksPoengGammelVerdi = self.oppgaver[i].maksPoeng ?? 1
             }
         }
-        self.objectWillChange.send()
+        //self.objectWillChange.send()
         
     }
     
