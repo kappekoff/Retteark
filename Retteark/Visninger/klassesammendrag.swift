@@ -11,31 +11,31 @@ import Charts
 struct Klassesammendrag: View {
     @Binding var visElevTilbakemleding: VisElevTilbakemleding?
     @Bindable var prøve: Prøve
+  @State var visFilvelger: Bool = false
     
     var body: some View {
         VStack {
             HStack {
                 Text("Klassesammendrag").font(.largeTitle)
                 Button {
-                    let docuementDirectory = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first!
-                    let outputfileURL: URL? = docuementDirectory.appendingPathComponent("\(prøve.navn) klassesammendrag")
-                    exportPDF(outputfileURL: outputfileURL){
-                        Klassesammendrag(visElevTilbakemleding:$visElevTilbakemleding , prøve: prøve)
-                    } completion: { status, url in
-                        if let url = url,status{
-                            print(url)
-                            let controller = UIDocumentPickerViewController(forExporting: [url], asCopy: false)
-                            let scenes = UIApplication.shared.connectedScenes
-                            let windowScene = scenes.first as? UIWindowScene
-                            let window = windowScene?.windows.last
-                            window?.rootViewController?.present(controller, animated: true)
-                        }
-                        else {
-                            print("Klarte ikke produsere pdf")
-                        }
-                    }
-                } label: {
+                  visFilvelger.toggle()
+                }
+                 label: {
                     Image(systemName: "square.and.arrow.up.fill")
+                }
+                 .fileExporter(isPresented: $visFilvelger, document: PDFDocument(pdfData: Data()), contentType: .pdf, defaultFilename: "\(prøve.navn) klassesammendrag.pdf") { result in
+                   switch result {
+                    case .success(let file):
+                     lagPDF(innhold: VStack {
+                       Text(prøve.navn).font(.largeTitle)
+                       Text("Kategorier").font(.title)
+                       kategoriSammendrag(prøve: prøve)
+                       Text("Karakterer").font(.title)
+                       Stolpediagram(prøve: prøve).frame(height: 500)
+                     }, filplassering: file)
+                    case .failure(let error):
+                     print(error)
+                  }
                 }
             }
             ScrollView {

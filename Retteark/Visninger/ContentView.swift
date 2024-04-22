@@ -13,7 +13,8 @@ struct ContentView: View {
     var valgtKlasseID: Klasse.ID?
     var valgtPrøveID: Prøve.ID?
     @State var viserSheet: VisElevTilbakemleding? = nil
-    @State var viserAlert: Bool = false
+    @State var visFilvelger: Bool = false
+  
     
     var body: some View {
         @Bindable var klasseoversikt = klasseoversikt
@@ -42,37 +43,35 @@ struct ContentView: View {
                             Image(systemName: "square.and.arrow.down")
                         })
                         .keyboardShortcut("s")
-                        Button(action: {
-                            let docuementDirectory = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first!
-                            let dataPath = docuementDirectory.appendingPathComponent("\(valgtPrøve.navn)")
-                            if !FileManager.default.fileExists(atPath: dataPath.path) {
-                                do {
-                                    try FileManager.default.createDirectory(atPath: dataPath.path, withIntermediateDirectories: true, attributes: nil)
-                                } catch {
-                                    print(error.localizedDescription)
-                                }
+                        Button {
+                          visFilvelger.toggle()
+                        } label: {
+                          Image(systemName: "square.and.arrow.up.circle.fill")
+                        }
+                        .fileExporter(isPresented: $visFilvelger, documents: [PDFDocument(pdfData: Data())], contentType: .directory) { result in
+                          switch result {
+                           case .success(let file):
+                            let dataPath = file.first!.deletingLastPathComponent().appendingPathComponent("\(file.first!.deletingPathExtension().lastPathComponent)")
+                            do {
+                              try FileManager.default.removeItem(at: file.first!)
+                              
+                              print(dataPath.path)
+                              try FileManager.default.createDirectory(atPath: dataPath.path, withIntermediateDirectories: true, attributes: nil)
+                            } catch {
+                                print(error.localizedDescription)
                             }
                             for elev in valgtPrøve.elever {
-                                let outputfileURL: URL? = dataPath.appendingPathComponent("\(valgtPrøve.navn) \(elev.navn).pdf")
-                                exportPDF(outputfileURL: outputfileURL){
-                                    elevTilbakemeldingVisning(elev: elev, visElevTilbakemleding: $viserSheet , prøve: valgtPrøve)
-                                } completion: { status, url in
-                                    if let url = url,status{
-                                        print(url)
-                                    }
-                                    else {
-                                        print("Klarte ikke produsere pdf")
-                                    }
-                                }
+                              lagPDF(innhold:VStack {
+                                top(elev: elev, prøve: valgtPrøve, visElevTilbakemleding: $viserSheet)
+                                hovedinnhold(elev: elev, visElevTilbakemleding: $viserSheet , prøve: valgtPrøve, lagerPDF: true)
+                              }, filplassering: dataPath.appendingPathComponent("\(valgtPrøve.navn)_\(elev.navn).pdf", conformingTo: .pdf))
                             }
-                            viserAlert = true
-                        }, label: {
-                            Image(systemName: "square.and.arrow.up")
-                        })
+                           case .failure(let error):
+                            print(error)
+                         }
+                       }
+
                         .keyboardShortcut("p")
-                        .alert("Se nedlastinger for pdfene", isPresented: $viserAlert) {
-                                    Button("OK", role: .cancel) { }
-                                }
                         Button(action: {
                             viserSheet = .velgtKlassesammendrag
                             
