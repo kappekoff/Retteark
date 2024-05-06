@@ -13,6 +13,7 @@ enum VisElevTilbakemleding: Identifiable  {
     case velgtInstillinger
     case valgtKategorier
     case velgtKlassesammendrag
+    case viserProgressView
     
     var id: String {
         switch self {
@@ -24,6 +25,8 @@ enum VisElevTilbakemleding: Identifiable  {
             return "valgtKategorier"
         case .velgtKlassesammendrag:
             return "velgtKlassesammendrag"
+        case .viserProgressView:
+          return "viserProgressView"
             
         }
             

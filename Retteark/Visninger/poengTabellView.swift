@@ -62,14 +62,13 @@ struct poengTabellView: View {
                                     .focused($fokus, equals: .poengFokus(id: $prøve.poeng[elevIndeks][oppgaveIndeks].id))
                                     .onSubmit {
                                         if(prøve.poeng[elevIndeks][oppgaveIndeks].poeng == "") {
-                                            prøve.poeng[elevIndeks][oppgaveIndeks].poeng = String((oppgave.maksPoeng!))
+                                          prøve.poeng[elevIndeks][oppgaveIndeks].poeng = String((oppgave.maksPoeng!))
                                             var fokus_posisjon = [elevIndeks, oppgaveIndeks+1]
                                             if(fokus?.get()[1] ?? 0 >= prøve.oppgaver.count - 1) {
                                                 fokus_posisjon = [(fokus?.get()[0] ?? 0) + 1, 0]
                                             }
                                             fokus = .poengFokus(id: fokus_posisjon)
                                         }
-                                        
                                     }
                             }
                             

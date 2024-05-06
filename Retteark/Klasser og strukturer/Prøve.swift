@@ -24,7 +24,7 @@ class Prøve: Hashable, Identifiable, Codable{
     var kategorierOgOppgaver: [[BoolOgId]] = []
     var visEleverKarakter: Bool = true
     var tilbakemeldinger: [Tilbakemelding] = [Tilbakemelding(tekst: "Du viser høy kompetanse", nedreGrense: 66), Tilbakemelding(tekst: "Du viser middels kompetanse", nedreGrense: 33), Tilbakemelding(tekst: "Arbeid mer med", nedreGrense: 0)]
-    var karaktergrenser: [Karaktergrense] = karaktergrenser_test
+    var karaktergrenser: [Karaktergrense] = Testdata().karaktergrenser_test
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)

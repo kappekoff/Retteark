@@ -37,7 +37,7 @@ func lagPDF (innhold: some View, filplassering: URL) {
 struct PDFDocument: FileDocument {
   
   var pdfData: Data
-  static var readableContentTypes: [UTType] = [.pdf, .directory]
+  static let readableContentTypes: [UTType] = [.pdf, .directory]
   
   init(configuration: ReadConfiguration) throws {
     self.init()

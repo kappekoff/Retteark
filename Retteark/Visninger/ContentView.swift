@@ -14,6 +14,7 @@ struct ContentView: View {
     var valgtPrøveID: Prøve.ID?
     @State var viserSheet: VisElevTilbakemleding? = nil
     @State var visFilvelger: Bool = false
+    @State var tilbakemledingerLaget: Float = 0.0
   
     
     var body: some View {
@@ -51,27 +52,28 @@ struct ContentView: View {
                         .fileExporter(isPresented: $visFilvelger, documents: [PDFDocument(pdfData: Data())], contentType: .directory) { result in
                           switch result {
                            case .success(let file):
+                            viserSheet = .viserProgressView
                             let dataPath = file.first!.deletingLastPathComponent().appendingPathComponent("\(file.first!.deletingPathExtension().lastPathComponent)")
                             do {
                               try FileManager.default.removeItem(at: file.first!)
-                              
-                              print(dataPath.path)
                               try FileManager.default.createDirectory(atPath: dataPath.path, withIntermediateDirectories: true, attributes: nil)
                             } catch {
                                 print(error.localizedDescription)
                             }
+                            tilbakemledingerLaget = 0
+                            
                             for elev in valgtPrøve.elever {
                               lagPDF(innhold:VStack {
                                 top(elev: elev, prøve: valgtPrøve, visElevTilbakemleding: $viserSheet)
                                 hovedinnhold(elev: elev, visElevTilbakemleding: $viserSheet , prøve: valgtPrøve, lagerPDF: true)
                               }, filplassering: dataPath.appendingPathComponent("\(valgtPrøve.navn)_\(elev.navn).pdf", conformingTo: .pdf))
+                              tilbakemledingerLaget = Float(1/valgtPrøve.elever.count)
                             }
+                            viserSheet = nil
                            case .failure(let error):
                             print(error)
                          }
                        }
-
-                        .keyboardShortcut("p")
                         Button(action: {
                             viserSheet = .velgtKlassesammendrag
                             
@@ -91,6 +93,10 @@ struct ContentView: View {
                         case .velgtKlassesammendrag:
                             Klassesammendrag(visElevTilbakemleding: $viserSheet, prøve: valgtPrøve)
                                 .presentationDetents([.large])
+                        case .viserProgressView:
+                            ProgressView("Lagrer tilbakemeldinger", value: tilbakemledingerLaget)
+                              .progressViewStyle(.circular)
+                            
                         default:
                             Text("Du skal aldri komme hit")
                         }

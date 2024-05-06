@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct PoengView: View {
+    @Environment(Klasseoversikt.self) var klasseoversikt
     @Binding var poeng: Poeng
     
     var body: some View {
@@ -16,5 +17,11 @@ struct PoengView: View {
             .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
             .border(.black)
             .multilineTextAlignment(.center)
+            .onChange(of: poeng) { _, _ in
+              Task {
+                klasseoversikt.lagreKlasser()
+              }
+            }
+            
     }
 }

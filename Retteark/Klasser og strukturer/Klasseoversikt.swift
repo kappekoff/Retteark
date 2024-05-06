@@ -49,8 +49,7 @@ class Klasseoversikt {
     
     func lagreKlasser() {
         let enkoder = JSONEncoder()
-        print(klasseinformasjon.lagret_tidspunkt?.formatted() ?? "Dato ikke satt")
-        do {
+          do {
             let data = try enkoder.encode(klasseinformasjon)
             let jsonString = String(decoding: data, as: UTF8.self)
             FileManager().saveDocument(contents: jsonString, documentname: filnavn) { (error) in
