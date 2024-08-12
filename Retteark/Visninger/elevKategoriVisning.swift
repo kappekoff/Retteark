@@ -130,7 +130,7 @@ struct hovedinnhold: View {
       for oppgave in prøve.oppgaver {
           if let oppgaveIndex = prøve.oppgaveIndexMedKjentKategori(oppgaveId: oppgave.id, kateogriIndex: kategoriIndex){
               if(prøve.kategorierOgOppgaver[kategoriIndex][oppgaveIndex].verdi){
-                  sum += prøve.oppgaver[oppgaveIndex].maksPoeng ?? 0
+                  sum += prøve.oppgaver[optional: oppgaveIndex]?.maksPoeng ?? 0
               }
           }
       }
