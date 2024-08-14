@@ -147,7 +147,7 @@ struct hovedinnhold: View {
       
       for oppgave in prøve.oppgaver {
           if let oppgaveIndex = prøve.oppgaveIndexMedKjentElev(oppgaveId: oppgave.id, elevIndex: elevIndex) {
-            if((prøve.kategorierOgOppgaver[optional: kategoriIndex]?[oppgaveIndex].verdi) != nil){
+              if(prøve.kategorierOgOppgaver[optional: kategoriIndex]?[optional: oppgaveIndex]?.verdi ?? false){
                   let tall = formatter.number(from: prøve.poeng[elevIndex][oppgaveIndex].poeng) as? Double
                   if(tall != nil) {
                       sum += tall!
