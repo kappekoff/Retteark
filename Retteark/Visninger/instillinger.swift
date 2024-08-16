@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct instillinger: View {
+    @Environment(Klasseoversikt.self) var klasseoversikt
     @Bindable var prøve: Prøve
     @Binding var visElevTilbakemleding: VisElevTilbakemleding?
+   
     
     var body: some View {
             Text("Instillinger").font(.largeTitle)
@@ -67,6 +69,7 @@ struct instillinger: View {
         }
         
         Button("Lukk") {
+            klasseoversikt.lagreKlasser()
             visElevTilbakemleding = nil
         }
     }

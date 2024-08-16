@@ -87,12 +87,11 @@ struct ContentView: View {
                     .fullScreenCover(item: $viserSheet, onDismiss: {viserSheet = nil}){ viserSheet in
                         switch viserSheet{
                         case .valgtKategorier:
-                            kategoriView(viserSheet: $viserSheet, prøve: valgtPrøve)
+                            kategoriView(viserSheet: $viserSheet, prøve: valgtPrøve).environment(klasseoversikt)
                         case .velgtInstillinger:
-                            instillinger(prøve: valgtPrøve, visElevTilbakemleding: $viserSheet)
+                            instillinger(prøve: valgtPrøve, visElevTilbakemleding: $viserSheet).environment(klasseoversikt)
                         case .velgtKlassesammendrag:
                             Klassesammendrag(visElevTilbakemleding: $viserSheet, prøve: valgtPrøve)
-                                .presentationDetents([.large])
                         case .viserProgressView:
                             ProgressView("Lagrer tilbakemeldinger", value: tilbakemledingerLaget)
                               .progressViewStyle(.circular)

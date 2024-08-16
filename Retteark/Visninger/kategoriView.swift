@@ -9,6 +9,7 @@ import SwiftUI
 
 
 struct kategoriView: View {
+    @Environment(Klasseoversikt.self) var klasseoversikt
     @Binding var viserSheet: VisElevTilbakemleding?
     @Bindable var prøve: Prøve
     
@@ -42,6 +43,7 @@ struct kategoriView: View {
                 }
             }
             Button("Lukk") {
+                klasseoversikt.lagreKlasser()
                 viserSheet = nil
             }
         }

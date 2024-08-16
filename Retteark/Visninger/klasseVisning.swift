@@ -105,15 +105,15 @@ struct klasseVisning: View {
         .fullScreenCover(item: $visKlassevisningSheet, onDismiss: {visKlassevisningSheet = nil}) { visKlassevisningSheet in
             switch visKlassevisningSheet {
             case .leggTilKlasse:
-                leggTilNyKlasseVisning(tekstFraVisma: "", klasseNavn: "", skoleÅr: "",  visKlassevisningSheet: $visKlassevisningSheet)
+                leggTilNyKlasseVisning(tekstFraVisma: "", klasseNavn: "", skoleÅr: "",  visKlassevisningSheet: $visKlassevisningSheet).environment(klasseoversikt)
             case .leggTilPrøve:
                 if let valgtKlasseID = valgtKlasseID {
-                    leggTilNyPr_veVisning(KlasseID: valgtKlasseID,  visKlassevisningSheet: $visKlassevisningSheet)
+                    leggTilNyPr_veVisning(KlasseID: valgtKlasseID,  visKlassevisningSheet: $visKlassevisningSheet).environment(klasseoversikt)
                 }
             case .redigerKlasse(let klasseid):
-                redigerKlasse(klasseId: klasseid, visKlassevisningSheet: $visKlassevisningSheet)
+                redigerKlasse(klasseId: klasseid, visKlassevisningSheet: $visKlassevisningSheet).environment(klasseoversikt)
             case .redigerPrøve(let klasseid, let prøveid):
-                redigerPr_ve(prøveId: prøveid, klasseId: klasseid, visKlassevisningSheet: $visKlassevisningSheet)
+                redigerPr_ve(prøveId: prøveid, klasseId: klasseid, visKlassevisningSheet: $visKlassevisningSheet).environment(klasseoversikt)
                 
             }
         }
