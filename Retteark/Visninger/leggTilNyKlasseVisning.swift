@@ -29,20 +29,23 @@ struct leggTilNyKlasseVisning: View {
                 } label: {
                     Image(systemName: "arrow.right.square.fill")
                 }
-                List() {
-                    ForEach($elever, id: \.self) { elev in
-                        TextField("Elevnanv", text: elev.navn)
+                VStack {
+                    Text("Det er \(elever.count) elever")
+                    List() {
+                        
+                        ForEach($elever, id: \.self) { elev in
+                            TextField("Elevnanv", text: elev.navn)
+                        }
+                        .onDelete(perform: slettElevFraListe)
+                        Button {
+                            elever.append(Elev(navn: ""))
+                        } label: {
+                            Image(systemName: "plus.circle").foregroundColor(.green)
+                        }
                     }
-                    .onDelete(perform: slettElevFraListe)
-                    Button {
-                        elever.append(Elev(navn: ""))
-                    } label: {
-                        Image(systemName: "plus.circle").foregroundColor(.green)
-                    }
-
+                    .frame(alignment: .leading)
+                    .navigationTitle("Legg til ny klasse")
                 }
-                .frame(alignment: .leading)
-                .navigationTitle("Legg til ny klasse")
             }
         }
         HStack {

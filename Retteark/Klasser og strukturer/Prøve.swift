@@ -100,23 +100,23 @@ class Prøve: Hashable, Identifiable, Codable{
         formatter.numberStyle = .decimal
         formatter.decimalSeparator = "."
         formatter.groupingSeparator = ""
-        let endringsfaktor = (self.oppgaver.first(where: { $0.id == oppgaveId})?.maksPoeng ?? 0) / (self.oppgaver.first(where: { $0.id == oppgaveId})?.maksPoengGammelVerdi ?? 1)
+        guard let oppgave = self.oppgaver.first(where: { $0.id == oppgaveId}) else {return}
+        guard let nyMaksPoeng = oppgave.maksPoeng else {return}
+        guard let gammelMaksPoeng = oppgave.gammelMaksPoeng else {return}
+        let endringsfaktor = nyMaksPoeng / gammelMaksPoeng
         for elev in self.elever {
             if let elevIndeks = self.poengRad(elevId: elev.id) {
                 if let oppgaveIndeks = oppgaveIndexMedKjentElev(oppgaveId: oppgaveId, elevIndex: elevIndeks){
                     if let gammelVerdi = (formatter.number(from: self.poeng[elevIndeks][oppgaveIndeks].poeng) as? Float) {
-                        let  nyVerdi = gammelVerdi * endringsfaktor
+                        let nyVerdi = endringsfaktor.isNaN == true ? nyMaksPoeng : gammelVerdi * endringsfaktor
                         self.poeng[elevIndeks][oppgaveIndeks].poeng = String(nyVerdi)
                     }
                 }
             }
             
         }
-        
-        for i in 0..<self.oppgaver.count {
-            if(self.oppgaver[i].id == oppgaveId){
-                self.oppgaver[i].maksPoengGammelVerdi = self.oppgaver[i].maksPoeng ?? 1
-            }
+        for i in 0...self.oppgaver.count-1 {
+            self.oppgaver[i].gammelMaksPoeng = nyMaksPoeng
         }
         //self.objectWillChange.send()
         

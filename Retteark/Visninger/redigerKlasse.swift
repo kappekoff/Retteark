@@ -25,9 +25,9 @@ struct redigerKlasse: View {
             if let klasseIndex = klasseIndex {
                 TextInputField(title: "Klassenavn", text: $klasseoversikt.klasseinformasjon.klasser[klasseIndex].navn)
                 TextInputField(title: "Skoleår", text: $klasseoversikt.klasseinformasjon.klasser[klasseIndex].skoleÅr)
+                Text("Det er \(klasseoversikt.klasseinformasjon.klasser[klasseIndex].elever.count) elever")
                 List() {
                     ForEach($klasseoversikt.klasseinformasjon.klasser[klasseIndex].elever, id: \.id) { elev in
-
                         TextField("Elevnavn", text: elev.navn)
                     }
                     .onDelete(perform: slettElevFraListe)

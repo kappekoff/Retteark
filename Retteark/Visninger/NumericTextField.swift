@@ -13,7 +13,7 @@ public extension String {
         return self.filter {
             if $0.isWholeNumber {
                 return true
-            } else if allowDecimalSeparator && String($0) == (Locale.current.decimalSeparator ?? ".") {
+            } else if allowDecimalSeparator && String($0) == (".") {
                 defer { hasFoundDecimal = true }
                 return !hasFoundDecimal
             }

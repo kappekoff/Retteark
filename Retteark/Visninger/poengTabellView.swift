@@ -34,9 +34,10 @@ struct poengTabellView: View {
                 Image(systemName: "number")
                 ForEach($prøve.oppgaver){oppgave in
                     maxPoengVisning(poeng: oppgave.maksPoeng)
-                    .onSubmit{
-                        prøve.endrePoengAlleElever(oppgaveId: oppgave.id)
-                    }
+                        .onChange(of: oppgave.maksPoeng.wrappedValue) { gammelVerdi, nyVerdi in
+                            guard nyVerdi != nil else {return}
+                            prøve.endrePoengAlleElever(oppgaveId: oppgave.id)
+                        }
                 }
                 Text(String(prøve.oppgaver.map({$0.maksPoeng ?? 0}).reduce(0, +)))
                 Text("6")
