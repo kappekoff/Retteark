@@ -33,7 +33,7 @@ struct leggTilNyKlasseVisning: View {
                     Text("Det er \(elever.count) elever")
                     List() {
                         
-                        ForEach($elever, id: \.self) { elev in
+                        ForEach($elever) { elev in
                             TextField("Elevnanv", text: elev.navn)
                         }
                         .onDelete(perform: slettElevFraListe)

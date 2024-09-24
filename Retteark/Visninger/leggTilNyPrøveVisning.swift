@@ -64,7 +64,7 @@ struct leggTilNyPr_veVisning: View {
                 Button("Legg til") {
                     let klasseIndex = klasseoversikt.klasseinformasjon.klasser.firstIndex(where: {$0.id == KlasseID})
                     if (klasseIndex != nil) {
-                        klasseoversikt.klasseinformasjon.klasser[klasseIndex!].prøver.append(Prøve(navn: prøveNavn, elever: klasseoversikt.klasseinformasjon.klasser[klasseIndex!].elever, oppgaver: oppgaver, kategorier: [], visEleverKarakter: visEleverKarakter))
+                        klasseoversikt.klasseinformasjon.klasser[klasseIndex!].prøver.append(Prøve(navn: prøveNavn, elever: klasseoversikt.klasseinformasjon.klasser[klasseIndex!].elever.sorted(by: {$0.navn.lowercased() < $1.navn.lowercased()}), oppgaver: oppgaver, kategorier: [], visEleverKarakter: visEleverKarakter))
                         klasseoversikt.lagreKlasser()
                         visKlassevisningSheet = nil
                     }
@@ -75,7 +75,7 @@ struct leggTilNyPr_veVisning: View {
                 }
             }
         }
-        .navigationTitle("Legg til Ny prøve")
+        .navigationTitle("Legg til ny prøve")
     }
     
     func slettOppgaveFraListe(at offsets: IndexSet){
