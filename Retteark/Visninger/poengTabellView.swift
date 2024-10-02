@@ -43,7 +43,7 @@ struct poengTabellView: View {
                 Text("6")
                 Color.clear.gridCellUnsizedAxes([.horizontal, .vertical])
             }
-            .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).font(.title).border(.primary).fontWeight(.bold).background(.gray)
+            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: 50).font(.title).border(.primary).fontWeight(.bold).background(.gray)
             ForEach(prøve.elever){elev in
                 if let elevIndeks = prøve.poengRad(elevId: elev.id){
                     GridRow(){
@@ -52,11 +52,10 @@ struct poengTabellView: View {
                               return elevv.id == prøve.poeng[elevIndeks][optional: 0]?.elevId
                             })!)
                         }, label: {
-                            Text( prøve.elever.first(where: { elevv in
+                            Text(prøve.elever.first(where: { elevv in
                               return elevv.id == prøve.poeng[elevIndeks][optional: 0]?.elevId
-                            })!.navn)
+                            })?.navn ?? "Fant ikke elev")
                         })
-                        
                         ForEach(prøve.oppgaver){ oppgave in
                             if let oppgaveIndeks = prøve.oppgave(elevIndeks: elevIndeks, oppgaveId: oppgave.id) {
                                 PoengView(poeng: $prøve.poeng[elevIndeks][oppgaveIndeks])

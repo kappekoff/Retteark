@@ -61,6 +61,8 @@ struct klasseVisning: View {
                 }
                 
             })
+            .toolbar(removing: .sidebarToggle)
+            
         } content:{
             if let valgtKlasseID = valgtKlasseID, let valgtKlasse=klasseoversikt.klasseFraId(id: valgtKlasseID) {
                 List(selection: $valgtPrøveID) {
@@ -100,7 +102,25 @@ struct klasseVisning: View {
                 Text("Velg klasse")
             }
         } detail: {
-            ContentView(valgtKlasseID: valgtKlasseID, valgtPrøveID: valgtPrøveID)
+            VStack {
+                HStack {
+                    Button {
+                        if(visSideKolonner == .all) {
+                            visSideKolonner = .detailOnly
+                        }
+                        else if(visSideKolonner == .detailOnly) {
+                            visSideKolonner = .all
+                        }
+                    } label: {
+                        Image(systemName: "sidebar.left")
+                            .font(.title2)
+                    }
+                    Spacer()
+                }
+                ContentView(valgtKlasseID: valgtKlasseID, valgtPrøveID: valgtPrøveID)
+                Spacer()
+            }
+            
         }
         .fullScreenCover(item: $visKlassevisningSheet, onDismiss: {visKlassevisningSheet = nil}) { visKlassevisningSheet in
             switch visKlassevisningSheet {

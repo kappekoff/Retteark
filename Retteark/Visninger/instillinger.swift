@@ -63,6 +63,11 @@ struct instillinger: View {
                         Image(systemName: "plus.circle").foregroundColor(.green)
                     }
                 }
+                Section("Elever") {
+                    ForEach($prøve.elever) { elev in
+                        TextField("Elevnavn", text: elev.navn)
+                    }
+                }
                 Section("Om prøven"){
                     Toggle("Vis elever karakter", isOn: $prøve.visEleverKarakter)
                 }
