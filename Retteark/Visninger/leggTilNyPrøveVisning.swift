@@ -15,6 +15,7 @@ struct leggTilNyPr_veVisning: View {
     @State var oppgaver: [Oppgave] = [];
     @State var visEleverKarakter = true;
     @State var nyeOppgaver: String = "";
+    @State var maksPoeng: Float? = nil
     
     
     
@@ -33,6 +34,7 @@ struct leggTilNyPr_veVisning: View {
                         .onSubmit {
                             leggTilNyeOppgaver()
                         }
+                    NumericTextField("Makspoeng", number: $maksPoeng, isDecimalAllowed: true)
                     Button("Legg til") {
                         leggTilNyeOppgaver()
                     }
@@ -83,7 +85,7 @@ struct leggTilNyPr_veVisning: View {
     }
     
     func leggTilNyeOppgaver() {
-        let listeMedNyeOppgaver:[Oppgave] = oppgaverFraListeMedOppgavenavn(listeMedOppgavenavn: lagOppgaver(input: nyeOppgaver))
+        let listeMedNyeOppgaver:[Oppgave] = oppgaverFraListeMedOppgavenavn(listeMedOppgavenavn: lagOppgaver(input: nyeOppgaver), maksPoeng: maksPoeng)
         oppgaver.append(contentsOf: listeMedNyeOppgaver)
         nyeOppgaver = ""
     }

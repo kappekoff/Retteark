@@ -181,10 +181,10 @@ func lagOppgaver(input: String) -> [String] {
     return oppgaver
 }
 
-func oppgaverFraListeMedOppgavenavn(listeMedOppgavenavn: [String]) -> [Oppgave] {
+func oppgaverFraListeMedOppgavenavn(listeMedOppgavenavn: [String], maksPoeng: Float?) -> [Oppgave] {
     var oppgaver:[Oppgave] = []
     for oppgavenavn in listeMedOppgavenavn {
-        oppgaver.append(Oppgave(navn: oppgavenavn, maksPoeng: 1))
+        oppgaver.append(Oppgave(navn: oppgavenavn, maksPoeng: maksPoeng ?? 2))
     }
     return oppgaver
 }
