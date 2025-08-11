@@ -6,28 +6,54 @@
 //
 
 import SwiftUI
+import SharingGRDB
+
+@Observable
+class KlasseVisningModell {
+    @ObservationIgnored @Dependency(\.defaultDatabase) var database
+    @ObservationIgnored @SharedReader(.fetchAll(sql: "SELECT * FROM klasser")) var klasser: [Klasser]
+    @ObservationIgnored @FetchAll var prøver: [Prover] = []
+    
+    func hentProverForKlasse(klasseId: String) async {
+        await withErrorReporting {
+            try await $prøver.load(
+                Prover
+                    .where{ $0.klasseId == klasseId },
+                animation: .default
+            )
+        }
+        
+    }
+}
+
+
 
 struct klasseVisning: View {
+    
     @Environment(Klasseoversikt.self) var klasseoversikt
     @State private var visSideKolonner = NavigationSplitViewVisibility.all
     @State private var valgtKlasseID: Klasse.ID?
     @State private var valgtPrøveID: Prøve.ID?
     @State var visKlassevisningSheet: VisKlassevisningSheet? = nil
+    
+    @Dependency(\.defaultDatabase) var database
+    @SharedReader(.fetchAll(sql: "SELECT * FROM Klasser")) var klasser: [Klasser]
+    @FetchAll var prøver: [Prover] = []
 
     var body: some View {
         @Bindable var klasseoversikt = klasseoversikt
         NavigationSplitView(columnVisibility: $visSideKolonner){
-            List(selection: $valgtKlasseID) {
-                ForEach($klasseoversikt.klasseinformasjon.klasser){ valgtKlasse in
+           List(selection: $valgtKlasseID) {
+                ForEach(klasser){ valgtKlasse in
                     HStack {
-                        Text(valgtKlasse.navn.wrappedValue)
+                        Text(valgtKlasse.navn)
                         Spacer()
-                        Text(valgtKlasse.skoleÅr.wrappedValue)
+                        Text(valgtKlasse.skoleår)
                     }
                     .font(.title).bold()
-                    .swipeActions {
+                    /*.swipeActions {
                         Button(role: .destructive) {
-                            slettKlasseFraListe(klasse: valgtKlasse.wrappedValue)
+                            slettKlasseFraListe(klasse: valgtKlasse)
                             print("Slett Klasse")
                         } label: {
                             Image(systemName: "trash")
@@ -39,10 +65,10 @@ struct klasseVisning: View {
                             Image(systemName: "square.and.pencil")
                         }
                         .tint(.yellow)
-                    }
+                    }*/
                 }
-                .onDelete(perform: funksjonSomIkkeSletterNoe)
-            }
+                //.onDelete(perform: funksjonSomIkkeSletterNoe)
+           }
             .navigationTitle("Klasser")
             .toolbar(content: {
                 ToolbarItem {
@@ -121,6 +147,9 @@ struct klasseVisning: View {
                 Spacer()
             }
             
+        }
+        .onAppear {
+            print(klasser)
         }
         .fullScreenCover(item: $visKlassevisningSheet, onDismiss: {visKlassevisningSheet = nil}) { visKlassevisningSheet in
             switch visKlassevisningSheet {

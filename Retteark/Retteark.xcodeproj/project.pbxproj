@@ -10,6 +10,10 @@
 		941205ED289006A500D7FA3C /* elev.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941205EC289006A500D7FA3C /* elev.swift */; };
 		941205EF2890071900D7FA3C /* oppgave.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941205EE2890071900D7FA3C /* oppgave.swift */; };
 		941205F128900ED700D7FA3C /* poeng.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941205F028900ED700D7FA3C /* poeng.swift */; };
+		941211F62E45DF2C0060099B /* SharingGRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 941211F52E45DF2C0060099B /* SharingGRDB */; };
+		941211F82E45DF2C0060099B /* SharingGRDBCore in Frameworks */ = {isa = PBXBuildFile; productRef = 941211F72E45DF2C0060099B /* SharingGRDBCore */; };
+		941211FA2E45DF2C0060099B /* StructuredQueriesGRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 941211F92E45DF2C0060099B /* StructuredQueriesGRDB */; };
+		941211FC2E45DF2C0060099B /* StructuredQueriesGRDBCore in Frameworks */ = {isa = PBXBuildFile; productRef = 941211FB2E45DF2C0060099B /* StructuredQueriesGRDBCore */; };
 		949429E5293D243C00543B19 /* bakgrunsfarger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949429E4293D243C00543B19 /* bakgrunsfarger.swift */; };
 		94B82C4A28CBCE010086368A /* Klasse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B82C4928CBCE010086368A /* Klasse.swift */; };
 		94B82C4C28CBCF350086368A /* klasseVisning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B82C4B28CBCF350086368A /* klasseVisning.swift */; };
@@ -126,6 +130,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				941211FC2E45DF2C0060099B /* StructuredQueriesGRDBCore in Frameworks */,
+				941211FA2E45DF2C0060099B /* StructuredQueriesGRDB in Frameworks */,
+				941211F62E45DF2C0060099B /* SharingGRDB in Frameworks */,
+				941211F82E45DF2C0060099B /* SharingGRDBCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,6 +289,10 @@
 			);
 			name = Retteark;
 			packageProductDependencies = (
+				941211F52E45DF2C0060099B /* SharingGRDB */,
+				941211F72E45DF2C0060099B /* SharingGRDBCore */,
+				941211F92E45DF2C0060099B /* StructuredQueriesGRDB */,
+				941211FB2E45DF2C0060099B /* StructuredQueriesGRDBCore */,
 			);
 			productName = Retteark;
 			productReference = 94DF82DB2878BB540054D5B8 /* Retteark.app */;
@@ -355,6 +367,7 @@
 			);
 			mainGroup = 94DF82D22878BB540054D5B8;
 			packageReferences = (
+				941211F42E45DF2C0060099B /* XCRemoteSwiftPackageReference "sharing-grdb" */,
 			);
 			productRefGroup = 94DF82DC2878BB540054D5B8 /* Products */;
 			projectDirPath = "";
@@ -779,6 +792,40 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		941211F42E45DF2C0060099B /* XCRemoteSwiftPackageReference "sharing-grdb" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/sharing-grdb";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.5.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		941211F52E45DF2C0060099B /* SharingGRDB */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 941211F42E45DF2C0060099B /* XCRemoteSwiftPackageReference "sharing-grdb" */;
+			productName = SharingGRDB;
+		};
+		941211F72E45DF2C0060099B /* SharingGRDBCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 941211F42E45DF2C0060099B /* XCRemoteSwiftPackageReference "sharing-grdb" */;
+			productName = SharingGRDBCore;
+		};
+		941211F92E45DF2C0060099B /* StructuredQueriesGRDB */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 941211F42E45DF2C0060099B /* XCRemoteSwiftPackageReference "sharing-grdb" */;
+			productName = StructuredQueriesGRDB;
+		};
+		941211FB2E45DF2C0060099B /* StructuredQueriesGRDBCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 941211F42E45DF2C0060099B /* XCRemoteSwiftPackageReference "sharing-grdb" */;
+			productName = StructuredQueriesGRDBCore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 94DF82D32878BB540054D5B8 /* Project object */;
 }
