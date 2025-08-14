@@ -24,7 +24,7 @@ struct redigerKlasse: View {
     
     
     @FetchAll var klasser : [Klasser] = []
-    @FetchAll var elever: [Elever] = []
+    @State var elever: [Elever] = []
     
     
     
@@ -40,7 +40,7 @@ struct redigerKlasse: View {
                 Text("Det er \(elever.count) elever")
                 List() {
                     ForEach(elever, id: \.id) { elev in
-                        ElevView(elev: elev)
+                        ElevView(elev: elev, navn: elev.navn)
                     }
                     .onDelete(perform: slettElevFraListe)
                     Button {
@@ -64,9 +64,11 @@ struct redigerKlasse: View {
         .onAppear {
             Task {
                 await hentKlasser()
-                await hentElever()
                 midlertidigKlasseNavn = klasser.first?.navn ?? ""
                 midlertidigKlasseSkoleår = klasser.first?.skoleår ?? ""
+            }
+            Task {
+                await hentElever()
             }
         }
         .onChange(of: [midlertidigKlasseNavn, midlertidigKlasseSkoleår]) { _, _ in
@@ -94,11 +96,11 @@ struct redigerKlasse: View {
     
     func hentElever() async {
         await withErrorReporting {
-            try await $elever.load(
-                Elever
-                    .where{ $0.klasseId == self.valgtKlasseID },
-                animation: .default
-            )
+            try await database.read { db in
+                elever = try Elever
+                    .where { $0.klasseId == self.valgtKlasseID }
+                    .fetchAll(db)
+            }
         }
     }
     
@@ -127,14 +129,10 @@ struct ElevView: View {
     var elev: Elever
     
     @Dependency(\.defaultDatabase) var database
-    @FetchAll var elever: [Elever] = []
-    @State private var navn: String = ""
+    @State var navn: String
     
     var body: some View {
         TextField("Elevnavn", text: $navn)
-            .onAppear {
-                navn = elever.first?.navn ?? ""
-            }
             .onChange(of: navn){ newvalue in
                 Task {
                     await withErrorReporting {
@@ -146,16 +144,4 @@ struct ElevView: View {
                 }
             }
     }
-    
-    
-    func hentElever() async {
-        await withErrorReporting {
-            try await $elever.load(
-                Elever
-                    .where{ $0.id == self.elev.id },
-                animation: .default
-            )
-        }
-    }
-
 }

@@ -6,13 +6,15 @@
 //
 
 import SwiftUI
+import SharingGRDB
     
 struct leggTilNyKlasseVisning: View {
     @Environment(Klasseoversikt.self) var klasseoversikt
+    @Dependency(\.defaultDatabase) var database
     @State var tekstFraVisma: String
     @State var klasseNavn: String
     @State var skoleÅr: String
-    @State var elever: [Elev] = []
+    @State var elever: [Elever] = []
     @Binding var visKlassevisningSheet: VisKlassevisningSheet?
     
     var body: some View {
@@ -24,7 +26,7 @@ struct leggTilNyKlasseVisning: View {
                 TextInputField(title: "Legg til elever. Kopier undervisningsgruppe fra visma", text: $tekstFraVisma)
                 Button {
                     let navnTilElever = vismaTilElever(visma: tekstFraVisma)
-                    elever = navnTilElever.enumerated().map({(index, navn) in return Elev(navn: navn)})
+                    elever = navnTilElever.enumerated().map({(index, navn) in return Elever(id: UUID().uuidString, navn: navn)})
                     print(navnTilElever)
                 } label: {
                     Image(systemName: "arrow.right.square.fill")
@@ -38,7 +40,7 @@ struct leggTilNyKlasseVisning: View {
                         }
                         .onDelete(perform: slettElevFraListe)
                         Button {
-                            elever.append(Elev(navn: ""))
+                            elever.append(Elever(id: UUID().uuidString, navn: ""))
                         } label: {
                             Image(systemName: "plus.circle").foregroundColor(.green)
                         }
@@ -53,13 +55,31 @@ struct leggTilNyKlasseVisning: View {
                 visKlassevisningSheet = nil
             }
             Button("Legg til") {
-                klasseoversikt.klasseinformasjon.klasser.append(Klasse(navn: klasseNavn, elever: elever, skoleÅr: skoleÅr))
-                klasseoversikt.lagreKlasser()
+                let klasseId = UUID().uuidString
+                Task {
+                    await withErrorReporting {
+                        try await database.write { db in
+                            let midlertidigKlasse = Klasser(id: klasseId, navn: klasseNavn, skoleår: skoleÅr)
+                            try  Klasser.insert{midlertidigKlasse}.execute(db)
+                        }
+                    }
+                }
+                for elev in elever {
+                    Task {
+                        await withErrorReporting {
+                            try await database.write { db in
+                                let midlertidigElev = Elever(id: elev.id, navn: elev.navn, klasseId: klasseId)
+                                try  Elever.insert{midlertidigElev}.execute(db)
+                            }
+                        }
+                    }
+                }
                 visKlassevisningSheet = nil
             }
         }
         
     }
-    func slettElevFraListe(at offsets: IndexSet){
-        elever.remove(atOffsets: offsets)    }
+        func slettElevFraListe(at offsets: IndexSet){
+            elever.remove(atOffsets: offsets)
+        }
 }
