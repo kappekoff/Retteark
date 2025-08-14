@@ -37,7 +37,7 @@ enum VisElevTilbakemleding: Identifiable  {
 enum VisKlassevisningSheet: Identifiable{
     case leggTilKlasse
     case leggTilPrøve
-    case redigerKlasse(klasseid: Klasse.ID)
+    case redigerKlasse(klasseid: Klasser.ID)
     case redigerPrøve(klasseid: Prøve.ID, prøveid: Prøve.ID)
     
     var id: String {

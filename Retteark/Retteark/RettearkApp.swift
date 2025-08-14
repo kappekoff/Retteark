@@ -158,22 +158,22 @@ struct RettearkApp: App {
     }
 }
 
-@Table
+@Table("Klasser")
 struct Klasser:FetchableRecord, Codable, Identifiable {
     var id: String
     var navn: String
     var skoleår: String
 }
 
-@Table
-struct Elever {
+@Table("Elever")
+struct Elever: FetchableRecord, Codable, Identifiable {
     var id: String
     var navn: String
-    var klasseId: String
+    var klasseId: String?
 }
 
-@Table
-struct Prover:FetchableRecord, Codable{
+@Table("Prover")
+struct Prover:FetchableRecord, Codable, Identifiable {
     var id: String
     var navn: String
     var visEleverKarakter: Bool

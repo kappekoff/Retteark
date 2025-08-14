@@ -8,24 +8,6 @@
 import SwiftUI
 import SharingGRDB
 
-@Observable
-class KlasseVisningModell {
-    @ObservationIgnored @Dependency(\.defaultDatabase) var database
-    @ObservationIgnored @SharedReader(.fetchAll(sql: "SELECT * FROM klasser")) var klasser: [Klasser]
-    @ObservationIgnored @FetchAll var prøver: [Prover] = []
-    
-    func hentProverForKlasse(klasseId: String) async {
-        await withErrorReporting {
-            try await $prøver.load(
-                Prover
-                    .where{ $0.klasseId == klasseId },
-                animation: .default
-            )
-        }
-        
-    }
-}
-
 
 
 struct klasseVisning: View {
@@ -50,27 +32,28 @@ struct klasseVisning: View {
                         Spacer()
                         Text(valgtKlasse.skoleår)
                     }
-                    .font(.title).bold()
-                    /*.swipeActions {
+                    .font(.title)
+                    .swipeActions {
                         Button(role: .destructive) {
-                            slettKlasseFraListe(klasse: valgtKlasse)
-                            print("Slett Klasse")
+                            Task {
+                                await slettKlasseFraListe(klasse: valgtKlasse)
+                            }
                         } label: {
                             Image(systemName: "trash")
                         }
                         
                         Button {
-                            visKlassevisningSheet = .redigerKlasse(klasseid: valgtKlasse.wrappedValue.id)
+                            visKlassevisningSheet = .redigerKlasse(klasseid: valgtKlasse.id)
                         } label: {
                             Image(systemName: "square.and.pencil")
                         }
                         .tint(.yellow)
-                    }*/
+                    }
                 }
-                //.onDelete(perform: funksjonSomIkkeSletterNoe)
+                .onDelete(perform: funksjonSomIkkeSletterNoe)
            }
             .navigationTitle("Klasser")
-            .toolbar(content: {
+            .toolbar {
                 ToolbarItem {
                     EditButton()
                 }
@@ -81,20 +64,17 @@ struct klasseVisning: View {
                         Image(systemName: "plus.circle").foregroundColor(.green)
                     }
                 }
-                
                 ToolbarItem(placement: .bottomBar) {
                     Text(.init("**Sist lagret:** " + (klasseoversikt.klasseinformasjon.lagret_tidspunkt?.formatted() ?? "")))
                 }
-                
-            })
+            }
             .toolbar(removing: .sidebarToggle)
-            
         } content:{
-            if let valgtKlasseID = valgtKlasseID, let valgtKlasse=klasseoversikt.klasseFraId(id: valgtKlasseID) {
+            if (valgtKlasseID != nil) {
                 List(selection: $valgtPrøveID) {
-                    ForEach(valgtKlasse.prøver){ valgtPrøve in
-                        Text(valgtPrøve.navn).font(.title).bold()
-                            .swipeActions {
+                    ForEach(prøver){ valgtPrøve in
+                        Text(valgtPrøve.navn).font(.title2)
+                            /*.swipeActions {
                                 Button(role: .destructive) {
                                     print("Slett prøve")
                                     slettPrøveFraKlasse(prøve: valgtPrøve)
@@ -110,17 +90,19 @@ struct klasseVisning: View {
                                 }
                                 .tint(.yellow)
 
-                            }
+                            }*/
                     }
                     .onDelete(perform: funksjonSomIkkeSletterNoe)
                 }
                 .navigationTitle("Prøver")
                 .toolbar(content: {
-                    EditButton()
-                    Button {
-                        visKlassevisningSheet = .leggTilPrøve
-                    } label: {
-                        Image(systemName: "plus.circle").foregroundColor(.green)
+                    ToolbarItemGroup(placement: .primaryAction) {
+                        EditButton()
+                        Button {
+                            visKlassevisningSheet = .leggTilPrøve
+                        } label: {
+                            Image(systemName: "plus.circle").foregroundColor(.green)
+                        }
                     }
                 })
             }
@@ -148,8 +130,12 @@ struct klasseVisning: View {
             }
             
         }
-        .onAppear {
-            print(klasser)
+        .onChange(of: valgtKlasseID) { _ in
+            print(valgtKlasseID ?? "Ingen valgt klasse")
+            Task {
+                await hentProverForKlasse()
+            }
+            print(prøver)
         }
         .fullScreenCover(item: $visKlassevisningSheet, onDismiss: {visKlassevisningSheet = nil}) { visKlassevisningSheet in
             switch visKlassevisningSheet {
@@ -160,7 +146,7 @@ struct klasseVisning: View {
                     leggTilNyPr_veVisning(KlasseID: valgtKlasseID,  visKlassevisningSheet: $visKlassevisningSheet).environment(klasseoversikt)
                 }
             case .redigerKlasse(let klasseid):
-                redigerKlasse(klasseId: klasseid, visKlassevisningSheet: $visKlassevisningSheet).environment(klasseoversikt)
+                redigerKlasse(valgtKlasseID: klasseid, visKlassevisningSheet: $visKlassevisningSheet).environment(klasseoversikt)
             case .redigerPrøve(let klasseid, let prøveid):
                 redigerPr_ve(prøveId: prøveid, klasseId: klasseid, visKlassevisningSheet: $visKlassevisningSheet).environment(klasseoversikt)
                 
@@ -168,9 +154,12 @@ struct klasseVisning: View {
         }
     }
     
-    func slettKlasseFraListe(klasse: Klasse){
-        if let indeks = klasseoversikt.klasseinformasjon.klasser.firstIndex(where: {$0.id == valgtKlasseID}) {
-            klasseoversikt.klasseinformasjon.klasser.remove(at: indeks)
+    func slettKlasseFraListe(klasse: Klasser) async {
+        await withErrorReporting {
+            try await database.write { db in
+                let midlertidigKlasse = klasser.first(where: {$0.id == klasse.id}) ?? Klasser(id: klasse.id, navn: klasse.navn, skoleår: klasse.skoleår)
+                try Klasser.delete(midlertidigKlasse).execute(db)
+            }
         }
     }
     
@@ -189,6 +178,17 @@ struct klasseVisning: View {
     
     func funksjonSomIkkeSletterNoe(at indeksset: IndexSet) {
         print("funksjonSomIkkeSletterNoe: Ingen skal noen gang komme hit. Hva gjør du her?")
+    }
+    
+    func hentProverForKlasse() async {
+        await withErrorReporting {
+            try await $prøver.load(
+                Prover
+                    .where{ $0.klasseId == self.valgtKlasseID },
+                animation: .default
+            )
+        }
+        
     }
 }
 

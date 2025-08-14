@@ -6,57 +6,156 @@
 //
 
 import SwiftUI
+import SharingGRDB
+
+
 
 struct redigerKlasse: View {
     
-    var klasseId: Klasse.ID
+    var valgtKlasseID: Klasser.ID
     
     @Environment(Klasseoversikt.self) var klasseoversikt
     @State private var tekstFraVisma: String = ""
-    
+    @Dependency(\.defaultDatabase) var database
     @Binding var visKlassevisningSheet:VisKlassevisningSheet?
-    var klasseIndex: Int? {
-        klasseoversikt.klasseinformasjon.klasser.firstIndex(where: {$0.id==klasseId})
-    }
-    @State private var midlertidigeElever: [Elev] = []
+    
+    @State private var midlertidigKlasseNavn: String = ""
+    @State private var midlertidigKlasseSkoleår: String = ""
+    
+    
+    @FetchAll var klasser : [Klasser] = []
+    @FetchAll var elever: [Elever] = []
+    
+    
+    
     var body: some View {
         @Bindable var klasseoversikt = klasseoversikt
-        NavigationStack {
-            if let klasseIndex = klasseIndex {
-                TextInputField(title: "Klassenavn", text: $klasseoversikt.klasseinformasjon.klasser[klasseIndex].navn)
-                TextInputField(title: "Skoleår", text: $klasseoversikt.klasseinformasjon.klasser[klasseIndex].skoleÅr)
-                Text("Det er \(klasseoversikt.klasseinformasjon.klasser[klasseIndex].elever.count) elever")
+        
+        VStack {
+            NavigationStack {
+                
+                TextInputField(title: "Klassenavn", text: $midlertidigKlasseNavn)
+                        
+                TextInputField(title: "Skoleår", text: $midlertidigKlasseSkoleår)
+                Text("Det er \(elever.count) elever")
                 List() {
-                    ForEach($klasseoversikt.klasseinformasjon.klasser[klasseIndex].elever, id: \.id) { elev in
-                        TextField("Elevnavn", text: elev.navn)
+                    ForEach(elever, id: \.id) { elev in
+                        ElevView(elev: elev)
                     }
                     .onDelete(perform: slettElevFraListe)
                     Button {
-                        klasseoversikt.klasseinformasjon.klasser[klasseIndex].elever.append(Elev(navn: ""))
+                        Task {
+                            await withErrorReporting {
+                                try await database.write { db in
+                                    let midlertidigElev = Elever(id: UUID().uuidString, navn: "", klasseId: valgtKlasseID)
+                                    try  Elever.insert{midlertidigElev}.execute(db)
+                                }
+                            }
+                        }
                     } label: {
-                        Image(systemName: "plus.circle").foregroundColor(.green)
+                        Image(systemName: "plus.circle").foregroundColor(.green)                }
+                }
+                Button("Lukk") {
+                    visKlassevisningSheet = nil
+                }
+                
+            }
+        }
+        .onAppear {
+            Task {
+                await hentKlasser()
+                await hentElever()
+                midlertidigKlasseNavn = klasser.first?.navn ?? ""
+                midlertidigKlasseSkoleår = klasser.first?.skoleår ?? ""
+            }
+        }
+        .onChange(of: [midlertidigKlasseNavn, midlertidigKlasseSkoleår]) { _, _ in
+            Task {
+                await withErrorReporting {
+                    try await database.write { db in
+                        let midlertidigKlasse = Klasser(id: valgtKlasseID, navn: midlertidigKlasseNavn, skoleår: midlertidigKlasseSkoleår)
+                        try  Klasser.update(midlertidigKlasse).execute(db)
                     }
                 }
             }
-            Button("Lukk") {
-                klasseoversikt.lagreKlasser()
-                visKlassevisningSheet = nil
-            }
-            .onAppear {
-                midlertidigeElever = klasseoversikt.klasseinformasjon.klasser.first(where: {$0.id==klasseId})?.elever ?? []
-            }
-            .onChange(of: midlertidigeElever) {
-                if let klasseIndex = klasseIndex {
-                    klasseoversikt.klasseinformasjon.klasser[klasseIndex].elever = midlertidigeElever
+        }
+    }
+            
+    
+    func hentKlasser() async {
+        await withErrorReporting {
+            try await $klasser.load(
+                Klasser
+                    .where{ $0.id == self.valgtKlasseID },
+                animation: .default
+            )
+        }
+    }
+    
+    func hentElever() async {
+        await withErrorReporting {
+            try await $elever.load(
+                Elever
+                    .where{ $0.klasseId == self.valgtKlasseID },
+                animation: .default
+            )
+        }
+    }
+    
+    
+    
+    
+    func slettElevFraListe(at offsets: IndexSet){
+        let eleverSomSkalSlettes = offsets.map { elever[$0] }
+        eleverSomSkalSlettes.forEach { elev in
+            Task {
+                await withErrorReporting {
+                    try await database.write { db in
+                        let midlertidigElev = Elever(id: elev.id, navn: elev.navn, klasseId: elev.klasseId)
+                        try  Elever.delete(midlertidigElev).execute(db)
+                    }
                 }
             }
         }
-
-        
-
-        
         
     }
-    func slettElevFraListe(at offsets: IndexSet){
-        klasseoversikt.klasseinformasjon.klasser[klasseIndex!].elever.remove(atOffsets: offsets)    }
+}
+
+
+struct ElevView: View {
+    
+    var elev: Elever
+    
+    @Dependency(\.defaultDatabase) var database
+    @FetchAll var elever: [Elever] = []
+    @State private var navn: String = ""
+    
+    var body: some View {
+        TextField("Elevnavn", text: $navn)
+            .onAppear {
+                navn = elever.first?.navn ?? ""
+            }
+            .onChange(of: navn){ newvalue in
+                Task {
+                    await withErrorReporting {
+                        try await database.write { db in
+                            let midlertidigElever = Elever(id: elev.id, navn: navn, klasseId: elev.klasseId)
+                            try  Elever.update(midlertidigElever).execute(db)
+                        }
+                    }
+                }
+            }
+    }
+    
+    
+    func hentElever() async {
+        await withErrorReporting {
+            try await $elever.load(
+                Elever
+                    .where{ $0.id == self.elev.id },
+                animation: .default
+            )
+        }
+    }
+
 }
