@@ -53,20 +53,20 @@ struct Klassesammendrag: View {
         }
     }
     
-    func gjennomsnittsElev() -> [Float]{
-        var antallElever: Float = 0
+    func gjennomsnittsElev() -> [Double]{
+        var antallElever: Double = 0
         let formatter: NumberFormatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.decimalSeparator = "."
         formatter.groupingSeparator = ""
-        var oppgaver:[Float] = prøve.oppgaver.map {_ in 0}
+        var oppgaver:[Double] = prøve.oppgaver.map {_ in 0}
         for elev in prøve.elever {
             if let elevIndeks = prøve.poengRad(elevId: elev.id) {
                 if(elevHarLevert(elevIndeks: elevIndeks)) {
                     antallElever += 1
                     for i in 0..<prøve.oppgaver.count {
                         if let oppgaveIndeks = prøve.oppgaveIndexMedKjentElev(oppgaveId: prøve.oppgaver[i].id, elevIndex: elevIndeks) {
-                            let tall = formatter.number(from: prøve.poeng[elevIndeks][oppgaveIndeks].poeng) as? Float
+                            let tall = formatter.number(from: prøve.poeng[elevIndeks][oppgaveIndeks].poeng) as? Double
                             if(tall != nil) {
                                oppgaver[i]  += tall!
                             }
@@ -197,8 +197,8 @@ struct kategoriSammendrag: View {
         }
     }
     
-    func elevPoengKategori(kategoriIndex: Int) -> Float {
-        var sum: Float = 0
+    func elevPoengKategori(kategoriIndex: Int) -> Double {
+        var sum: Double = 0
         for oppgave in prøve.oppgaver {
             if let oppgaveIndex = prøve.oppgaveIndexMedKjentKategori(oppgaveId: oppgave.id, kateogriIndex: kategoriIndex) {
                 if(prøve.kategorierOgOppgaver[kategoriIndex][oppgaveIndex].verdi){
@@ -210,20 +210,20 @@ struct kategoriSammendrag: View {
         return sum
     }
     
-    func gjennomsnittsElev() -> [Float]{
-        var antallElever: Float = 0
+    func gjennomsnittsElev() -> [Double]{
+        var antallElever: Double = 0
         let formatter: NumberFormatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.decimalSeparator = "."
         formatter.groupingSeparator = ""
-        var oppgaver:[Float] = prøve.oppgaver.map({_ in 0})
+        var oppgaver:[Double] = prøve.oppgaver.map({_ in 0})
         for elev in prøve.elever {
             if let elevIndeks = prøve.poengRad(elevId: elev.id) {
                 if(elevHarLevert(elevIndeks: elevIndeks)) {
                     antallElever += 1
                     for i in 0..<prøve.oppgaver.count {
                         if let oppgaveIndeks = prøve.oppgaveIndexMedKjentElev(oppgaveId: prøve.oppgaver[i].id, elevIndex: elevIndeks) {
-                            let tall = formatter.number(from: prøve.poeng[elevIndeks][oppgaveIndeks].poeng) as? Float
+                            let tall = formatter.number(from: prøve.poeng[elevIndeks][oppgaveIndeks].poeng) as? Double
                             if(tall != nil) {
                                oppgaver[i]  += tall!
                             }
@@ -251,8 +251,8 @@ struct kategoriSammendrag: View {
         return false
     }
     
-    func maxPoengKategori(kategoriIndex: Int) -> Float {
-        var sum: Float = 0
+    func maxPoengKategori(kategoriIndex: Int) -> Double {
+        var sum: Double = 0
         for oppgave in prøve.oppgaver {
             if let oppgaveIndex = prøve.oppgaveIndexMedKjentKategori(oppgaveId: oppgave.id, kateogriIndex: kategoriIndex){
                 if(prøve.kategorierOgOppgaver[kategoriIndex][oppgaveIndex].verdi){

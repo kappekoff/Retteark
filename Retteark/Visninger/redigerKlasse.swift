@@ -133,7 +133,7 @@ struct ElevView: View {
     
     var body: some View {
         TextField("Elevnavn", text: $navn)
-            .onChange(of: navn){ newvalue in
+            .onChange(of: navn){
                 Task {
                     await withErrorReporting {
                         try await database.write { db in

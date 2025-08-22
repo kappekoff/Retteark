@@ -24,14 +24,14 @@ struct sumCelle: View {
     
     func sumAvPoeng() -> String {
 
-        var sum: Float = 0
+        var sum: Double = 0
         formatter.numberStyle = .decimal
         formatter.decimalSeparator = "."
         formatter.groupingSeparator = ""
         for oppgave in prøve.oppgaver {
             if let oppgaveIndeks = prøve.oppgaveIndexMedKjentElev(oppgaveId: oppgave.id, elevIndex: elevIndeks){
                 if let tall = formatter.number(from: prøve.poeng[elevIndeks][oppgaveIndeks].poeng) as? Double {
-                    sum += Float(tall)
+                    sum += Double(tall)
                 }
             }
         }

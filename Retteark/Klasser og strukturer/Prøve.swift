@@ -107,7 +107,7 @@ class Prøve: Hashable, Identifiable, Codable{
         for elev in self.elever {
             if let elevIndeks = self.poengRad(elevId: elev.id) {
                 if let oppgaveIndeks = oppgaveIndexMedKjentElev(oppgaveId: oppgaveId, elevIndex: elevIndeks){
-                    if let gammelVerdi = (formatter.number(from: self.poeng[elevIndeks][oppgaveIndeks].poeng) as? Float) {
+                    if let gammelVerdi = (formatter.number(from: self.poeng[elevIndeks][oppgaveIndeks].poeng) as? Double) {
                         let nyVerdi = endringsfaktor.isNaN == true ? nyMaksPoeng : gammelVerdi * endringsfaktor
                         self.poeng[elevIndeks][oppgaveIndeks].poeng = String(nyVerdi)
                     }
@@ -185,16 +185,16 @@ class Prøve: Hashable, Identifiable, Codable{
         }
     }
     
-    func sumAvPoeng(elevIndeks: Int) -> Float {
+    func sumAvPoeng(elevIndeks: Int) -> Double {
 
-        var sum: Float = 0
+        var sum: Double = 0
         let formatter: NumberFormatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.decimalSeparator = "."
         formatter.groupingSeparator = ""
         for oppgave in oppgaver {
             if let oppgaveIndeks = oppgaveIndexMedKjentElev(oppgaveId: oppgave.id, elevIndex: elevIndeks){
-                if let tall = formatter.number(from: poeng[elevIndeks][oppgaveIndeks].poeng) as? Float {
+                if let tall = formatter.number(from: poeng[elevIndeks][oppgaveIndeks].poeng) as? Double {
                     sum += tall
                 }
             }

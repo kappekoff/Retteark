@@ -24,7 +24,7 @@ public extension String {
 
 public struct NumericTextField: View {
 
-    @Binding private var number: Float?
+    @Binding private var number: Double?
     @State private var string: String
     private let isDecimalAllowed: Bool
     private let formatter: NumberFormatter = NumberFormatter()
@@ -33,7 +33,7 @@ public struct NumericTextField: View {
     private let onEditingChanged: (Bool) -> Void
     private let onCommit: () -> Void
 
-    public init(_ titleKey: String, number: Binding<Float?>, isDecimalAllowed: Bool, onEditingChanged: @escaping (Bool) -> Void = { _ in }, onCommit: @escaping () -> Void = {}) {
+    public init(_ titleKey: String, number: Binding<Double?>, isDecimalAllowed: Bool, onEditingChanged: @escaping (Bool) -> Void = { _ in }, onCommit: @escaping () -> Void = {}) {
         formatter.numberStyle = .decimal
         _number = number
         if let number = number.wrappedValue, let string = formatter.string(from: number as NSNumber) {
@@ -59,7 +59,7 @@ public struct NumericTextField: View {
         if newValue != numeric {
             string = numeric
         }
-        number = formatter.number(from: string) as? Float
+        number = formatter.number(from: string) as? Double
         
     }
 }

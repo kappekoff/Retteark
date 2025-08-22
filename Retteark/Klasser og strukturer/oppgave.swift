@@ -12,10 +12,10 @@ struct Oppgave: Identifiable, Hashable, Codable {
     
     var id: String = UUID().uuidString
     var navn: String
-    var maksPoeng: Float?
-    var gammelMaksPoeng: Float?
+    var maksPoeng: Double?
+    var gammelMaksPoeng: Double?
     
-    init (navn: String, maksPoeng: Float ) {
+    init (navn: String, maksPoeng: Double ) {
         self.navn = navn
         self.maksPoeng = maksPoeng 
         self.gammelMaksPoeng = maksPoeng

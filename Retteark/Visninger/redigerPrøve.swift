@@ -6,50 +6,53 @@
 //
 
 import SwiftUI
+import SharingGRDB
 
 struct redigerPr_ve: View {
-    var prøveId: Prøve.ID
-    var klasseId: Klasse.ID
+    var prøveId: Prover.ID
     @Environment(Klasseoversikt.self) var klasseoversikt
     @Binding var visKlassevisningSheet:VisKlassevisningSheet?
-    var klasseIndex: Int? {
-        klasseoversikt.klasseinformasjon.klasser.firstIndex(where: {$0.id==klasseId})
-    }
-    var prøveIndex: Int? {
-        if let klasseIndex = klasseIndex {
-            return klasseoversikt.klasseinformasjon.klasser[klasseIndex].prøver.firstIndex(where: {$0.id==prøveId})
-        }
-        else {
-            return nil
-        }
-    }
     
+    @Dependency(\.defaultDatabase) var database
+
+    @State var prøvenavn: String = ""
+    @State var visEleverKarakter: Bool = false
+    
+    @State var oppgaver: [Oppgaver] = []
+    @State var prøve: [Prover] = []
     var body: some View {
         @Bindable var klasseoversikt = klasseoversikt
-        if let klasseIndex = klasseIndex, let prøveIndex = prøveIndex {
-            NavigationStack {
-                Section("Om prøven"){
-                    TextInputField(title: "Prøvenavn", text: $klasseoversikt.klasseinformasjon.klasser[klasseIndex].prøver[prøveIndex].navn)
-                    Toggle("Vis karakter til elever", isOn: $klasseoversikt.klasseinformasjon.klasser[klasseIndex].prøver[prøveIndex].visEleverKarakter)
-                }
-                Section("Oppgaver") {
-                    List() {
-                        ForEach($klasseoversikt.klasseinformasjon.klasser[klasseIndex].prøver[prøveIndex].oppgaver) { oppgave in
-                            HStack {
-                                TextField("Oppgavenavn", text: oppgave.navn)
-                                Spacer()
-                                NumericTextField("Makspoeng", number: oppgave.maksPoeng, isDecimalAllowed: true)
+        NavigationStack {
+            Section("Om prøven"){
+                TextInputField(title: "Prøvenavn", text: $prøvenavn)
+                Toggle("Vis karakter til elever", isOn: $visEleverKarakter)
+            }
+            Section("Oppgaver") {
+                List() {
+                    ForEach(oppgaver) { oppgave in
+                        OppgaveVisning(oppgave: oppgave, navn: oppgave.navn, maksPoeng: oppgave.maksPoeng)
+                    }
+                    .onDelete(perform: slettOppgaveFraListe)
+                    Button {
+                        Task {
+                            await withErrorReporting {
+                                try await database.write { db in
+                                    let midlertidigOppgave = Oppgaver(id: UUID().uuidString, navn: "", proveId: prøveId, maksPoeng: 1)
+                                    try  Oppgaver.insert{midlertidigOppgave}.execute(db)
+                                }
                             }
                         }
-                        .onDelete(perform: slettOppgaveFraListe)
-                        Button {
-                            klasseoversikt.klasseinformasjon.klasser[klasseIndex].prøver[prøveIndex].oppgaver.append(Oppgave(navn: "", maksPoeng: 1))
-                        } label: {
-                            Image(systemName: "plus.circle").foregroundColor(.green)
-                        }
+                    } label: {
+                        Image(systemName: "plus.circle").foregroundColor(.green)
                     }
-                }.navigationTitle("Legg til Ny prøve")
-            }
+                }
+            }.navigationTitle("Legg til Ny prøve")
+        }
+        .task {
+            await hentOppgaver()
+            await hentPrøve()
+            prøvenavn = prøve.first?.navn ?? ""
+            visEleverKarakter = prøve.first?.visEleverKarakter ?? false
         }
         HStack {
             Button("Lukk") {
@@ -59,10 +62,58 @@ struct redigerPr_ve: View {
         }
     }
     
+    
+    func hentOppgaver() async {
+        await withErrorReporting {
+            try await database.read { db in
+                oppgaver = try Oppgaver
+                    .where { $0.id == self.prøveId}
+                    .fetchAll(db)
+            }
+        }
+    }
+    
+    func hentPrøve() async {
+        await withErrorReporting {
+            try await database.read { db in
+                let prøve = try Prover
+                    .where { $0.id == self.prøveId }
+                    .fetchOne(db)
+            }
+        }
+    }
+                
+
+    
     func slettOppgaveFraListe(at offsets: IndexSet){
-        if let klasseIndex = klasseIndex, let prøveIndex = prøveIndex {
-            klasseoversikt.klasseinformasjon.klasser[klasseIndex].prøver[prøveIndex].oppgaver.remove(atOffsets: offsets)
+        let oppgaverSomSkalSlettes = offsets.map { oppgaver[$0] }
+        oppgaverSomSkalSlettes.forEach { oppgave in
+            Task {
+                await withErrorReporting {
+                    try await database.write { db in
+                        let midlertidigOppgave = Oppgaver(id: oppgave.id, navn: oppgave.navn, proveId: oppgave.proveId, maksPoeng: oppgave.maksPoeng)
+                        try  Oppgaver.delete(midlertidigOppgave).execute(db)
+                    }
+                }
+            }
         }
     }
         
+}
+
+
+struct OppgaveVisning: View {
+    
+    var oppgave: Oppgaver
+    @State var navn: String
+    @State var maksPoeng: Double?
+    
+    var body: some View {
+        HStack {
+            TextField("Oppgavenavn", text: $navn)
+            Spacer()
+            NumericTextField("Makspoeng", number: $maksPoeng, isDecimalAllowed: true)
+        }
+    }
+    
 }

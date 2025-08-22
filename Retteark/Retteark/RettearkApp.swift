@@ -84,9 +84,19 @@ struct RettearkApp: App {
             .execute(db)
             try #sql(
               """
+               CREATE TABLE "Deltakere" (
+                   "id" TEXT PRIMARY KEY,
+                   "navn" TEXT,
+                   "proveId" TEXT NOT NULL REFERENCES "Prover" ("id") ON DELETE CASCADE ON UPDATE NO ACTION  
+              ) STRICT
+              """
+            )
+            .execute(db)
+            try #sql(
+              """
                CREATE TABLE "ElevProve" (
-                   "elevId" TEXT NOT NULL REFERENCES "Elev" ("id") ON DELETE CASCADE ON UPDATE NO ACTION,
-                   "proveId" TEXT NOT NULL REFERENCES "Prove" ("id") ON DELETE CASCADE ON UPDATE NO ACTION,
+                   "elevId" TEXT NOT NULL REFERENCES "Elever" ("id") ON DELETE CASCADE ON UPDATE NO ACTION,
+                   "proveId" TEXT NOT NULL REFERENCES "Prover" ("id") ON DELETE CASCADE ON UPDATE NO ACTION,
                    "karakter" TEXT,
                    "låstKarakter" INTEGER,
                     PRIMARY KEY ("elevId", "proveId")
@@ -96,10 +106,10 @@ struct RettearkApp: App {
             .execute(db)
             try #sql(
               """
-               CREATE TABLE "Oppgave" (
+               CREATE TABLE "Oppgaver" (
                    "id" TEXT PRIMARY KEY,
                    "navn" TEXT,
-                   "proveId" TEXT NOT NULL REFERENCES "Prove" ("id") ON DELETE CASCADE ON UPDATE NO ACTION,
+                   "proveId" TEXT NOT NULL REFERENCES "Prover" ("id") ON DELETE CASCADE ON UPDATE NO ACTION,
                    "maksPoeng" REAL,
                    "gammelMaksPoeng" REAL
                ) STRICT
@@ -108,11 +118,11 @@ struct RettearkApp: App {
             .execute(db)
             try #sql(
               """
-                CREATE TABLE "Poeng" (
-                    "oppgaveId" TEXT NOT NULL REFERENCES "Oppgave" ("id") ON DELETE CASCADE ON UPDATE NO ACTION,
-                    "elevId" TEXT NOT NULL REFERENCES "Elev" ("id") ON DELETE CASCADE ON UPDATE NO ACTION,
-                    "poeng" TEXT,
-                    PRIMARY KEY ("oppgaveId", "elevId")
+                CREATE TABLE "Poenger" (
+                    "id" TEXT PRIMARY KEY,
+                    "oppgaveId" TEXT NOT NULL REFERENCES "Oppgaver" ("id") ON DELETE CASCADE ON UPDATE NO ACTION,
+                    "deltakerId" TEXT NOT NULL REFERENCES "Deltaker" ("id") ON DELETE CASCADE ON UPDATE NO ACTION,
+                    "poeng" TEXT
                 ) STRICT
               """
             )
@@ -144,6 +154,17 @@ struct RettearkApp: App {
                     ('prove1', 'Matematikkprøve', 1, 'klasse1'),
                     ('prove2', 'Norskprøve', 0, 'klasse1'),
                     ('prove3', 'Naturfagprøve', 1, 'klasse2')
+                """
+            ).execute(db)
+            try #sql (
+                """
+                    INSERT INTO Oppgaver (id, navn, proveId, maksPoeng, gammelMaksPoeng) VALUES
+                    ('oppgave1', 'Addisjon', 'prove1', 10.0, NULL),
+                    ('oppgave2', 'Subtraksjon', 'prove1', 5.0, NULL),
+                    ('oppgave3', 'Multiplikasjon', 'prove2', 15.0, NULL),
+                    ('oppgave4', 'Divisjon', 'prove2', 20.0, NULL),
+                    ('oppgave5', 'Kjemi', 'prove3', 25.0, NULL),
+                    ('oppgave6', 'Biologi', 'prove3', 30.0, NULL)
                 """
             ).execute(db)
         }
@@ -178,4 +199,30 @@ struct Prover:FetchableRecord, Codable, Identifiable {
     var navn: String
     var visEleverKarakter: Bool
     var klasseId: String
+}
+
+@Table("Oppgaver")
+struct Oppgaver:FetchableRecord, Codable, Identifiable {
+    var id: String
+    var navn: String
+    var proveId: String
+    var maksPoeng: Double?
+    var gammelMaksPoeng: Double?
+}
+
+@Table("Deltakere")
+struct Deltakere: FetchableRecord, Codable, Identifiable {
+    var id: String
+    var navn: String
+    var proveId: String
+}
+
+@Table("Poenger")
+struct Poenger: FetchableRecord, Codable, Identifiable {
+    var oppgaveId: String
+    var deltakerId: String
+    var poeng: String
+    var id: String {
+        return "\(oppgaveId)-\(deltakerId)"
+    }
 }

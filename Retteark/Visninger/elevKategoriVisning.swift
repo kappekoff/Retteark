@@ -125,8 +125,8 @@ struct hovedinnhold: View {
         }.padding(20).frame(width: 500)
   }
   
-  func maxPoengKategori(kategoriIndex: Int) -> Float {
-      var sum: Float = 0
+  func maxPoengKategori(kategoriIndex: Int) -> Double {
+      var sum: Double = 0
       for oppgave in prøve.oppgaver {
           if let oppgaveIndex = prøve.oppgaveIndexMedKjentKategori(oppgaveId: oppgave.id, kateogriIndex: kategoriIndex){
               if(prøve.kategorierOgOppgaver[kategoriIndex][oppgaveIndex].verdi){
@@ -137,7 +137,7 @@ struct hovedinnhold: View {
       return sum
   }
   
-  func elevPoengKategori(elevIndex: Int, kategoriIndex: Int) -> Float {
+  func elevPoengKategori(elevIndex: Int, kategoriIndex: Int) -> Double {
       let formatter: NumberFormatter = NumberFormatter()
       formatter.numberStyle = .decimal
       formatter.decimalSeparator = "."
@@ -155,7 +155,7 @@ struct hovedinnhold: View {
               }
           }
       }
-      return Float(sum)
+      return Double(sum)
   }
   
   func lagElevtilbakemelding() -> String {

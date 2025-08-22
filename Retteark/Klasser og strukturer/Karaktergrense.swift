@@ -11,10 +11,10 @@ import Foundation
 class Karaktergrense: Hashable, Codable, Identifiable {
     var id = UUID().uuidString
     var karakter: String
-    var grense: Float?
+    var grense: Double?
     
     
-    init(karakter: String, grense: Float) {
+    init(karakter: String, grense: Double) {
         self.karakter = karakter
         self.grense = grense
     }

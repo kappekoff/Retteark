@@ -6,19 +6,20 @@
 //
 
 import SwiftUI
+import SharingGRDB
 
 struct leggTilNyPr_veVisning: View {
     @Environment(Klasseoversikt.self) var klasseoversikt
-    var KlasseID: String
+    @Dependency(\.defaultDatabase) var database
+    var klasseID: String
     @Binding var visKlassevisningSheet: VisKlassevisningSheet?
     @State var prøveNavn: String = ""
-    @State var oppgaver: [Oppgave] = [];
+    @State var oppgaver: [Oppgaver] = [];
     @State var visEleverKarakter = true;
     @State var nyeOppgaver: String = "";
-    @State var maksPoeng: Float? = nil
-    
-    
-    
+    @State var maksPoeng: Double? = nil
+    let proveid = UUID().uuidString
+    @FetchAll var elever: [Elever] = []
     
     var body: some View {
         @Bindable var klasseoversikt = klasseoversikt
@@ -32,13 +33,12 @@ struct leggTilNyPr_veVisning: View {
                 HStack {
                     TextField("Oppgavenavn: 1-15, 1.a-d", text: $nyeOppgaver)
                         .onSubmit {
-                            leggTilNyeOppgaver()
+                            leggTilNyeOppgaver(prøveId: UUID().uuidString)
                         }
                     NumericTextField("Makspoeng", number: $maksPoeng, isDecimalAllowed: true)
                     Button("Legg til") {
-                        leggTilNyeOppgaver()
+                        leggTilNyeOppgaver(prøveId: proveid)
                     }
-                    
                 }
                 List() {
                     ForEach($oppgaver) { oppgave in
@@ -46,14 +46,12 @@ struct leggTilNyPr_veVisning: View {
                             TextField("Oppgavenavn", text: oppgave.navn)
                             Spacer()
                             NumericTextField("Makspoeng", number: oppgave.maksPoeng, isDecimalAllowed: true)
-                            
                         }
-                        
                         
                     }
                     .onDelete(perform: slettOppgaveFraListe)
                     Button {
-                        oppgaver.append(Oppgave(navn: "", maksPoeng: 1))
+                        oppgaver.append(Oppgaver(id: UUID().uuidString, navn: "",  proveId: proveid, maksPoeng: 1, gammelMaksPoeng: 1))
                     } label: {
                         Image(systemName: "plus.circle").foregroundColor(.green)
                     }
@@ -64,29 +62,73 @@ struct leggTilNyPr_veVisning: View {
                     visKlassevisningSheet = nil
                 }
                 Button("Legg til") {
-                    let klasseIndex = klasseoversikt.klasseinformasjon.klasser.firstIndex(where: {$0.id == KlasseID})
-                    if (klasseIndex != nil) {
-                        klasseoversikt.klasseinformasjon.klasser[klasseIndex!].prøver.append(Prøve(navn: prøveNavn, elever: klasseoversikt.klasseinformasjon.klasser[klasseIndex!].elever.sorted(by: {$0.navn.lowercased() < $1.navn.lowercased()}), oppgaver: oppgaver, kategorier: [], visEleverKarakter: visEleverKarakter))
-                        klasseoversikt.lagreKlasser()
-                        visKlassevisningSheet = nil
+                    Task {
+                        await withErrorReporting {
+                            try await database.write { db in
+                                let midlertidigPrøve = Prover(id: proveid, navn: prøveNavn, visEleverKarakter: visEleverKarakter, klasseId: klasseID)
+                                try  Prover.insert{midlertidigPrøve}.execute(db)
+                            }
+                        }
+                        await hentElever()
+                        
                     }
-                    else {
-                        visKlassevisningSheet = nil
+                    elever.forEach { elev in
+                        let deltakerId = UUID().uuidString
+                        Task {
+                            await withErrorReporting {
+                                try await database.write { db in
+                                    let midlertidigDeltaker = Deltakere(id: deltakerId, navn: elev.navn, proveId: proveid)
+                                    try  Deltakere.insert{midlertidigDeltaker}.execute(db)
+                                }
+                            }
+                        }
+                        for oppgave in oppgaver {
+                            Task {
+                                await withErrorReporting {
+                                    try await database.write { db in
+                                        let midlertidigPoeng = Poenger(oppgaveId: oppgave.id, deltakerId: deltakerId, poeng: "")
+                                        try  Poenger.insert{midlertidigPoeng}.execute(db)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                                    
+                    for oppgave in oppgaver {
+                        Task {
+                            await withErrorReporting {
+                                try await database.write { db in
+                                    let midlertidigOppgave = Oppgaver(id: oppgave.id, navn: oppgave.navn, proveId: proveid, maksPoeng: oppgave.maksPoeng)
+                                    try  Oppgaver.insert{midlertidigOppgave}.execute(db)
+                                }
+                            }
+                        }
                     }
                     
+                    visKlassevisningSheet = nil
                 }
+                    
             }
-        }
-        .navigationTitle("Legg til ny prøve")
+        }.navigationTitle("Legg til ny prøve")
     }
     
     func slettOppgaveFraListe(at offsets: IndexSet){
         oppgaver.remove(atOffsets: offsets)
     }
     
-    func leggTilNyeOppgaver() {
-        let listeMedNyeOppgaver:[Oppgave] = oppgaverFraListeMedOppgavenavn(listeMedOppgavenavn: lagOppgaver(input: nyeOppgaver), maksPoeng: maksPoeng)
+    func leggTilNyeOppgaver(prøveId: String) {
+        let listeMedNyeOppgaver:[Oppgaver] = oppgaverFraListeMedOppgavenavn(listeMedOppgavenavn: lagOppgaver(input: nyeOppgaver), maksPoeng: maksPoeng, prøveId: prøveId)
         oppgaver.append(contentsOf: listeMedNyeOppgaver)
         nyeOppgaver = ""
+    }
+    
+    func hentElever() async {
+        await withErrorReporting {
+            try await $elever.load(
+                Elever
+                    .where{ $0.klasseId == self.klasseID },
+                animation: .default
+            )
+        }
     }
 }

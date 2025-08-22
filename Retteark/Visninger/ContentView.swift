@@ -14,7 +14,7 @@ struct ContentView: View {
     var valgtPrøveID: Prøve.ID?
     @State var viserSheet: VisElevTilbakemleding? = nil
     @State var visFilvelger: Bool = false
-    @State var tilbakemledingerLaget: Float = 0.0
+    @State var tilbakemledingerLaget: Double = 0.0
   
     
     var body: some View {
@@ -67,7 +67,7 @@ struct ContentView: View {
                                 top(elev: elev, prøve: valgtPrøve, visElevTilbakemleding: $viserSheet)
                                 hovedinnhold(elev: elev, visElevTilbakemleding: $viserSheet , prøve: valgtPrøve, lagerPDF: true)
                               }, filplassering: dataPath.appendingPathComponent("\(valgtPrøve.navn)_\(elev.navn).pdf", conformingTo: .pdf))
-                              tilbakemledingerLaget = Float(1/valgtPrøve.elever.count)
+                              tilbakemledingerLaget = Double(1/valgtPrøve.elever.count)
                             }
                             viserSheet = nil
                            case .failure(let error):

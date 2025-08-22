@@ -79,7 +79,8 @@ struct leggTilNyKlasseVisning: View {
         }
         
     }
-        func slettElevFraListe(at offsets: IndexSet){
-            elever.remove(atOffsets: offsets)
-        }
+    
+    func slettElevFraListe(at offsets: IndexSet){
+        elever.remove(atOffsets: offsets)
+    }
 }

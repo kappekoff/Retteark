@@ -9,5 +9,5 @@ import Foundation
 
 struct Tilbakemelding: Codable, Hashable {
     var tekst: String
-    var nedreGrense: Float?
+    var nedreGrense: Double?
 }

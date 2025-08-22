@@ -38,7 +38,7 @@ enum VisKlassevisningSheet: Identifiable{
     case leggTilKlasse
     case leggTilPrøve
     case redigerKlasse(klasseid: Klasser.ID)
-    case redigerPrøve(klasseid: Prøve.ID, prøveid: Prøve.ID)
+    case redigerPrøve(prøveid: Prøve.ID)
     
     var id: String {
         switch self {

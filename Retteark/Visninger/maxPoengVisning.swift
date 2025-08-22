@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct maxPoengVisning: View {
-    @Binding var poeng: Float?
+    @Binding var poeng: Double?
     
     var body: some View {
         NumericTextField(String(poeng ?? 0), number: $poeng, isDecimalAllowed: true)
