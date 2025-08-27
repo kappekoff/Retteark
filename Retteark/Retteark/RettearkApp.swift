@@ -220,7 +220,7 @@ struct Deltakere: FetchableRecord, Codable, Identifiable {
 }
 
 @Table("Poenger")
-struct Poenger: FetchableRecord, Codable, Identifiable {
+struct Poenger: FetchableRecord, Codable, Identifiable, TableRecord {
     var oppgaveId: String
     var deltakerId: String
     var poeng: String

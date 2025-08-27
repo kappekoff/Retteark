@@ -42,7 +42,7 @@ struct poengTabellView: View {
                     maxPoengVisning(poeng: oppgave.maksPoeng)
                         .onChange(of: oppgave.maksPoeng.wrappedValue) { gammelVerdi, nyVerdi in
                             //må endre her seneere
-                            print("Endret maks poeng fra \(gammelVerdi) til \(nyVerdi)")
+                            print("Endret maks poeng fra \(String(describing: gammelVerdi)) til \(String(describing: nyVerdi))")
                         }
                 }
                 Text(String(oppgaver.map({$0.maksPoeng ?? 0}).reduce(0, +)))
@@ -51,15 +51,15 @@ struct poengTabellView: View {
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: 50).font(.title).border(.primary).fontWeight(.bold).background(.gray)
             
-            ForEach(deltakere){deltaker in
+            ForEach(deltakere){ deltaker in
                 GridRow(){
                     Button(action: {
                         visElevTilbakemleding = .valgtElev(deltaker:  deltaker)
                     }, label: {
                         Text(deltaker.navn)
                     })
-                    ForEach(prøve.oppgaver){ oppgave in
-                        PoengView(poeng: $prøve.poeng[elevIndeks][oppgaveIndeks])
+                    ForEach(oppgaver){ oppgave in
+                        /*PoengView(poeng:)
                             .focused($fokus, equals: .poengFokus(id: $prøve.poeng[elevIndeks][oppgaveIndeks].id))
                             .onSubmit {
                                 if(prøve.poeng[elevIndeks][oppgaveIndeks].poeng == "") {
@@ -70,32 +70,26 @@ struct poengTabellView: View {
                                     }
                                     fokus = .poengFokus(id: fokus_posisjon)
                                 }
-                            }
-                        }
-                        sumCelle(prøve: prøve, elevIndeks: elevIndeks)
-                        karakterView(prøve: prøve, elevIndeks: elevIndeks)
-                        Button(action: {
-                            for i in 0..<prøve.elever.count {
-                                if prøve.elever[i].id == prøve.poeng[elevIndeks][optional: 0]?.elevId {
-                                    prøve.elever[i].låstKarakter = !prøve.elever[i].låstKarakter
-                                }
-                            }
-                        }, label: {
-                            Image(systemName: deltaker.låstKarakter ? "lock.open.fill" : "lock.fill")
-                        })
-                        .fullScreenCover(item: $visElevTilbakemleding, onDismiss: { visElevTilbakemleding = nil }) { visElevTilbakemleding in
-                            switch visElevTilbakemleding{
-                            case .valgtElev(let elev):
-                                print("skal fikse senere")//elevTilbakemeldingVisning(deltaker: deltaker, visElevTilbakemleding: $visElevTilbakemleding)
-                            default:
-                                Text("Du skal aldri komme hit")
-                            }
-                        }
-                        
+                            }*/
                     }
-                    .font(.title3).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background(elevIndeks % 2 == 1 ? Color.background:.orange)
-             
-            }
+                    sumCelle(prøveId: prøveID, deltakerId: deltaker.id)
+                    //karakterView(prøve: prøve!, elevIndeks: elevIndeks!)
+                    /*Button(action: {
+                        deltaker.låstKarakter.toggle()
+                    }, label: {
+                        Image(systemName: deltaker.låstKarakter ? "lock.open.fill" : "lock.fill")
+                    })*/
+                    .fullScreenCover(item: $visElevTilbakemleding, onDismiss: { visElevTilbakemleding = nil }) { visElevTilbakemleding in
+                        switch visElevTilbakemleding{
+                        case .valgtElev(let elev):
+                            Text("skal fikse senere")//elevTilbakemeldingVisning(deltaker: deltaker, visElevTilbakemleding: $visElevTilbakemleding)
+                        default:
+                            Text("Du skal aldri komme hit")
+                        }
+                    }
+                }
+                .font(.title3).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background((elevIndeks ?? 0) % 2 == 1 ? Color.background:.orange)
+             }
         }.task {
             fokus_posisjon = [0, 0]
             fokus = .poengFokus(id: fokus_posisjon)

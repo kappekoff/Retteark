@@ -6,35 +6,73 @@
 //
 
 import SwiftUI
+import SharingGRDB
 
 struct sumCelle: View {
-    @Bindable var prøve: Prøve
-    var elevIndeks: Int
-    var formatter: NumberFormatter  = NumberFormatter()
+    @Dependency(\.defaultDatabase) var database
 
+    var prøveId: Prover.ID
+    var deltakerId: Deltakere.ID
+    var orangeCelle: Bool = false
+    var formatter: NumberFormatter  = NumberFormatter()
+    
+    @State var oppgaver: [Oppgaver] = []
+    @State var poeng: Poenger? = nil
+    @State var sum: String = ""
     
     var body: some View {
-        Text(sumAvPoeng())
+        Text(sum)
             .font(.title3)
             .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
             .border(.black)
-            .background(elevIndeks % 2 == 1 ? Color.background:.orange)
+            .background(orangeCelle ? Color.background:.orange)
             .multilineTextAlignment(.center)
+            .task {
+                await hentOppgaver()
+                sum = await sumAvPoeng()
+            }
     }
     
-    func sumAvPoeng() -> String {
+    func sumAvPoeng() async -> String  {
 
-        var sum: Double = 0
+        var tallsum: Double = 0
         formatter.numberStyle = .decimal
         formatter.decimalSeparator = "."
         formatter.groupingSeparator = ""
-        for oppgave in prøve.oppgaver {
-            if let oppgaveIndeks = prøve.oppgaveIndexMedKjentElev(oppgaveId: oppgave.id, elevIndex: elevIndeks){
-                if let tall = formatter.number(from: prøve.poeng[elevIndeks][oppgaveIndeks].poeng) as? Double {
-                    sum += Double(tall)
+        for oppgave in oppgaver {
+            Task {
+                await hentPoeng(oppgaveId: oppgave.id)
+                if let poeng = poeng {
+                    if let poengVerdi = formatter.number(from: poeng.poeng)?.doubleValue {
+                        tallsum += poengVerdi
+                    }
+                    
                 }
             }
+            
         }
-        return String(sum)
+        return String(tallsum)
     }
+    
+    func hentOppgaver() async {
+        await withErrorReporting {
+            try await database.read { db in
+                oppgaver = try Oppgaver
+                    .where { $0.proveId == self.prøveId}
+                    .fetchAll(db)
+            }
+        }
+    }
+    
+    func hentPoeng(oppgaveId: Oppgaver.ID) async {
+        await withErrorReporting {
+            try await database.read { db in
+                poeng = try Poenger
+                    .where { $0.deltakerId == self.deltakerId && $0.oppgaveId == oppgaveId }
+                    .fetchOne(db)
+                    
+            }
+        }
+    }
+    
 }
