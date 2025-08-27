@@ -9,7 +9,7 @@ import SwiftUI
 
 
 enum VisElevTilbakemleding: Identifiable  {
-    case valgtElev(elev: Elev)
+    case valgtElev(deltaker: Deltakere)
     case velgtInstillinger
     case valgtKategorier
     case velgtKlassesammendrag

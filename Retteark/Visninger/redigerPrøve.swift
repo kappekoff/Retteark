@@ -19,7 +19,7 @@ struct redigerPr_ve: View {
     @State var visEleverKarakter: Bool = false
     
     @State var oppgaver: [Oppgaver] = []
-    @State var prøve: [Prover] = []
+    @State var prøve: Prover? = nil
     var body: some View {
         @Bindable var klasseoversikt = klasseoversikt
         NavigationStack {
@@ -51,8 +51,8 @@ struct redigerPr_ve: View {
         .task {
             await hentOppgaver()
             await hentPrøve()
-            prøvenavn = prøve.first?.navn ?? ""
-            visEleverKarakter = prøve.first?.visEleverKarakter ?? false
+            prøvenavn = prøve?.navn ?? ""
+            visEleverKarakter = prøve?.visEleverKarakter ?? false
         }
         HStack {
             Button("Lukk") {
@@ -76,7 +76,7 @@ struct redigerPr_ve: View {
     func hentPrøve() async {
         await withErrorReporting {
             try await database.read { db in
-                let prøve = try Prover
+                prøve = try Prover
                     .where { $0.id == self.prøveId }
                     .fetchOne(db)
             }

@@ -6,10 +6,16 @@
 //
 
 import SwiftUI
+import SharingGRDB
 
 struct poengTabellView: View {
+    @Dependency(\.defaultDatabase) var database
+    var prøveID: Prover.ID
+    @State var prøve: Prover? = nil
+    @State var oppgaver: [Oppgaver] = []
+    @State var deltakere: [Deltakere] = []
+
     
-    @Bindable var prøve: Prøve
     @State var visElevTilbakemleding: VisElevTilbakemleding? = nil
     @State var elevIndeks: Int? = nil
     @State var oppgaveIndeks: Int? = nil
@@ -22,8 +28,8 @@ struct poengTabellView: View {
         Grid(horizontalSpacing: 0, verticalSpacing: 0){
             GridRow{
                 Color.clear.gridCellUnsizedAxes([.horizontal, .vertical])
-                ForEach($prøve.oppgaver){oppgave in
-                    TextField("Oppgave navn", text: oppgave.navn)
+                ForEach(oppgaver){oppgave in
+                    oppgaveNavnCelle(oppgave: oppgave)
                 }
                 Image(systemName: "sum")
                 Image(systemName: "graduationcap.fill")
@@ -32,46 +38,39 @@ struct poengTabellView: View {
             .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).font(.title).fontWeight(.bold).border(.primary).background(.green).multilineTextAlignment(.center)
             GridRow{
                 Image(systemName: "number")
-                ForEach($prøve.oppgaver){oppgave in
+                ForEach($oppgaver){oppgave in
                     maxPoengVisning(poeng: oppgave.maksPoeng)
                         .onChange(of: oppgave.maksPoeng.wrappedValue) { gammelVerdi, nyVerdi in
-                            guard nyVerdi != nil else {return}
-                            prøve.endrePoengAlleElever(oppgaveId: oppgave.id)
+                            //må endre her seneere
+                            print("Endret maks poeng fra \(gammelVerdi) til \(nyVerdi)")
                         }
                 }
-                Text(String(prøve.oppgaver.map({$0.maksPoeng ?? 0}).reduce(0, +)))
+                Text(String(oppgaver.map({$0.maksPoeng ?? 0}).reduce(0, +)))
                 Text("6")
                 Color.clear.gridCellUnsizedAxes([.horizontal, .vertical])
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: 50).font(.title).border(.primary).fontWeight(.bold).background(.gray)
-            ForEach(prøve.elever){elev in
-                if let elevIndeks = prøve.poengRad(elevId: elev.id){
-                    GridRow(){
-                        Button(action: {
-                            visElevTilbakemleding = .valgtElev(elev:  prøve.elever.first(where: { elevv in
-                              return elevv.id == prøve.poeng[elevIndeks][optional: 0]?.elevId
-                            })!)
-                        }, label: {
-                            Text(prøve.elever.first(where: { elevv in
-                              return elevv.id == prøve.poeng[elevIndeks][optional: 0]?.elevId
-                            })?.navn ?? "Fant ikke elev")
-                        })
-                        ForEach(prøve.oppgaver){ oppgave in
-                            if let oppgaveIndeks = prøve.oppgave(elevIndeks: elevIndeks, oppgaveId: oppgave.id) {
-                                PoengView(poeng: $prøve.poeng[elevIndeks][oppgaveIndeks])
-                                    .focused($fokus, equals: .poengFokus(id: $prøve.poeng[elevIndeks][oppgaveIndeks].id))
-                                    .onSubmit {
-                                        if(prøve.poeng[elevIndeks][oppgaveIndeks].poeng == "") {
-                                          prøve.poeng[elevIndeks][oppgaveIndeks].poeng = String((oppgave.maksPoeng!))
-                                            var fokus_posisjon = [elevIndeks, oppgaveIndeks+1]
-                                            if(fokus?.get()[1] ?? 0 >= prøve.oppgaver.count - 1) {
-                                                fokus_posisjon = [(fokus?.get()[0] ?? 0) + 1, 0]
-                                            }
-                                            fokus = .poengFokus(id: fokus_posisjon)
-                                        }
+            
+            ForEach(deltakere){deltaker in
+                GridRow(){
+                    Button(action: {
+                        visElevTilbakemleding = .valgtElev(deltaker:  deltaker)
+                    }, label: {
+                        Text(deltaker.navn)
+                    })
+                    ForEach(prøve.oppgaver){ oppgave in
+                        PoengView(poeng: $prøve.poeng[elevIndeks][oppgaveIndeks])
+                            .focused($fokus, equals: .poengFokus(id: $prøve.poeng[elevIndeks][oppgaveIndeks].id))
+                            .onSubmit {
+                                if(prøve.poeng[elevIndeks][oppgaveIndeks].poeng == "") {
+                                    prøve.poeng[elevIndeks][oppgaveIndeks].poeng = String((oppgave.maksPoeng!))
+                                    var fokus_posisjon = [elevIndeks, oppgaveIndeks+1]
+                                    if(fokus?.get()[1] ?? 0 >= prøve.oppgaver.count - 1) {
+                                        fokus_posisjon = [(fokus?.get()[0] ?? 0) + 1, 0]
                                     }
+                                    fokus = .poengFokus(id: fokus_posisjon)
+                                }
                             }
-                            
                         }
                         sumCelle(prøve: prøve, elevIndeks: elevIndeks)
                         karakterView(prøve: prøve, elevIndeks: elevIndeks)
@@ -82,14 +81,12 @@ struct poengTabellView: View {
                                 }
                             }
                         }, label: {
-                            Image(systemName: prøve.elever.first(where: { elevv in
-                                return elevv.id == prøve.poeng[elevIndeks][optional: 0]?.elevId
-                              })!.låstKarakter ? "lock.open.fill" : "lock.fill")
+                            Image(systemName: deltaker.låstKarakter ? "lock.open.fill" : "lock.fill")
                         })
                         .fullScreenCover(item: $visElevTilbakemleding, onDismiss: { visElevTilbakemleding = nil }) { visElevTilbakemleding in
                             switch visElevTilbakemleding{
                             case .valgtElev(let elev):
-                                elevTilbakemeldingVisning(elev: elev, visElevTilbakemleding: $visElevTilbakemleding, prøve: prøve)
+                                print("skal fikse senere")//elevTilbakemeldingVisning(deltaker: deltaker, visElevTilbakemleding: $visElevTilbakemleding)
                             default:
                                 Text("Du skal aldri komme hit")
                             }
@@ -97,20 +94,58 @@ struct poengTabellView: View {
                         
                     }
                     .font(.title3).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background(elevIndeks % 2 == 1 ? Color.background:.orange)
-                }
+             
             }
-        }.onAppear {
-            if (prøve.elever.count > 0 && prøve.oppgaver.count > 0) {
-                if let elevIndeks = prøve.poengRad(elevId: prøve.elever[0].id){
-                    if let oppgaveIndeks = prøve.oppgave(elevIndeks: elevIndeks, oppgaveId: prøve.oppgaver[0].id) {
-                        fokus_posisjon = [elevIndeks, oppgaveIndeks]
-                        fokus = .poengFokus(id: fokus_posisjon)
-                    }
-                }
+        }.task {
+            fokus_posisjon = [0, 0]
+            fokus = .poengFokus(id: fokus_posisjon)
+            await hentPrøve()
+        }
+    }
+    
+    func hentPrøve() async {
+        await withErrorReporting {
+            try await database.read { db in
+                prøve = try Prover
+                    .where { $0.id == self.prøveID}
+                    .fetchOne(db)
             }
         }
     }
+    
+    func hentOppgaver() async {
+        await withErrorReporting {
+            try await database.read { db in
+                oppgaver = try Oppgaver
+                    .where { $0.proveId == self.prøveID}
+                    .fetchAll(db)
+            }
+        }
+    }
+    
+    func hentDeltakere() async {
+        await withErrorReporting {
+            try await database.read { db in
+                deltakere = try Deltakere
+                    .where { $0.proveId == self.prøveID}
+                    .fetchAll(db)
+            }
+        }
+    }
+    
 }
 
+struct oppgaveNavnCelle: View {
+    var oppgave: Oppgaver
+    @State var oppgaveNavn = ""
+    
+    var body : some View {
+        TextField("Oppgave navn", text: $oppgaveNavn)
+            .onAppear {
+                oppgaveNavn = oppgave.navn
+            }
+    }
+}
+            
 
 

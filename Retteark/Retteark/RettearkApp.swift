@@ -87,7 +87,8 @@ struct RettearkApp: App {
                CREATE TABLE "Deltakere" (
                    "id" TEXT PRIMARY KEY,
                    "navn" TEXT,
-                   "proveId" TEXT NOT NULL REFERENCES "Prover" ("id") ON DELETE CASCADE ON UPDATE NO ACTION  
+                   "proveId" TEXT NOT NULL REFERENCES "Prover" ("id") ON DELETE CASCADE ON UPDATE NO ACTION,
+                   "låstKarakter" INTEGER
               ) STRICT
               """
             )
@@ -215,6 +216,7 @@ struct Deltakere: FetchableRecord, Codable, Identifiable {
     var id: String
     var navn: String
     var proveId: String
+    var låstKarakter: Bool?
 }
 
 @Table("Poenger")

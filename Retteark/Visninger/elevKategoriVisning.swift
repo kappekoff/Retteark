@@ -10,14 +10,14 @@ import SwiftUI
 struct elevTilbakemeldingVisning: View {
     var elev: Elev
     @Binding var visElevTilbakemleding:VisElevTilbakemleding?
-    @Bindable var prøve: Prøve
+    @Binding var prøve: Prøve
     var lagerPDF: Bool = false
     
     var body: some View {
 
         ScrollView {
-          top(elev: elev, prøve: prøve, visElevTilbakemleding: $visElevTilbakemleding)
-          hovedinnhold(elev: elev, visElevTilbakemleding: $visElevTilbakemleding, prøve: prøve, lagerPDF: false)
+          top(elev: elev, prøve: $prøve, visElevTilbakemleding: $visElevTilbakemleding)
+          hovedinnhold(elev: elev, visElevTilbakemleding: $visElevTilbakemleding, prøve: $prøve, lagerPDF: false)
         }
         Button("Lukk") {
             visElevTilbakemleding = nil
@@ -31,7 +31,7 @@ struct elevTilbakemeldingVisning: View {
 
 struct top: View {
   var elev: Elev
-  @Bindable var prøve: Prøve
+  @Binding var prøve: Prøve
   @Binding var visElevTilbakemleding:VisElevTilbakemleding?
   @State var visFilvelger = false
   
@@ -47,8 +47,8 @@ struct top: View {
         switch result {
          case .success(let file):
           lagPDF(innhold: VStack {
-              top(elev: elev, prøve: prøve, visElevTilbakemleding: $visElevTilbakemleding)
-              hovedinnhold(elev: elev, visElevTilbakemleding: $visElevTilbakemleding, prøve: prøve, lagerPDF: true)
+              top(elev: elev, prøve: $prøve, visElevTilbakemleding: $visElevTilbakemleding)
+              hovedinnhold(elev: elev, visElevTilbakemleding: $visElevTilbakemleding, prøve: $prøve, lagerPDF: true)
           }, filplassering: file)
          case .failure(let error):
           print(error)
@@ -63,7 +63,7 @@ struct top: View {
 struct hovedinnhold: View {
   var elev: Elev
   @Binding var visElevTilbakemleding:VisElevTilbakemleding?
-  @Bindable var prøve: Prøve
+  @Binding var prøve: Prøve
   var lagerPDF: Bool = false
   
   let kategoriKolonner = [

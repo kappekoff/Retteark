@@ -14,8 +14,8 @@ struct klasseVisning: View {
     
     @Environment(Klasseoversikt.self) var klasseoversikt
     @State private var visSideKolonner = NavigationSplitViewVisibility.all
-    @State private var valgtKlasseID: Klasse.ID?
-    @State private var valgtPrøveID: Prøve.ID?
+    @State private var valgtKlasseID: Klasser.ID?
+    @State private var valgtPrøveID: Prover.ID?
     @State var visKlassevisningSheet: VisKlassevisningSheet? = nil
     
     @Dependency(\.defaultDatabase) var database
@@ -131,7 +131,7 @@ struct klasseVisning: View {
             }
             
         }
-        .onChange(of: valgtKlasseID) { _ in
+        .onChange(of: valgtKlasseID) {
             print(valgtKlasseID ?? "Ingen valgt klasse")
             Task {
                 await hentProverForKlasse()

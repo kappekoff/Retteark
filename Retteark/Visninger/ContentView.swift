@@ -6,12 +6,20 @@
 //
 
 import SwiftUI
+import SharingGRDB
+
 
 struct ContentView: View {
     
     @Environment(Klasseoversikt.self) var klasseoversikt
+    @Dependency(\.defaultDatabase) var database
     var valgtKlasseID: Klasse.ID?
     var valgtPrøveID: Prøve.ID?
+    
+    @State var valgtKlasse: Klasser? = nil
+    @State var valgtPrøve: Prover? = nil
+    @State var proveDeltakere: [Elever] = []
+    
     @State var viserSheet: VisElevTilbakemleding? = nil
     @State var visFilvelger: Bool = false
     @State var tilbakemledingerLaget: Double = 0.0
@@ -20,7 +28,7 @@ struct ContentView: View {
     var body: some View {
         @Bindable var klasseoversikt = klasseoversikt
         if let valgtKlasseID = valgtKlasseID {
-            if let valgtPrøveID = valgtPrøveID, let valgtKlasse = klasseoversikt.klasseFraId(id: valgtKlasseID), let valgtPrøve = valgtKlasse.finnPrøveFraId(id: valgtPrøveID) {
+            if let valgtPrøveID = valgtPrøveID {
                 VStack {
                     HStack {
                         Button(action: {
@@ -39,12 +47,11 @@ struct ContentView: View {
                         .keyboardShortcut("i")
                         Button(action: {
                             klasseoversikt.lagreKlasser()
-                            
                         }, label: {
                             Image(systemName: "square.and.arrow.down")
                         })
                         .keyboardShortcut("s")
-                        Button {
+                        /*Button {
                           visFilvelger.toggle()
                         } label: {
                           Image(systemName: "square.and.arrow.up.circle.fill")
@@ -62,7 +69,7 @@ struct ContentView: View {
                             }
                             tilbakemledingerLaget = 0
                             
-                            for elev in valgtPrøve.elever {
+                            for deltaker in proveDeltakere {
                               lagPDF(innhold:VStack {
                                 top(elev: elev, prøve: valgtPrøve, visElevTilbakemleding: $viserSheet)
                                 hovedinnhold(elev: elev, visElevTilbakemleding: $viserSheet , prøve: valgtPrøve, lagerPDF: true)
@@ -73,7 +80,7 @@ struct ContentView: View {
                            case .failure(let error):
                             print(error)
                          }
-                       }
+                       }*/
                         Button(action: {
                             viserSheet = .velgtKlassesammendrag
                             
@@ -87,11 +94,11 @@ struct ContentView: View {
                     .fullScreenCover(item: $viserSheet, onDismiss: {viserSheet = nil}){ viserSheet in
                         switch viserSheet{
                         case .valgtKategorier:
-                            kategoriView(viserSheet: $viserSheet, prøve: valgtPrøve).environment(klasseoversikt)
+                            Text("skal fikses når kategorier kommer")//kategoriView(viserSheet: $viserSheet, prøve: valgtPrøve).environment(klasseoversikt)
                         case .velgtInstillinger:
-                            instillinger(prøve: valgtPrøve, visElevTilbakemleding: $viserSheet).environment(klasseoversikt)
+                            instillinger(valgtPrøveID: valgtPrøveID, visElevTilbakemleding: $viserSheet).environment(klasseoversikt)
                         case .velgtKlassesammendrag:
-                            Klassesammendrag(visElevTilbakemleding: $viserSheet, prøve: valgtPrøve)
+                            Text("skal fikses når kategorier kommer")//Klassesammendrag(visElevTilbakemleding: $viserSheet, prøve: valgtPrøve)
                         case .viserProgressView:
                             ProgressView("Lagrer tilbakemeldinger", value: tilbakemledingerLaget)
                               .progressViewStyle(.circular)
@@ -101,17 +108,39 @@ struct ContentView: View {
                         }
                     }
                     ScrollView(.horizontal) {
-                        poengTabellView(prøve: valgtPrøve)
+                        EmptyView()//poengTabellView(prøve: valgtPrøve)
                             .padding([.bottom, .leading, .trailing])
                     }
                     
+                }
+                .task {
+                    await hentKlasse()
+                    await hentPrøve()
                 }
             }
             else {
                 Text("Velg prøve")
             }
         }
-        
-        
+    }
+    
+    func hentKlasse() async {
+        await withErrorReporting {
+            try await database.read { db in
+                valgtKlasse = try Klasser
+                    .where { $0.id == self.valgtKlasseID}
+                    .fetchOne(db)
+            }
+        }
+    }
+    
+    func hentPrøve() async {
+        await withErrorReporting {
+            try await database.read { db in
+                valgtPrøve = try Prover
+                    .where { $0.id == self.valgtPrøveID}
+                    .fetchOne(db)
+            }
+        }
     }
 }
