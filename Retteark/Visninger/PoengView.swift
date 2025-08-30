@@ -12,23 +12,28 @@ struct PoengView: View {
     @Environment(Klasseoversikt.self) var klasseoversikt
     @Dependency(\.defaultDatabase) var database
 
-    var poengId: Poenger.ID
+    var deltakerID: Deltakere.ID
+    var oppgaveID: Oppgaver.ID
+    
     @State var poeng: Poenger? = nil
+    @State var poengVerdi = ""
     
     var body: some View {
         Group {
             if let poeng = poeng {
-                tallEllerStrekVisning(tekst: Binding(get: {poeng.poeng}, set: { nyVerdi in
-                    self.poeng?.poeng = nyVerdi
-                }), tittel: poeng.poeng)
+                tallEllerStrekVisning(tekst: $poengVerdi, tittel: poeng.poeng)
                     .font(.title3)
                     .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
                     .border(.black)
                     .multilineTextAlignment(.center)
-                    .onChange(of: poeng.poeng) { _, _ in
+                    .onChange(of: poengVerdi) { _, _ in
                       Task {
-                        klasseoversikt.lagreKlasser()
+                        self.poeng?.poeng = poengVerdi
+                        await lagrePoeng()
                       }
+                    }
+                    .onAppear {
+                        poengVerdi = poeng.poeng
                     }
             } else {
                 Text("Laster...").task {
@@ -41,7 +46,20 @@ struct PoengView: View {
     func hentPoeng() async {
         await withErrorReporting {
             try await database.read { db in
-                poeng = try Poenger.fetchOne(db, id: self.poengId)
+                poeng = try Poenger
+                    .where{$0.deltakerId == deltakerID && $0.oppgaveId == oppgaveID}
+                    .fetchOne(db)
+            }
+        }
+    }
+    
+    func lagrePoeng() async{
+        await withErrorReporting {
+            try await database.write { db in
+                if let poeng = poeng {
+                    let midlertidigPoeng = poeng
+                    try Poenger.update(midlertidigPoeng).execute(db)
+                }
             }
         }
     }

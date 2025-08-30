@@ -17,9 +17,9 @@ struct poengTabellView: View {
 
     
     @State var visElevTilbakemleding: VisElevTilbakemleding? = nil
-    @State var elevIndeks: Int? = nil
     @State var oppgaveIndeks: Int? = nil
     @State var farge: Bool = false
+    @State var indeks: Int = 0
     @State var fokus_posisjon: [Int] = [0, 0]
     @FocusState var fokus: Fokus?
 
@@ -59,8 +59,8 @@ struct poengTabellView: View {
                         Text(deltaker.navn)
                     })
                     ForEach(oppgaver){ oppgave in
-                        /*PoengView(poeng:)
-                            .focused($fokus, equals: .poengFokus(id: $prøve.poeng[elevIndeks][oppgaveIndeks].id))
+                        PoengView(deltakerID: deltaker.id, oppgaveID: oppgave.id)
+                            /*.focused($fokus, equals: .poengFokus(id: $prøve.poeng[elevIndeks][oppgaveIndeks].id))
                             .onSubmit {
                                 if(prøve.poeng[elevIndeks][oppgaveIndeks].poeng == "") {
                                     prøve.poeng[elevIndeks][oppgaveIndeks].poeng = String((oppgave.maksPoeng!))
@@ -72,13 +72,13 @@ struct poengTabellView: View {
                                 }
                             }*/
                     }
-                    sumCelle(prøveId: prøveID, deltakerId: deltaker.id)
-                    //karakterView(prøve: prøve!, elevIndeks: elevIndeks!)
-                    /*Button(action: {
-                        deltaker.låstKarakter.toggle()
+                    sumCelle(prøveId: prøveID, deltakerId: deltaker.id, elevIndeks: indeks)
+                    karakterView(prøveId: prøveID, deltakerId: deltaker.id,elevIndeks: indeks)
+                    Button(action: {
+                        låsKarakarakterForDeltaker(deltaker: deltaker)
                     }, label: {
                         Image(systemName: deltaker.låstKarakter ? "lock.open.fill" : "lock.fill")
-                    })*/
+                    })
                     .fullScreenCover(item: $visElevTilbakemleding, onDismiss: { visElevTilbakemleding = nil }) { visElevTilbakemleding in
                         switch visElevTilbakemleding{
                         case .valgtElev(let elev):
@@ -88,12 +88,17 @@ struct poengTabellView: View {
                         }
                     }
                 }
-                .font(.title3).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background((elevIndeks ?? 0) % 2 == 1 ? Color.background:.orange)
+                .onAppear {
+                    indeks += 1
+                }
+                .font(.title3).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background(indeks % 2 == 1 ? Color.background:.orange)
              }
         }.task {
             fokus_posisjon = [0, 0]
             fokus = .poengFokus(id: fokus_posisjon)
             await hentPrøve()
+            await hentOppgaver()
+            
         }
     }
     
@@ -127,6 +132,15 @@ struct poengTabellView: View {
         }
     }
     
+    func låsKarakarakterForDeltaker(deltaker: Deltakere) {
+        withErrorReporting {
+            try database.write { db in
+                var midlertidigDeltaker = deltaker
+                midlertidigDeltaker.låstKarakter = !deltaker.låstKarakter
+                try Deltakere.update(midlertidigDeltaker).execute(db)
+            }
+        }
+    }
 }
 
 struct oppgaveNavnCelle: View {

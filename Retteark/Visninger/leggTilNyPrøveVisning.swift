@@ -77,7 +77,7 @@ struct leggTilNyPr_veVisning: View {
                         Task {
                             await withErrorReporting {
                                 try await database.write { db in
-                                    let midlertidigDeltaker = Deltakere(id: deltakerId, navn: elev.navn, proveId: proveid)
+                                    let midlertidigDeltaker = Deltakere(id: deltakerId, navn: elev.navn, proveId: proveid, låstKarakter: false, kakrakter: "")
                                     try  Deltakere.insert{midlertidigDeltaker}.execute(db)
                                 }
                             }
@@ -86,7 +86,7 @@ struct leggTilNyPr_veVisning: View {
                             Task {
                                 await withErrorReporting {
                                     try await database.write { db in
-                                        let midlertidigPoeng = Poenger(oppgaveId: oppgave.id, deltakerId: deltakerId, poeng: "")
+                                        let midlertidigPoeng = Poenger(oppgaveId: oppgave.id, deltakerId: deltakerId, poeng: "", id: UUID().uuidString)
                                         try  Poenger.insert{midlertidigPoeng}.execute(db)
                                     }
                                 }

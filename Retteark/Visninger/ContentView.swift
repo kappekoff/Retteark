@@ -108,7 +108,7 @@ struct ContentView: View {
                         }
                     }
                     ScrollView(.horizontal) {
-                        EmptyView()//poengTabellView(prøve: valgtPrøve)
+                        poengTabellView(prøveID: valgtPrøveID)
                             .padding([.bottom, .leading, .trailing])
                     }
                     

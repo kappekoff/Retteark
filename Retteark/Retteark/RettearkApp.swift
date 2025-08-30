@@ -88,7 +88,8 @@ struct RettearkApp: App {
                    "id" TEXT PRIMARY KEY,
                    "navn" TEXT,
                    "proveId" TEXT NOT NULL REFERENCES "Prover" ("id") ON DELETE CASCADE ON UPDATE NO ACTION,
-                   "låstKarakter" INTEGER
+                   "låstKarakter" INTEGER,
+                    "karakter" TEXT
               ) STRICT
               """
             )
@@ -122,7 +123,7 @@ struct RettearkApp: App {
                 CREATE TABLE "Poenger" (
                     "id" TEXT PRIMARY KEY,
                     "oppgaveId" TEXT NOT NULL REFERENCES "Oppgaver" ("id") ON DELETE CASCADE ON UPDATE NO ACTION,
-                    "deltakerId" TEXT NOT NULL REFERENCES "Deltaker" ("id") ON DELETE CASCADE ON UPDATE NO ACTION,
+                    "deltakerId" TEXT NOT NULL REFERENCES "Deltakere" ("id") ON DELETE CASCADE ON UPDATE NO ACTION,
                     "poeng" TEXT
                 ) STRICT
               """
@@ -160,14 +161,40 @@ struct RettearkApp: App {
             try #sql (
                 """
                     INSERT INTO Oppgaver (id, navn, proveId, maksPoeng, gammelMaksPoeng) VALUES
-                    ('oppgave1', 'Addisjon', 'prove1', 10.0, NULL),
-                    ('oppgave2', 'Subtraksjon', 'prove1', 5.0, NULL),
-                    ('oppgave3', 'Multiplikasjon', 'prove2', 15.0, NULL),
-                    ('oppgave4', 'Divisjon', 'prove2', 20.0, NULL),
-                    ('oppgave5', 'Kjemi', 'prove3', 25.0, NULL),
-                    ('oppgave6', 'Biologi', 'prove3', 30.0, NULL)
+                    ('oppgave1', '1', 'prove1', 10.0, NULL),
+                    ('oppgave2', '2', 'prove1', 5.0, NULL),
+                    ('oppgave3', '1a', 'prove2', 15.0, NULL),
+                    ('oppgave4', '1b', 'prove2', 20.0, NULL),
+                    ('oppgave5', '1', 'prove3', 25.0, NULL),
+                    ('oppgave6', '2', 'prove3', 30.0, NULL)
                 """
             ).execute(db)
+            try #sql (
+                """
+                    INSERT INTO Poenger (id, oppgaveId, deltakerId, poeng) VALUES
+                    ('poeng1', 'oppgave1', 'deltaker1', '8'),
+                    ('poeng2', 'oppgave2', 'deltaker1', '4'),
+                    ('poeng3', 'oppgave1', 'deltaker2', '9'),
+                    ('poeng4', 'oppgave2', 'deltaker2', '5'),
+                    ('poeng5', 'oppgave3', 'deltaker3', '12'),
+                    ('poeng6', 'oppgave4', 'deltaker3', '18'),
+                    ('poeng7', 'oppgave3', 'deltaker4', '14'),
+                    ('poeng8', 'oppgave4', 'deltaker4', '20'),
+                    ('poeng9', 'oppgave5', 'deltaker5', '20'),
+                    ('poeng10', 'oppgave6', 'deltaker5', '25')
+                """
+            ).execute(db)
+            try #sql (
+                """
+                    INSERT INTO Deltakere (id, navn, proveId, låstKarakter, karakter) VALUES
+                    ('deltaker1', 'Ola Nordmann', 'prove1', 0, ''),
+                    ('deltaker2', 'Kari Nordmann', 'prove1', 0, ''),
+                    ('deltaker3', 'Ola Nordmann', 'prove2', 0, ''),
+                    ('deltaker4', 'Kari Nordmann', 'prove2', 0, ''),
+                    ('deltaker5', 'Per Hansen', 'prove3', 0, '')
+                """
+            ).execute(db)
+            
         }
         do {
             try migrator.migrate(database)
@@ -216,7 +243,8 @@ struct Deltakere: FetchableRecord, Codable, Identifiable {
     var id: String
     var navn: String
     var proveId: String
-    var låstKarakter: Bool?
+    var låstKarakter: Bool
+    var kakrakter: String
 }
 
 @Table("Poenger")
@@ -224,7 +252,5 @@ struct Poenger: FetchableRecord, Codable, Identifiable, TableRecord {
     var oppgaveId: String
     var deltakerId: String
     var poeng: String
-    var id: String {
-        return "\(oppgaveId)-\(deltakerId)"
-    }
+    var id: String
 }

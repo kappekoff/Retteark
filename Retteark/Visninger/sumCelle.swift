@@ -13,7 +13,7 @@ struct sumCelle: View {
 
     var prøveId: Prover.ID
     var deltakerId: Deltakere.ID
-    var orangeCelle: Bool = false
+    var elevIndeks: Int
     var formatter: NumberFormatter  = NumberFormatter()
     
     @State var oppgaver: [Oppgaver] = []
@@ -25,7 +25,7 @@ struct sumCelle: View {
             .font(.title3)
             .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
             .border(.black)
-            .background(orangeCelle ? Color.background:.orange)
+            .background(elevIndeks % 2 == 1  ? Color.background:.orange)
             .multilineTextAlignment(.center)
             .task {
                 await hentOppgaver()
@@ -46,10 +46,8 @@ struct sumCelle: View {
                     if let poengVerdi = formatter.number(from: poeng.poeng)?.doubleValue {
                         tallsum += poengVerdi
                     }
-                    
                 }
             }
-            
         }
         return String(tallsum)
     }
