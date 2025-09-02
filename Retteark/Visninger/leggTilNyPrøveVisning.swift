@@ -77,7 +77,7 @@ struct leggTilNyPr_veVisning: View {
                         Task {
                             await withErrorReporting {
                                 try await database.write { db in
-                                    let midlertidigDeltaker = Deltakere(id: deltakerId, navn: elev.navn, proveId: proveid, låstKarakter: false, kakrakter: "")
+                                    let midlertidigDeltaker = Deltakere(id: deltakerId, navn: elev.navn, proveId: proveid, låstKarakter: false, karakter: "")
                                     try  Deltakere.insert{midlertidigDeltaker}.execute(db)
                                 }
                             }

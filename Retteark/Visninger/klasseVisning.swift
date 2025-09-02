@@ -132,11 +132,15 @@ struct klasseVisning: View {
             
         }
         .onChange(of: valgtKlasseID) {
-            print(valgtKlasseID ?? "Ingen valgt klasse")
             Task {
                 await hentProverForKlasse()
             }
         }
+        .onChange(of: valgtPrøveID) { nyVerdi in
+            print("valgtPrøveID endret til \(String(describing: nyVerdi))")
+        }
+
+            
         .fullScreenCover(item: $visKlassevisningSheet, onDismiss: {visKlassevisningSheet = nil}) { visKlassevisningSheet in
             switch visKlassevisningSheet {
             case .leggTilKlasse:

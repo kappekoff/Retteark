@@ -14,6 +14,7 @@
 		941211F82E45DF2C0060099B /* SharingGRDBCore in Frameworks */ = {isa = PBXBuildFile; productRef = 941211F72E45DF2C0060099B /* SharingGRDBCore */; };
 		941211FA2E45DF2C0060099B /* StructuredQueriesGRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 941211F92E45DF2C0060099B /* StructuredQueriesGRDB */; };
 		941211FC2E45DF2C0060099B /* StructuredQueriesGRDBCore in Frameworks */ = {isa = PBXBuildFile; productRef = 941211FB2E45DF2C0060099B /* StructuredQueriesGRDBCore */; };
+		94361DCB2E65CAFD0019496B /* karakterLåsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94361DCA2E65CAFD0019496B /* karakterLåsView.swift */; };
 		949429E5293D243C00543B19 /* bakgrunsfarger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949429E4293D243C00543B19 /* bakgrunsfarger.swift */; };
 		94B82C4A28CBCE010086368A /* Klasse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B82C4928CBCE010086368A /* Klasse.swift */; };
 		94B82C4C28CBCF350086368A /* klasseVisning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B82C4B28CBCF350086368A /* klasseVisning.swift */; };
@@ -78,6 +79,7 @@
 		941205EC289006A500D7FA3C /* elev.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = elev.swift; sourceTree = "<group>"; };
 		941205EE2890071900D7FA3C /* oppgave.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = oppgave.swift; sourceTree = "<group>"; };
 		941205F028900ED700D7FA3C /* poeng.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = poeng.swift; sourceTree = "<group>"; };
+		94361DCA2E65CAFD0019496B /* karakterLåsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "karakterLåsView.swift"; sourceTree = "<group>"; };
 		948D050C290DAFFD00359FD8 /* Retteark.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Retteark.entitlements; sourceTree = "<group>"; };
 		949429E4293D243C00543B19 /* bakgrunsfarger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bakgrunsfarger.swift; sourceTree = "<group>"; };
 		94B82C4928CBCE010086368A /* Klasse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Klasse.swift; sourceTree = "<group>"; };
@@ -244,6 +246,7 @@
 				94CC3008289D951D00A193F4 /* sumCelle.swift */,
 				94DF82E02878BB540054D5B8 /* ContentView.swift */,
 				DEB6BBD128B37B66008BBD31 /* poengTabellView.swift */,
+				94361DCA2E65CAFD0019496B /* karakterLåsView.swift */,
 				DE993B2B291A726F004889EC /* maxPoengVisning.swift */,
 				DE05744E28C1F67E001D487B /* elevKategoriVisning.swift */,
 				DE85159928DB2AAA0048913A /* leggTilNyKlasseVisning.swift */,
@@ -414,6 +417,7 @@
 				DE05745128C6073B001D487B /* VisElevTilbakemleding.swift in Sources */,
 				DE87C38E28BF65D900E880A9 /* kakediagram.swift in Sources */,
 				DE993B2E291BC43D004889EC /* Fokus.swift in Sources */,
+				94361DCB2E65CAFD0019496B /* karakterLåsView.swift in Sources */,
 				DE05744F28C1F67E001D487B /* elevKategoriVisning.swift in Sources */,
 				DE0620D728D0981E008AF4EA /* filemanager_extension.swift in Sources */,
 				94CC300528953FD600A193F4 /* PoengView.swift in Sources */,

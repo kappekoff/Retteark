@@ -244,7 +244,7 @@ struct Deltakere: FetchableRecord, Codable, Identifiable {
     var navn: String
     var proveId: String
     var låstKarakter: Bool
-    var kakrakter: String
+    var karakter: String
 }
 
 @Table("Poenger")

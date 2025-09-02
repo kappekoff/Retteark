@@ -50,7 +50,7 @@ struct karakterView: View {
                             withErrorReporting {
                                 try database.write { db in
                                     if(!(deltaker.låstKarakter ?? false)) {
-                                        let midlertidigDeltaker = Deltakere(id: deltakerId, navn: deltaker.navn, proveId: prøveId, låstKarakter: true, kakrakter: newValue)
+                                        let midlertidigDeltaker = Deltakere(id: deltakerId, navn: deltaker.navn, proveId: prøveId, låstKarakter: true, karakter: newValue)
                                         try Deltakere.update(midlertidigDeltaker)
                                             .execute(db)
                                     }

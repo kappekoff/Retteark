@@ -58,6 +58,9 @@ struct poengTabellView: View {
                     }, label: {
                         Text(deltaker.navn)
                     })
+                    .onAppear {
+                        indeks = indeks + 1
+                    }
                     ForEach(oppgaver){ oppgave in
                         PoengView(deltakerID: deltaker.id, oppgaveID: oppgave.id)
                             /*.focused($fokus, equals: .poengFokus(id: $prøve.poeng[elevIndeks][oppgaveIndeks].id))
@@ -74,11 +77,8 @@ struct poengTabellView: View {
                     }
                     sumCelle(prøveId: prøveID, deltakerId: deltaker.id, elevIndeks: indeks)
                     karakterView(prøveId: prøveID, deltakerId: deltaker.id,elevIndeks: indeks)
-                    Button(action: {
-                        låsKarakarakterForDeltaker(deltaker: deltaker)
-                    }, label: {
-                        Image(systemName: deltaker.låstKarakter ? "lock.open.fill" : "lock.fill")
-                    })
+                    karakterLa_sView(deltakerID: deltaker.id, elevIndeks: indeks)
+
                     .fullScreenCover(item: $visElevTilbakemleding, onDismiss: { visElevTilbakemleding = nil }) { visElevTilbakemleding in
                         switch visElevTilbakemleding{
                         case .valgtElev(let elev):
@@ -88,16 +88,26 @@ struct poengTabellView: View {
                         }
                     }
                 }
-                .onAppear {
-                    indeks += 1
-                }
                 .font(.title3).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background(indeks % 2 == 1 ? Color.background:.orange)
              }
-        }.task {
+        }
+        .onAppear() {
             fokus_posisjon = [0, 0]
             fokus = .poengFokus(id: fokus_posisjon)
-            await hentPrøve()
-            await hentOppgaver()
+            Task {
+                await hentPrøve()
+                await hentOppgaver()
+                await hentDeltakere()
+            }
+        }
+        .onChange(of: prøveID)  {
+            fokus_posisjon = [0, 0]
+            fokus = .poengFokus(id: fokus_posisjon)
+            Task {
+                await hentPrøve()
+                await hentOppgaver()
+                await hentDeltakere()
+            }
             
         }
     }
@@ -130,17 +140,7 @@ struct poengTabellView: View {
                     .fetchAll(db)
             }
         }
-    }
-    
-    func låsKarakarakterForDeltaker(deltaker: Deltakere) {
-        withErrorReporting {
-            try database.write { db in
-                var midlertidigDeltaker = deltaker
-                midlertidigDeltaker.låstKarakter = !deltaker.låstKarakter
-                try Deltakere.update(midlertidigDeltaker).execute(db)
-            }
-        }
-    }
+    }    
 }
 
 struct oppgaveNavnCelle: View {
