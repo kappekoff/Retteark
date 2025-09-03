@@ -17,6 +17,7 @@ struct PoengView: View {
     
     @State var poeng: Poenger? = nil
     @State var poengVerdi = ""
+    @Binding var endretPoeng: Int
     
     var body: some View {
         Group {
@@ -27,10 +28,11 @@ struct PoengView: View {
                     .border(.black)
                     .multilineTextAlignment(.center)
                     .onChange(of: poengVerdi) { _, _ in
-                      Task {
-                        self.poeng?.poeng = poengVerdi
-                        await lagrePoeng()
-                      }
+                        endretPoeng += 1
+                        Task {
+                            self.poeng?.poeng = poengVerdi
+                            await lagrePoeng()
+                        }
                     }
                     .onAppear {
                         poengVerdi = poeng.poeng

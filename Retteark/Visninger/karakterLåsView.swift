@@ -12,13 +12,15 @@ struct karakterLa_sView: View {
     @Dependency(\.defaultDatabase) var database
     
     var deltakerID: Deltakere.ID
-    var elevIndeks: Int
+    var indeks: Int
     
-    @State var låstKarakter: Bool = false
     @State var deltaker: Deltakere? = nil
+    @Binding var låstKarakter: Bool
+
     
     var body: some View {
         Button(action: {
+            låstKarakter.toggle()
             låsKarakarakterForDeltaker()
             Task {
                 await hentDeltaker()
@@ -31,7 +33,7 @@ struct karakterLa_sView: View {
         .fontWeight(.bold)
         .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
         .border(.black)
-        .background(elevIndeks % 2 == 1 ? Color.background:.orange)
+        .background(indeks % 2 == 1 ? Color.background:.orange)
         .multilineTextAlignment(.center)
         .task{
             await hentDeltaker()

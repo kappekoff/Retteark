@@ -14,7 +14,11 @@ struct karakterView: View {
     
     var prøveId: Prover.ID
     var deltakerId: Deltakere.ID
-    let elevIndeks: Int
+    let indeks: Int
+    
+    @Binding var låstKarakter: Bool
+    @Binding var endretPoeng: Int
+
     
     @State var oppgaver: [Oppgaver] = []
     @State var poeng: Poenger? = nil
@@ -25,37 +29,43 @@ struct karakterView: View {
     var body: some View {
         
         Group {
-            if(deltaker?.låstKarakter ?? false) {
-                Text(karakter)
-                    .font(.title3)
-                    .fontWeight(.bold)
-                    .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
-                    .border(.black)
-                    .background(elevIndeks % 2 == 1 ? Color.background:.orange)
-                    .multilineTextAlignment(.center)
-                    .task {
-                        karakter = await finnKarakter()
-                    }
-            }
-            else{
+            if(låstKarakter) {
                 TextField("", text: $karakter)
                     .font(.title3)
                     .fontWeight(.bold)
                     .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
                     .border(.black)
-                    .background(elevIndeks % 2 == 1  ? Color.background:.orange)
+                    .background(indeks % 2 == 1  ? Color.background:.orange)
                     .multilineTextAlignment(.center)
                     .onChange(of: karakter) { _, newValue in
                         if let deltaker = deltaker {
                             withErrorReporting {
                                 try database.write { db in
-                                    if(!(deltaker.låstKarakter ?? false)) {
+                                    if(deltaker.låstKarakter) {
                                         let midlertidigDeltaker = Deltakere(id: deltakerId, navn: deltaker.navn, proveId: prøveId, låstKarakter: true, karakter: newValue)
                                         try Deltakere.update(midlertidigDeltaker)
                                             .execute(db)
                                     }
                                 }
                             }
+                        }
+                    }
+                
+            }
+            else{
+                Text(karakter)
+                    .font(.title3)
+                    .fontWeight(.bold)
+                    .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
+                    .border(.black)
+                    .background(indeks % 2 == 1 ? Color.background:.orange)
+                    .multilineTextAlignment(.center)
+                    .task {
+                        karakter = await finnKarakter()
+                    }
+                    .onChange(of: endretPoeng) {
+                        Task {
+                            karakter = await finnKarakter()
                         }
                     }
             }

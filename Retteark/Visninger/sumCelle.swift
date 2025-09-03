@@ -13,8 +13,8 @@ struct sumCelle: View {
 
     var prøveId: Prover.ID
     var deltakerId: Deltakere.ID
-    var elevIndeks: Int
-    var formatter: NumberFormatter  = NumberFormatter()
+    var indeks: Int
+    @Binding var endretPoeng: Int
     
     @State var oppgaver: [Oppgaver] = []
     @State var poeng: Poenger? = nil
@@ -25,31 +25,43 @@ struct sumCelle: View {
             .font(.title3)
             .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
             .border(.black)
-            .background(elevIndeks % 2 == 1  ? Color.background:.orange)
+            .background(indeks % 2 == 1  ? Color.background:.orange)
             .multilineTextAlignment(.center)
             .task {
                 await hentOppgaver()
                 sum = await sumAvPoeng()
+            }
+            .onChange(of: endretPoeng) {
+                Task {
+                    sum = await sumAvPoeng()
+                }
+                
             }
     }
     
     func sumAvPoeng() async -> String  {
 
         var tallsum: Double = 0
+        
+        for oppgave in oppgaver {
+            tallsum += await hentPoengForOppgave(oppgaveId: oppgave.id) ?? 0
+        }
+        
+        return String(tallsum)
+    }
+    
+    func hentPoengForOppgave(oppgaveId: Oppgaver.ID) async -> Double? {
+        var formatter: NumberFormatter  = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.decimalSeparator = "."
         formatter.groupingSeparator = ""
-        for oppgave in oppgaver {
-            Task {
-                await hentPoeng(oppgaveId: oppgave.id)
-                if let poeng = poeng {
-                    if let poengVerdi = formatter.number(from: poeng.poeng)?.doubleValue {
-                        tallsum += poengVerdi
-                    }
-                }
+        await hentPoeng(oppgaveId: oppgaveId)
+        if let poeng = poeng {
+            if let poengVerdi = formatter.number(from: poeng.poeng)?.doubleValue {
+                return poengVerdi
             }
         }
-        return String(tallsum)
+        return nil
     }
     
     func hentOppgaver() async {

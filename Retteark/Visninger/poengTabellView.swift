@@ -52,33 +52,7 @@ struct poengTabellView: View {
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: 50).font(.title).border(.primary).fontWeight(.bold).background(.gray)
             
             ForEach(deltakere){ deltaker in
-                GridRow(){
-                    Button(action: {
-                        visElevTilbakemleding = .valgtElev(deltaker:  deltaker)
-                    }, label: {
-                        Text(deltaker.navn)
-                    })
-                    .onAppear {
-                        indeks = indeks + 1
-                    }
-                    ForEach(oppgaver){ oppgave in
-                        PoengView(deltakerID: deltaker.id, oppgaveID: oppgave.id)
-                            /*.focused($fokus, equals: .poengFokus(id: $prøve.poeng[elevIndeks][oppgaveIndeks].id))
-                            .onSubmit {
-                                if(prøve.poeng[elevIndeks][oppgaveIndeks].poeng == "") {
-                                    prøve.poeng[elevIndeks][oppgaveIndeks].poeng = String((oppgave.maksPoeng!))
-                                    var fokus_posisjon = [elevIndeks, oppgaveIndeks+1]
-                                    if(fokus?.get()[1] ?? 0 >= prøve.oppgaver.count - 1) {
-                                        fokus_posisjon = [(fokus?.get()[0] ?? 0) + 1, 0]
-                                    }
-                                    fokus = .poengFokus(id: fokus_posisjon)
-                                }
-                            }*/
-                    }
-                    sumCelle(prøveId: prøveID, deltakerId: deltaker.id, elevIndeks: indeks)
-                    karakterView(prøveId: prøveID, deltakerId: deltaker.id,elevIndeks: indeks)
-                    karakterLa_sView(deltakerID: deltaker.id, elevIndeks: indeks)
-
+                deltakerRadView(deltaker: deltaker, oppgaver: oppgaver, prøveID: prøveID, indeks: $indeks, visElevTilbakemleding: $visElevTilbakemleding)
                     .fullScreenCover(item: $visElevTilbakemleding, onDismiss: { visElevTilbakemleding = nil }) { visElevTilbakemleding in
                         switch visElevTilbakemleding{
                         case .valgtElev(let elev):
@@ -87,8 +61,8 @@ struct poengTabellView: View {
                             Text("Du skal aldri komme hit")
                         }
                     }
-                }
-                .font(.title3).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background(indeks % 2 == 1 ? Color.background:.orange)
+                    .font(.title3).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background(indeks % 2 == 1 ? Color.background:.orange)
+                
              }
         }
         .onAppear() {
@@ -154,6 +128,23 @@ struct oppgaveNavnCelle: View {
             }
     }
 }
+
+struct karakterCeller: View {
+    
+    var prøveID: Prover.ID
+    var deltakerID: Deltakere.ID
+    var indeks: Int
+    
+    @State var låstKarakter: Bool = false
+    @Binding var endretPoeng: Int
+
+    
+    var body: some View {
+        karakterView(prøveId: prøveID, deltakerId: deltakerID, indeks: indeks,låstKarakter: $låstKarakter, endretPoeng: $endretPoeng)
+        karakterLa_sView(deltakerID: deltakerID, indeks: indeks, låstKarakter: $låstKarakter)
+    }
+}
+    
             
 
 
