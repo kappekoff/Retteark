@@ -50,6 +50,10 @@ struct karakterView: View {
                             }
                         }
                     }
+                    .task {
+                        await hentDeltaker()
+                        karakter = deltaker?.karakter ?? ""
+                    }
                 
             }
             else{
@@ -107,7 +111,7 @@ struct karakterView: View {
     }
 
     func sumAvPoeng() async -> Double  {
-        var formatter: NumberFormatter  = NumberFormatter()
+        let formatter: NumberFormatter  = NumberFormatter()
         var tallsum: Double = 0
         formatter.numberStyle = .decimal
         formatter.decimalSeparator = "."

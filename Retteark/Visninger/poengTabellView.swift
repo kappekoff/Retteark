@@ -135,7 +135,7 @@ struct karakterCeller: View {
     var deltakerID: Deltakere.ID
     var indeks: Int
     
-    @State var låstKarakter: Bool = false
+    @State var låstKarakter: Bool = true
     @Binding var endretPoeng: Int
 
     
