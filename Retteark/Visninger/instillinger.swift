@@ -15,6 +15,7 @@ struct instillinger: View {
     @State var prøve: Prover? = nil
     @FetchAll var oppgaver: [Oppgaver] = []
     @FetchAll var deltakere: [Deltakere] = []
+    @FetchAll var kategorier: [Kategorier] = []
     @Binding var visElevTilbakemleding: VisElevTilbakemleding?
     @State var visEleverKarakter: Bool = false
    
@@ -22,17 +23,20 @@ struct instillinger: View {
     var body: some View {
             Text("Instillinger").font(.largeTitle)
             List(){
-                /*Section("Kategorier"){
-                    ForEach($prøve.kategorier){ kategori in
-                        TextField("kategori.navn", text: kategori.navn)
+                Section("Kategorier"){
+                    ForEach(kategorier) { kategori in
+                        kategorierRad(kategori: kategori)
                     }
                     Button {
-                        prøve.leggTilKategori()
+                        Task {
+                            await leggTilKategori()
+                        }
+                        
                     } label: {
                         Image(systemName: "plus.circle").foregroundColor(.green)
                     }
                 }
-                Section("Tilbakemeldinger") {
+                /*Section("Tilbakemeldinger") {
                     ForEach($prøve.tilbakemeldinger, id: \.self){ tilbakemelding in
                         HStack {
                             TextField("Tilbakemelding", text: tilbakemelding.tekst)
@@ -132,6 +136,24 @@ struct instillinger: View {
         }
     }
     
+    func hentKategorierForProve() async {
+        await withErrorReporting {
+            try await $kategorier.load(
+                Kategorier
+                    .where{ $0.proveId == self.valgtPrøveID },
+                animation: .default
+            )
+        }
+    }
+    
+    func leggTilKategori() async {
+        let nyKategori = Kategorier(id: UUID().uuidString, navn: "", proveId: valgtPrøveID)
+        await withErrorReporting {
+            try await database.write { db in
+                try Kategorier.insert{nyKategori}.execute(db)
+            }
+        }
+    }
     
     func slettOppgaveFraListe(at offsets: IndexSet){
         let oppgaverSomSkalSlettes = offsets.map { oppgaver[$0] }
@@ -150,7 +172,7 @@ struct instillinger: View {
 
 
 struct oppgaverRad: View {
-    
+    @Dependency(\.defaultDatabase) var database
     var oppgave: Oppgaver
     @State var oppgaveNavn = ""
     @State var oppgaveMaksPoeng: Double? = nil
@@ -165,10 +187,23 @@ struct oppgaverRad: View {
             oppgaveNavn = oppgave.navn
             oppgaveMaksPoeng = oppgave.maksPoeng ?? nil
         }
+        .onChange(of: [oppgaveNavn, String(oppgaveMaksPoeng ?? 0)]) {
+            Task {
+                await withErrorReporting {
+                    try await database.write { db in
+                        let midlertidigOppgave = Oppgaver(id: oppgave.id, navn: oppgaveNavn, proveId: oppgave.proveId, maksPoeng: oppgaveMaksPoeng ?? 2)
+                        try Oppgaver.update(midlertidigOppgave)
+                            .execute(db)
+                    }
+                }
+            }
+        }
+            
     }
 }
 
 struct deltakerRad: View {
+    @Dependency(\.defaultDatabase) var database
     var deltaker: Deltakere
     
     @State var deltakerNavn: String = ""
@@ -178,6 +213,44 @@ struct deltakerRad: View {
             .onAppear {
                 deltakerNavn = deltaker.navn
             }
+            .onChange(of: deltakerNavn) {
+                Task {
+                    await withErrorReporting {
+                        try await database.write { db in
+                            let midlertidigDeltaker = Deltakere(id: deltaker.id, navn: deltakerNavn, proveId: deltaker.proveId, låstKarakter: deltaker.låstKarakter, karakter: deltaker.karakter)
+                            try Deltakere.update(midlertidigDeltaker)
+                                .execute(db)
+                        }
+                    }
+                }
+            }
+                
     }
-    
 }
+
+struct kategorierRad: View {
+    @Dependency(\.defaultDatabase) var database
+    var kategori: Kategorier
+    
+    @State var kategoriNavn: String = ""
+    
+    var body: some View {
+        TextField("Kategorinavn", text: $kategoriNavn)
+            .onAppear {
+                kategoriNavn = kategori.navn
+            }
+            .onChange(of: kategoriNavn) {
+                Task {
+                    await withErrorReporting {
+                        try await database.write { db in
+                            let midlertidigKategori = Kategorier(id: kategori.id, navn: kategoriNavn, proveId: kategori.proveId)
+                            try Kategorier.update(midlertidigKategori)
+                                .execute(db)
+                        }
+                    }
+                }
+            }
+    }
+}
+
+

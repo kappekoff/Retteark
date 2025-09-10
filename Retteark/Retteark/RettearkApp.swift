@@ -96,18 +96,6 @@ struct RettearkApp: App {
             .execute(db)
             try #sql(
               """
-               CREATE TABLE "ElevProve" (
-                   "elevId" TEXT NOT NULL REFERENCES "Elever" ("id") ON DELETE CASCADE ON UPDATE NO ACTION,
-                   "proveId" TEXT NOT NULL REFERENCES "Prover" ("id") ON DELETE CASCADE ON UPDATE NO ACTION,
-                   "karakter" TEXT,
-                   "låstKarakter" INTEGER,
-                    PRIMARY KEY ("elevId", "proveId")
-               ) STRICT
-              """
-            )
-            .execute(db)
-            try #sql(
-              """
                CREATE TABLE "Oppgaver" (
                    "id" TEXT PRIMARY KEY,
                    "navn" TEXT,
@@ -129,6 +117,24 @@ struct RettearkApp: App {
               """
             )
             .execute(db)
+            try #sql(
+              """
+                CREATE TABLE Kategorier (
+                    id TEXT PRIMARY KEY,
+                    navn TEXT,
+                    proveId TEXT NOT NULL REFERENCES Prover (id) ON DELETE CASCADE ON UPDATE NO ACTION
+                ) STRICT
+              """
+            ).execute(db)
+            try #sql(
+              """
+                CREATE TABLE OppgaverKategorier (
+                    id TEXT PRIMARY KEY,
+                    KategoriId TEXT NOT NULL REFERENCES Kategorier (id) ON DELETE CASCADE ON UPDATE NO ACTION,
+                    OppgaveId TEXT NOT NULL REFERENCES Oppgaver (id) ON DELETE CASCADE ON UPDATE NO ACTION
+                ) STRICT
+              """
+            ).execute(db)
           }
         
         migrator.registerMigration("Populate with test data") { db in
@@ -254,3 +260,17 @@ struct Poenger: FetchableRecord, Codable, Identifiable, TableRecord {
     var poeng: String
     var id: String
 }
+@Table("Kategorier")
+struct Kategorier: FetchableRecord, Codable, Identifiable {
+    var id: String
+    var navn: String
+    var proveId: String
+}
+
+@Table("OppgaverKategorier")
+struct OppgaverKategorier: FetchableRecord, Codable, Identifiable {
+    var id: String
+    var KategoriId: String
+    var OppgaveId: String
+}
+
