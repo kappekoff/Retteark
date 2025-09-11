@@ -6,13 +6,20 @@
 //
 
 import SwiftUI
+import SharingGRDB
 
 
 struct kategoriView: View {
     @Environment(Klasseoversikt.self) var klasseoversikt
-    @Binding var viserSheet: VisElevTilbakemleding?
+    
     @Bindable var prøve: Prøve
     
+    @Binding var viserSheet: VisElevTilbakemleding?
+    var valgtPrøveID: Prover.ID
+    @Dependency(\.defaultDatabase) var database
+    @FetchAll var oppgaver: [Oppgaver] = []
+    @FetchAll var kategorier: [Kategorier] = []
+    @FetchAll var oppgaverKategorier: [OppgaverKategorier] = []
     
     
     var body: some View {
@@ -21,25 +28,18 @@ struct kategoriView: View {
             Grid(horizontalSpacing: 0, verticalSpacing: 0){
                 GridRow{
                     Color.green.gridCellUnsizedAxes([.horizontal, .vertical]).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary)
-                    ForEach(prøve.oppgaver){oppgave in
+                    ForEach(oppgaver){oppgave in
                         Text(oppgave.navn)
                     }.frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background(.green)
                 }
-                ForEach(prøve.kategorier){ kategori in
-                    if let kategoriIndex = prøve.kategoriIndex(kategoriId: kategori.id) {
-                        GridRow() {
-                            Text(prøve.kategorier[kategoriIndex].navn).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background(.orange)
-                            ForEach(prøve.oppgaver){oppgave in
-                                if let oppgaveIndex = prøve.oppgaveIndexMedKjentKategori(oppgaveId: oppgave.id, kateogriIndex: kategoriIndex) {
-                                    Toggle("", isOn: $prøve.kategorierOgOppgaver[kategoriIndex][oppgaveIndex].verdi)
-                                        .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary)
-                                }
-                                
-                            }
+                ForEach(kategorier){ kategori in
+                    GridRow() {
+                        Text(kategori.navn).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background(.orange)
+                        ForEach(prøve.oppgaver){oppgave in
                             
+                                        
                         }
                     }
-                    
                 }
             }
             Button("Lukk") {
@@ -48,10 +48,50 @@ struct kategoriView: View {
             }
         }
     }
+    
+    func hentoppgaverForProve() async {
+        await withErrorReporting {
+            try await $oppgaver.load(
+                Oppgaver
+                    .where{ $0.proveId == self.valgtPrøveID },
+                animation: .default
+            )
+        }
+    }
+    
+    func hentKategorierForProve() async {
+        await withErrorReporting {
+            try await $kategorier.load(
+                Kategorier
+                    .where{ $0.proveId == self.valgtPrøveID },
+                animation: .default
+            )
+        }
+    }
+    
+    func hentOppgaverKategorierForProve() async {
+        await withErrorReporting {
+            try await $oppgaverKategorier.load(
+                OppgaverKategorier
+                    .joining(required: OppgaverKategorier.belongsTo(Oppgaver.self, key: "OppgaveId"))
+                    .where{ $0.proveId == self.valgtPrøveID }
+                    ,
+                animation: .default
+            )
+        }
+    }
 }
 
-/*struct kategoriView_Previews: PreviewProvider {
-    static var previews: some View {
-        kategoriView()
+struct kategoriOgOppgaveCelleView : View {
+    let kategori: Kategorier
+    let oppgave: Oppgaver
+    
+    @State var verdi: Bool = false
+    
+    var body: some View {
+        Toggle("", isOn: $verdi)
+            .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
+            .border(.primary)
+            
     }
-}*/
+}
