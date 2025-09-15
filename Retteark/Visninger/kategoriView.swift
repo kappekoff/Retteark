@@ -72,10 +72,10 @@ struct kategoriView: View {
     func hentOppgaverKategorierForProve() async {
         await withErrorReporting {
             try await $oppgaverKategorier.load(
-                OppgaverKategorier
-                    .joining(required: OppgaverKategorier.belongsTo(Oppgaver.self, key: "OppgaveId"))
-                    .where{ $0.proveId == self.valgtPrøveID }
-                    ,
+                OppgaverKategorier.all,
+                    //.join(Oppgaver.all) { $0.OppgaveId == $1.id }
+                    //.where{ $1.proveId == self.valgtPrøveID },
+                    //.select{$0},
                 animation: .default
             )
         }

@@ -274,3 +274,4 @@ struct OppgaverKategorier: FetchableRecord, Codable, Identifiable {
     var OppgaveId: String
 }
 
+
