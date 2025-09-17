@@ -196,11 +196,15 @@ struct klasseVisning: View {
     
     func testerSQL() {
         let valgtPrøveIDtest = "valgtPrøveID"
-        let q = OppgaverKategorier
-            .join(Oppgaver.all) { $0.OppgaveId == $1.id }
-            .where{ $0.proveId == valgtPrøveIDtest}
-            .select{($0, $1.proveId, $1)}
-        print(q.queryFragment)
+        let joinedQuery = OppgaverKategorier
+                    .join(Oppgaver.all) { $0.OppgaveId == $1.id }
+                
+                let filteredQuery = joinedQuery
+                    .where{ $1.proveId == self.valgtPrøveID }
+                
+                let selectedQuery = filteredQuery
+                    .select{($0, $1.proveId)}
+        print(selectedQuery.queryFragment)
     }
 }
 

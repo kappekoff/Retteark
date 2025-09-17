@@ -23,10 +23,6 @@ struct elevTilbakemeldingVisning: View {
             visElevTilbakemleding = nil
         }
     }
-    
-
-  
-  
 }
 
 struct top: View {

@@ -94,7 +94,7 @@ struct ContentView: View {
                     .fullScreenCover(item: $viserSheet, onDismiss: {viserSheet = nil}){ viserSheet in
                         switch viserSheet{
                         case .valgtKategorier:
-                            Text("skal fikses når kategorier kommer")//kategoriView(viserSheet: $viserSheet, prøve: valgtPrøve).environment(klasseoversikt)
+                            kategoriView(viserSheet: $viserSheet, valgtPrøveID: valgtPrøveID).environment(klasseoversikt)
                         case .velgtInstillinger:
                             instillinger(valgtPrøveID: valgtPrøveID, visElevTilbakemleding: $viserSheet).environment(klasseoversikt)
                         case .velgtKlassesammendrag:

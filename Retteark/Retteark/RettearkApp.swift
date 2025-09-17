@@ -200,7 +200,25 @@ struct RettearkApp: App {
                     ('deltaker5', 'Per Hansen', 'prove3', 0, '')
                 """
             ).execute(db)
-            
+            try #sql (
+                """
+                    INSERT INTO Kategorier (id, navn, proveId) VALUES
+                    ('kategori1', 'linære funksjoner', 'prove1'),
+                    ('kategori2', 'ekponensialfunksjoner', 'prove1'),
+                    ('kategori3', 'andregradsfunksjoner', 'prove1')
+                """
+            ).execute(db)
+            try #sql (
+                """
+                    INSERT INTO OppgaverKategorier (id, KategoriId, OppgaveId) VALUES
+                    ('1', 'kategori1', 'oppgave1'),
+                    ('2', 'kategori2', 'oppgave1'),
+                    ('3', 'kategori3', 'oppgave1'),
+                    ('4', 'kategori1', 'oppgave2'),
+                    ('5', 'kategori2', 'oppgave2'),
+                    ('6', 'kategori3', 'oppgave2')
+                """
+            ).execute(db)
         }
         do {
             try migrator.migrate(database)

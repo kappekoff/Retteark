@@ -12,14 +12,12 @@ import SharingGRDB
 struct kategoriView: View {
     @Environment(Klasseoversikt.self) var klasseoversikt
     
-    @Bindable var prøve: Prøve
-    
     @Binding var viserSheet: VisElevTilbakemleding?
     var valgtPrøveID: Prover.ID
     @Dependency(\.defaultDatabase) var database
-    @FetchAll var oppgaver: [Oppgaver] = []
-    @FetchAll var kategorier: [Kategorier] = []
-    @FetchAll var oppgaverKategorier: [OppgaverKategorier] = []
+    @State var oppgaver: [Oppgaver] = []
+    @State var kategorier: [Kategorier] = []
+    @State var oppgaverKategorier: [(OppgaverKategorier, Oppgaver.ID)] = []
     
     
     var body: some View {
@@ -27,21 +25,39 @@ struct kategoriView: View {
             Text("Kategorier og oppgaver").font(.largeTitle)
             Grid(horizontalSpacing: 0, verticalSpacing: 0){
                 GridRow{
-                    Color.green.gridCellUnsizedAxes([.horizontal, .vertical]).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary)
+                    Color.green.gridCellUnsizedAxes([.horizontal, .vertical])
+                        .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
+                        .border(.primary)
                     ForEach(oppgaver){oppgave in
                         Text(oppgave.navn)
-                    }.frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background(.green)
+                            .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
+                            .border(.primary)
+                            .background(.green)
+                    }
                 }
                 ForEach(kategorier){ kategori in
                     GridRow() {
-                        Text(kategori.navn).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background(.orange)
-                        ForEach(prøve.oppgaver){oppgave in
-                            
-                                        
+                        Text(kategori.navn)
+                            .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
+                            .border(.primary)
+                            .background(.orange)
+                        ForEach(oppgaver){oppgave in
+                            kategoriOgOppgaveCelleView(kategori: kategori,
+                                                       oppgave: oppgave,
+                                                       verdi: oppgaverKategorier.contains(where: {$0.0.KategoriId == kategori.id && $0.0.OppgaveId == oppgave.id}),
+                                                       oppgaveKategoriId: oppgaverKategorier.first(where: {$0.0.KategoriId == kategori.id && $0.0.OppgaveId == oppgave.id})?.0.id
+                            )
                         }
                     }
                 }
             }
+            .task {
+                await hentOppgaverKategorierForProve()
+                await hentKategorierForProve()
+                await hentoppgaverForProve()
+                
+            }
+ 
             Button("Lukk") {
                 klasseoversikt.lagreKlasser()
                 viserSheet = nil
@@ -51,47 +67,79 @@ struct kategoriView: View {
     
     func hentoppgaverForProve() async {
         await withErrorReporting {
-            try await $oppgaver.load(
-                Oppgaver
-                    .where{ $0.proveId == self.valgtPrøveID },
-                animation: .default
-            )
+            try await database.read { db in
+                oppgaver = try Oppgaver
+                    .where{ $0.proveId == self.valgtPrøveID }
+                    .fetchAll(db)
+            }
         }
     }
     
     func hentKategorierForProve() async {
         await withErrorReporting {
-            try await $kategorier.load(
-                Kategorier
-                    .where{ $0.proveId == self.valgtPrøveID },
-                animation: .default
-            )
+            try await database.read { db in
+                kategorier = try Kategorier
+                    .where{ $0.proveId == self.valgtPrøveID }
+                    .fetchAll(db)
+            }
         }
     }
     
     func hentOppgaverKategorierForProve() async {
         await withErrorReporting {
-            try await $oppgaverKategorier.load(
-                OppgaverKategorier.all,
-                    //.join(Oppgaver.all) { $0.OppgaveId == $1.id }
-                    //.where{ $1.proveId == self.valgtPrøveID },
-                    //.select{$0},
-                animation: .default
-            )
+            try await database.read { db in
+                oppgaverKategorier = try OppgaverKategorier
+                    .join(Oppgaver.all) { $0.OppgaveId == $1.id }
+                    .where{ $1.proveId == self.valgtPrøveID }
+                    .select{($0, $1.proveId)}
+                    .fetchAll(db)
+            }
         }
     }
+
+    
 }
 
 struct kategoriOgOppgaveCelleView : View {
+    @Dependency(\.defaultDatabase) var database
+   
     let kategori: Kategorier
     let oppgave: Oppgaver
-    
-    @State var verdi: Bool = false
+
+    @State var verdi: Bool
+    let oppgaveKategoriId: String?
     
     var body: some View {
         Toggle("", isOn: $verdi)
             .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
             .border(.primary)
+            .onChange(of: verdi) { oldValue, newValue in
+                if(newValue == true) {
+                    Task {
+                        await withErrorReporting {
+                            try await database.write { db in
+                                let midlertidigOppgaveKategori = OppgaverKategorier(id: UUID().uuidString, KategoriId: kategori.id, OppgaveId: oppgave.id)
+                                try  OppgaverKategorier.insert{midlertidigOppgaveKategori}.execute(db)
+                            }
+                        }
+                    }
+                }
+                else {
+                    Task {
+                        await withErrorReporting {
+                            try await database.write { db in
+                                let midlertidigOppgavveKategori = OppgaverKategorier(id: oppgaveKategoriId ?? "", KategoriId: kategori.id, OppgaveId: oppgave.id)
+                                try OppgaverKategorier.delete(midlertidigOppgavveKategori).execute(db)
+                            }
+                        }
+                    }
+
+                }
+            }
+            .onAppear {
+                verdi = oppgaveKategoriId != nil
+            }
+                    
             
     }
 }
