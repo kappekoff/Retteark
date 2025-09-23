@@ -85,11 +85,12 @@ struct RettearkApp: App {
             try #sql(
               """
                CREATE TABLE "Deltakere" (
-                   "id" TEXT PRIMARY KEY,
-                   "navn" TEXT,
-                   "proveId" TEXT NOT NULL REFERENCES "Prover" ("id") ON DELETE CASCADE ON UPDATE NO ACTION,
-                   "låstKarakter" INTEGER,
-                    "karakter" TEXT
+                    "id" TEXT PRIMARY KEY,
+                    "navn" TEXT,
+                    "proveId" TEXT NOT NULL REFERENCES "Prover" ("id") ON DELETE CASCADE ON UPDATE NO ACTION,
+                    "låstKarakter" INTEGER,
+                    "karakter" TEXT,
+                    "framovermelding" TEXT 
               ) STRICT
               """
             )
@@ -192,12 +193,12 @@ struct RettearkApp: App {
             ).execute(db)
             try #sql (
                 """
-                    INSERT INTO Deltakere (id, navn, proveId, låstKarakter, karakter) VALUES
-                    ('deltaker1', 'Ola Nordmann', 'prove1', 0, ''),
-                    ('deltaker2', 'Kari Nordmann', 'prove1', 0, ''),
-                    ('deltaker3', 'Ola Nordmann', 'prove2', 0, ''),
-                    ('deltaker4', 'Kari Nordmann', 'prove2', 0, ''),
-                    ('deltaker5', 'Per Hansen', 'prove3', 0, '')
+                    INSERT INTO Deltakere (id, navn, proveId, låstKarakter, karakter, framovermelding) VALUES
+                    ('deltaker1', 'Ola Nordmann', 'prove1', 0, '', ''),
+                    ('deltaker2', 'Kari Nordmann', 'prove1', 0, '', ''),
+                    ('deltaker3', 'Ola Nordmann', 'prove2', 0, '', ''),
+                    ('deltaker4', 'Kari Nordmann', 'prove2', 0, '', ''),
+                    ('deltaker5', 'Per Hansen', 'prove3', 0, '', '')
                 """
             ).execute(db)
             try #sql (
@@ -269,6 +270,7 @@ struct Deltakere: FetchableRecord, Codable, Identifiable {
     var proveId: String
     var låstKarakter: Bool
     var karakter: String
+    var framovermelding: String
 }
 
 @Table("Poenger")

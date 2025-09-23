@@ -129,6 +129,7 @@ class Testdata {
       Karaktergrense(karakter: "1+", grense: 19),
       Karaktergrense(karakter: "1", grense: 0)
   ]
+    let tilbakemeldinger: [Tilbakemelding] = [Tilbakemelding(tekst: "Du viser høy kompetanse", nedreGrense: 66), Tilbakemelding(tekst: "Du viser middels kompetanse", nedreGrense: 33), Tilbakemelding(tekst: "Arbeid mer med", nedreGrense: 0)]
 }
 
 

@@ -217,7 +217,7 @@ struct deltakerRad: View {
                 Task {
                     await withErrorReporting {
                         try await database.write { db in
-                            let midlertidigDeltaker = Deltakere(id: deltaker.id, navn: deltakerNavn, proveId: deltaker.proveId, låstKarakter: deltaker.låstKarakter, karakter: deltaker.karakter)
+                            let midlertidigDeltaker = Deltakere(id: deltaker.id, navn: deltakerNavn, proveId: deltaker.proveId, låstKarakter: deltaker.låstKarakter, karakter: deltaker.karakter, framovermelding: "")
                             try Deltakere.update(midlertidigDeltaker)
                                 .execute(db)
                         }

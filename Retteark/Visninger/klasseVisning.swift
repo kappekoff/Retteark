@@ -131,9 +131,6 @@ struct klasseVisning: View {
             }
             
         }
-        .onAppear {
-            testerSQL()
-        }
         .onChange(of: valgtKlasseID) {
             Task {
                 await hentProverForKlasse()
@@ -192,19 +189,6 @@ struct klasseVisning: View {
             )
         }
         
-    }
-    
-    func testerSQL() {
-        let valgtPrøveIDtest = "valgtPrøveID"
-        let joinedQuery = OppgaverKategorier
-                    .join(Oppgaver.all) { $0.OppgaveId == $1.id }
-                
-                let filteredQuery = joinedQuery
-                    .where{ $1.proveId == self.valgtPrøveID }
-                
-                let selectedQuery = filteredQuery
-                    .select{($0, $1.proveId)}
-        print(selectedQuery.queryFragment)
     }
 }
 

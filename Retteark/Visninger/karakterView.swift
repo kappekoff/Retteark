@@ -25,7 +25,7 @@ struct karakterView: View {
     @State var deltaker: Deltakere? = nil
     @State var karakter = ""
     
-    let karaktergrenser = Testdata().karaktergrenser_test
+    
     var body: some View {
         
         Group {
@@ -42,7 +42,7 @@ struct karakterView: View {
                             withErrorReporting {
                                 try database.write { db in
                                     if(deltaker.låstKarakter) {
-                                        let midlertidigDeltaker = Deltakere(id: deltakerId, navn: deltaker.navn, proveId: prøveId, låstKarakter: true, karakter: newValue)
+                                        let midlertidigDeltaker = Deltakere(id: deltakerId, navn: deltaker.navn, proveId: prøveId, låstKarakter: true, karakter: newValue, framovermelding: deltaker.framovermelding)
                                         try Deltakere.update(midlertidigDeltaker)
                                             .execute(db)
                                     }
@@ -128,6 +128,7 @@ struct karakterView: View {
     }
     
     func finnKarakter() async -> String {
+        let karaktergrenser = Testdata().karaktergrenser_test
         await hentOppgaver()
         let maxPoeng = oppgaver.map({$0.maksPoeng ?? 0}).reduce(0, +)
         let sumPoeng = await sumAvPoeng()
@@ -147,7 +148,5 @@ struct karakterView: View {
         
         return "??"
     }
-    
-        
 
 }

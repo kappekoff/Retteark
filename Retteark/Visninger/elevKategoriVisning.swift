@@ -6,177 +6,276 @@
 //
 
 import SwiftUI
+import SharingGRDB
 
 struct elevTilbakemeldingVisning: View {
-    var elev: Elev
+    @Dependency(\.defaultDatabase) var database
+
     @Binding var visElevTilbakemleding:VisElevTilbakemleding?
-    @Binding var prøve: Prøve
     var lagerPDF: Bool = false
+    
+    var deltakerId: Deltakere.ID
+    var prøveId: Prover.ID
+    @State var deltaker: Deltakere? = nil
+    @State var prøve: Prover? = nil
+    @State var oppgaver : [Oppgaver] = []
+    @State var kategorier: [Kategorier] = []
+
     
     var body: some View {
 
         ScrollView {
-          top(elev: elev, prøve: $prøve, visElevTilbakemleding: $visElevTilbakemleding)
-          hovedinnhold(elev: elev, visElevTilbakemleding: $visElevTilbakemleding, prøve: $prøve, lagerPDF: false)
+            if let deltaker = deltaker, let prøve = prøve {
+                top(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier, visElevTilbakemleding: $visElevTilbakemleding)
+                hovedinnhold(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier, visElevTilbakemleding: $visElevTilbakemleding,  lagerPDF: false)
+            }
+            else {
+                Text("Fant ikke elev/prøve")
+            }
+          
         }
         Button("Lukk") {
             visElevTilbakemleding = nil
         }
     }
+    
+    func hentDeltaker() async {
+        await withErrorReporting {
+            try await database.read { db in
+                deltaker = try Deltakere
+                    .where{$0.id == deltakerId}
+                    .fetchOne(db)
+            }
+        }
+    }
+    
+    func hentPrøve() async {
+        await withErrorReporting {
+            try await database.read { db in
+                prøve = try Prover
+                    .where{$0.id == prøveId}
+                    .fetchOne(db)
+            }
+        }
+    }
+    
+    func hentOppgaver() async {
+        await withErrorReporting {
+            try await database.read { db in
+                oppgaver = try Oppgaver
+                    .where{$0.proveId == prøveId}
+                    .fetchAll(db)
+            }
+        }
+    }
+    
+    func hentKategorier() async {
+        await withErrorReporting {
+            try await database.read { db in
+                kategorier = try Kategorier
+                    .where{$0.proveId == prøveId}
+                    .fetchAll(db)
+            }
+        }
+    }
 }
 
 struct top: View {
-  var elev: Elev
-  @Binding var prøve: Prøve
-  @Binding var visElevTilbakemleding:VisElevTilbakemleding?
-  @State var visFilvelger = false
+    @Dependency(\.defaultDatabase) var database
+    var deltaker: Deltakere
+    var prøve: Prover
+    var oppgaver : [Oppgaver]
+    var kategorier: [Kategorier]
+    @Binding var visElevTilbakemleding:VisElevTilbakemleding?
+    @State var visFilvelger = false
   
-  var body: some View {
-    HStack {
-      Text(elev.navn).font(.largeTitle).frame(alignment: .center)
-      Button {
-        visFilvelger.toggle()
-        } label: {
-        Image(systemName: "square.and.arrow.up.circle.fill")
-      }
-      .fileExporter(isPresented: $visFilvelger, document: PDFDocument(pdfData: Data()), contentType: .pdf, defaultFilename: "\(prøve.navn)_\(elev.navn).pdf") { result in
-        switch result {
-         case .success(let file):
-          lagPDF(innhold: VStack {
-              top(elev: elev, prøve: $prøve, visElevTilbakemleding: $visElevTilbakemleding)
-              hovedinnhold(elev: elev, visElevTilbakemleding: $visElevTilbakemleding, prøve: $prøve, lagerPDF: true)
-          }, filplassering: file)
-         case .failure(let error):
-          print(error)
-       }
-     }
-
+    var body: some View {
+        HStack {
+            Text(deltaker.navn).font(.largeTitle).frame(alignment: .center)
+            Button {
+                visFilvelger.toggle()
+            } label: {
+                Image(systemName: "square.and.arrow.up.circle.fill")
+            }
+            .fileExporter(isPresented: $visFilvelger, document: PDFDocument(pdfData: Data()), contentType: .pdf, defaultFilename: "\(prøve.navn)_\(deltaker.navn).pdf") { result in
+                switch result {
+                case .success(let file):
+                    lagPDF(innhold: VStack {
+                        top(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier, visElevTilbakemleding: $visElevTilbakemleding)
+                        hovedinnhold(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier, visElevTilbakemleding: $visElevTilbakemleding, lagerPDF: true)
+                    }, filplassering: file)
+                case .failure(let error):
+                    print(error)
+                }
+            }
+            
+        }
     }
-  }
-  
 }
 
 struct hovedinnhold: View {
-  var elev: Elev
-  @Binding var visElevTilbakemleding:VisElevTilbakemleding?
-  @Binding var prøve: Prøve
-  var lagerPDF: Bool = false
+    @Dependency(\.defaultDatabase) var database
+    var deltaker: Deltakere
+    var prøve: Prover
+    var oppgaver : [Oppgaver]
+    var kategorier: [Kategorier]
+    @Binding var visElevTilbakemleding:VisElevTilbakemleding?
   
-  let kategoriKolonner = [
-      GridItem(.fixed(150)), GridItem(.fixed(150)), GridItem(.fixed(150))
-      ]
-  let poengKolonner = [GridItem(.flexible(minimum: 50), spacing: 0),GridItem(.flexible(minimum: 50), spacing: 0), GridItem(.flexible(minimum: 50), spacing: 0),GridItem(.flexible(minimum: 50), spacing: 0), GridItem(.flexible(minimum: 50), spacing: 0), GridItem(.flexible(minimum: 50), spacing: 0),GridItem(.flexible(minimum: 50), spacing: 0), GridItem(.flexible(minimum: 50), spacing: 0)]
+    var lagerPDF: Bool = false
+    @State var fargeIndex: Int = 0
+    @State var poenger: [(Poenger, Prover.ID)] = []
+    @State var oppgaverKategorier: [(OppgaverKategorier, Oppgaver)] = []
+    @State var framovermelding: String = ""
+    let kategoriKolonner = [GridItem(.fixed(150)), GridItem(.fixed(150)), GridItem(.fixed(150))]
+    let poengKolonner = [GridItem(.flexible(minimum: 50), spacing: 0),GridItem(.flexible(minimum: 50), spacing: 0), GridItem(.flexible(minimum: 50), spacing: 0),GridItem(.flexible(minimum: 50), spacing: 0), GridItem(.flexible(minimum: 50), spacing: 0), GridItem(.flexible(minimum: 50), spacing: 0),GridItem(.flexible(minimum: 50), spacing: 0), GridItem(.flexible(minimum: 50), spacing: 0)]
   
-  let farger: [Color] = [Color.teal, Color.red, Color.green, Color.indigo, Color.brown, Color.mint, Color.orange, Color.pink, Color.purple, Color.yellow, Color.gray, Color.cyan]
-  var body: some View {
-      VStack(alignment: .listRowSeparatorLeading){
-          LazyVGrid(columns: poengKolonner, alignment: .leading, spacing: 15) {
-              ForEach(prøve.oppgaver) { oppgave in
-                  if let elevIndeks = prøve.poengRad(elevId: elev.id){
-                      if let oppgaveIndeks = prøve.oppgaveIndexMedKjentElev(oppgaveId: oppgave.id, elevIndex: elevIndeks) {
-                          VStack(spacing: 0) {
-                      Text(oppgave.navn).frame(width: 50, height: 20, alignment: .center).background(.green).border(.primary).fontWeight(.bold)
-                      Text(String(oppgave.maksPoeng ?? -1)).frame(width: 50, height: 20, alignment: .center).border(.primary).background(.orange)
-                      Text(prøve.poeng[elevIndeks][oppgaveIndeks].poeng).frame(width: 50, height: 20, alignment: .center).border(.primary)
-                            }
-                      }
+    let farger: [Color] = [Color.teal, Color.red, Color.green, Color.indigo, Color.brown, Color.mint, Color.orange, Color.pink, Color.purple, Color.yellow, Color.gray, Color.cyan]
+    
+    var body: some View {
+        VStack(alignment: .listRowSeparatorLeading){
+            LazyVGrid(columns: poengKolonner, alignment: .leading, spacing: 15) {
+                ForEach(oppgaver) { oppgave in
+                    VStack(spacing: 0) {
+                        Text(oppgave.navn)
+                            .frame(width: 50, height: 20, alignment: .center)
+                            .background(.green)
+                            .border(.primary)
+                            .fontWeight(.bold)
+                        Text(String(oppgave.maksPoeng ?? -1))
+                            .frame(width: 50, height: 20, alignment: .center)
+                            .border(.primary)
+                            .background(.orange)
+                        Text(poenger.first(where: {$0.0.oppgaveId == oppgave.id})?.0.poeng ?? "???")
+                            .frame(width: 50, height: 20, alignment: .center)
+                            .border(.primary)
+                    }
                 }
-              }
-          }
-            LazyVGrid(columns: kategoriKolonner, spacing: 30) {
-                ForEach(prøve.kategorier) { kategori in
-                    if let kategoriIndex = prøve.kategoriIndex(kategoriId: kategori.id) {
-                        if(maxPoengKategori(kategoriIndex: kategoriIndex) > 0) {
+                LazyVGrid(columns: kategoriKolonner, spacing: 30) {
+                    ForEach(kategorier) { kategori in
+                        if(oppgaverKategorier.contains(where: {$0.0.KategoriId == kategori.id})) {
                             VStack {
-                                Text(prøve.kategorier[kategoriIndex].navn)
-                                kakediagram(desimaltall: Double(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex)), farge:farger[kategoriIndex % farger.count]).frame(width: 150, height: 150, alignment: .center)
-                                Text(String(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)) + "/" + String(maxPoengKategori(kategoriIndex: kategoriIndex)))
+                                Text(kategori.navn)
+                                kakediagram(desimaltall: kategoriDetakerPoeng(kategori: kategori)/kategoriMaxPoeng(kategori: kategori), farge:farger[fargeIndex])
+                                    .frame(width: 150, height: 150, alignment: .center)
+                                    .onAppear {
+                                        fargeIndex += 1
+                                        fargeIndex  %= farger.count
+                                    }
+                                Text(String(kategoriDetakerPoeng(kategori: kategori)) + "/" + String(kategoriMaxPoeng(kategori: kategori)))
                             }
                         }
                     }
                 }
+                
+                Text(.init(lagElevtilbakemelding())).frame(alignment: .leading)
+                
+                if(lagerPDF) {
+                    Text(deltaker.framovermelding)
+                }
+                else {
+                    TextField("Framovermelding", text: $framovermelding, axis: .vertical)
+                        .onAppear {
+                            framovermelding = deltaker.framovermelding
+                        }
+                        .onChange(of: framovermelding) {
+                            Task {
+                                await withErrorReporting {
+                                    try await database.write { db in
+                                        var midlertidiDeltaker = deltaker
+                                        midlertidiDeltaker.framovermelding = framovermelding
+                                        try Deltakere.update(midlertidiDeltaker).execute(db)
+                                        
+                                    }
+                                }
+                            }
+                        }
+                }
+                
+                if(prøve.visEleverKarakter){
+                    karakterView(prøveId: prøve.id, deltakerId: deltaker.id, indeks: 0, låstKarakter: Binding.constant(deltaker.låstKarakter), endretPoeng: Binding.constant(0)
+                    )
+                }
+                
+            }.padding(20).frame(width: 500)
+        }
+    }
+    
+    
+   func hentPoenger() async {
+       let q1 = Poenger.join(Oppgaver.all) {$0.oppgaveId == $1.id}
+       let q2 = q1.where{$0.deltakerId == self.deltaker.id && $1.proveId == self.prøve.id}
+       let q3 = q2.select {($0, $1.proveId)}
+        await withErrorReporting {
+            try await database.read { db in
+                poenger = try q3
+                    .fetchAll(db)
             }
-            Text(.init(lagElevtilbakemelding())).frame(alignment: .leading)
-          if(lagerPDF) {
-            Text(prøve.elever[prøve.elever.firstIndex{$0.id == elev.id}!].framovermelding)
-          }
-          else {
-            TextField("Framovermelding", text: $prøve.elever[prøve.elever.firstIndex{$0.id == elev.id}!].framovermelding, axis: .vertical)
-          }
-            
-            
-            
-            if(prøve.visEleverKarakter){
-                HStack {
-                    Text("Karakter").fontWeight(.bold)
-                    if(elev.låstKarakter) {
-                        Text(prøve.finnKarakter(elevIndeks: prøve.elever.firstIndex{$0.id == elev.id}!))
-                    }
-                    else {
-                        Text(elev.karakter)
+        }
+    }
+    
+    func hentOppgaverKategorierForProve() async {
+        let q1 = OppgaverKategorier.join(Oppgaver.all) { $0.OppgaveId == $1.id }
+        let q2 = q1.where{ $1.proveId == self.prøve.id }
+        let q3 = q2.select{($0, $1)}
+        await withErrorReporting {
+            try await database.read { db in
+                oppgaverKategorier = try q3
+                    .fetchAll(db)
+            }
+        }
+    }
+    
+    func kategoriMaxPoeng(kategori: Kategorier) -> Double {
+        var sum: Double = 0
+        for oppgave in oppgaver {
+            if(oppgaverKategorier.contains(where: {$0.0.KategoriId == kategori.id && $0.0.OppgaveId == oppgave.id})) {
+                if let maksPoeng = oppgave.maksPoeng {
+                    sum += maksPoeng
+                }
+            }
+        }
+        return sum
+    }
+        
+    func kategoriDetakerPoeng(kategori: Kategorier) -> Double {
+        let formatter: NumberFormatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.decimalSeparator = "."
+        formatter.groupingSeparator = ""
+        var sum: Double = 0
+        for oppgave in oppgaver {
+            if(oppgaverKategorier.contains(where: {$0.0.KategoriId == kategori.id && $0.0.OppgaveId == oppgave.id})) {
+                if let maksPoengString = poenger.first(where: {$0.0.oppgaveId == oppgave.id})?.0.poeng{
+                    if let maksPoeng = formatter.number(from: maksPoengString) as? Double {
+                        sum += maksPoeng
                     }
                 }
             }
-            
-        }.padding(20).frame(width: 500)
-  }
-  
-  func maxPoengKategori(kategoriIndex: Int) -> Double {
-      var sum: Double = 0
-      for oppgave in prøve.oppgaver {
-          if let oppgaveIndex = prøve.oppgaveIndexMedKjentKategori(oppgaveId: oppgave.id, kateogriIndex: kategoriIndex){
-              if(prøve.kategorierOgOppgaver[kategoriIndex][oppgaveIndex].verdi){
-                  sum += prøve.oppgaver[optional: oppgaveIndex]?.maksPoeng ?? 0
-              }
-          }
-      }
-      return sum
-  }
-  
-  func elevPoengKategori(elevIndex: Int, kategoriIndex: Int) -> Double {
-      let formatter: NumberFormatter = NumberFormatter()
-      formatter.numberStyle = .decimal
-      formatter.decimalSeparator = "."
-      formatter.groupingSeparator = ""
-      var sum: Double = 0
-      
-      
-      for oppgave in prøve.oppgaver {
-          if let oppgaveIndex = prøve.oppgaveIndexMedKjentElev(oppgaveId: oppgave.id, elevIndex: elevIndex) {
-              if(prøve.kategorierOgOppgaver[optional: kategoriIndex]?[optional: oppgaveIndex]?.verdi ?? false){
-                  let tall = formatter.number(from: prøve.poeng[elevIndex][oppgaveIndex].poeng) as? Double
-                  if(tall != nil) {
-                      sum += tall!
-                  }
-              }
-          }
-      }
-      return Double(sum)
-  }
+        }
+        return sum
+    }
   
   func lagElevtilbakemelding() -> String {
-      var høy: String = "**" + prøve.tilbakemeldinger[0].tekst + ":** "
-      var middels: String = "**" + prøve.tilbakemeldinger[1].tekst + ":** "
-      var lav: String = "**" + prøve.tilbakemeldinger[2].tekst + ":** "
+      let tilbakemeldinger = Testdata().tilbakemeldinger
+      var høy: String = "**" + tilbakemeldinger[0].tekst + ":** "
+      var middels: String = "**" + tilbakemeldinger[1].tekst + ":** "
+      var lav: String = "**" + tilbakemeldinger[2].tekst + ":** "
       var taMedHøy: Bool = false
       var taMedMiddels: Bool = false
       var taMedLav: Bool = false
-      for kategori in prøve.kategorier {
-          if let kategoriIndex = prøve.kategoriIndex(kategoriId: kategori.id){
-              if(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex) > (prøve.tilbakemeldinger[0].nedreGrense ?? 66) / 100) {
-                  høy += prøve.kategorier[kategoriIndex].navn + ", "
+      for kategori in kategorier {
+          if(kategoriDetakerPoeng(kategori: kategori)/kategoriMaxPoeng(kategori: kategori) > (tilbakemeldinger[0].nedreGrense ?? 66) / 100) {
+                  høy += kategori.navn + ", "
                   taMedHøy = true
-              }
+          }
               
-              else if(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex) > (prøve.tilbakemeldinger[1].nedreGrense ?? 33) / 100) {
-                  middels += prøve.kategorier[kategoriIndex].navn + ", "
+          else if(kategoriDetakerPoeng(kategori: kategori)/kategoriMaxPoeng(kategori: kategori) > (tilbakemeldinger[1].nedreGrense ?? 33) / 100) {
+                  middels += kategori.navn + ", "
                   taMedMiddels = true
-              }
-              
-              else if(elevPoengKategori(elevIndex: prøve.elever.firstIndex{$0.id == elev.id}!, kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex) >= (prøve.tilbakemeldinger[2].nedreGrense ?? 0)/100) {
-                  lav += prøve.kategorier[kategoriIndex].navn + ", "
+          }
+          else if(kategoriDetakerPoeng(kategori: kategori)/kategoriMaxPoeng(kategori: kategori) > (tilbakemeldinger[2].nedreGrense ?? 0)/100) {
+                  lav += kategori.navn + ", "
                   taMedLav = true
-              }
           }
       }
       
