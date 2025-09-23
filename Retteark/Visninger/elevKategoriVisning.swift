@@ -20,14 +20,18 @@ struct elevTilbakemeldingVisning: View {
     @State var prøve: Prover? = nil
     @State var oppgaver : [Oppgaver] = []
     @State var kategorier: [Kategorier] = []
-
+    @State var poenger: [(Poenger, Prover.ID)] = []
+    @State var oppgaverKategorier: [(OppgaverKategorier, Oppgaver)] = []
     
     var body: some View {
 
         ScrollView {
             if let deltaker = deltaker, let prøve = prøve {
-                top(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier, visElevTilbakemleding: $visElevTilbakemleding)
-                hovedinnhold(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier, visElevTilbakemleding: $visElevTilbakemleding,  lagerPDF: false)
+                VStack {
+                    top(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier,poenger: poenger, oppgaverKategorier: oppgaverKategorier, visElevTilbakemleding: $visElevTilbakemleding)
+                    hovedinnhold(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier, poenger: poenger, oppgaverKategorier: oppgaverKategorier, visElevTilbakemleding: $visElevTilbakemleding,  lagerPDF: false)
+                }
+                
             }
             else {
                 Text("Fant ikke elev/prøve")
@@ -37,7 +41,37 @@ struct elevTilbakemeldingVisning: View {
         Button("Lukk") {
             visElevTilbakemleding = nil
         }
+        .task {
+            await hentDeltaker()
+            await hentPrøve()
+            await hentOppgaver()
+            await hentKategorier()
+            await hentPoenger()
+            await hentOppgaverKategorierForProve()
+        }
     }
+    
+    func hentPoenger() async {
+         await withErrorReporting {
+             try await database.read { db in
+                 poenger = try Poenger.join(Oppgaver.all) {$0.oppgaveId == $1.id}
+                     .where{$0.deltakerId.eq(deltakerId) && $1.proveId.eq(prøveId)}
+                     .select {($0, $1.proveId)}
+                     .fetchAll(db)
+             }
+         }
+     }
+     
+     func hentOppgaverKategorierForProve() async {
+         await withErrorReporting {
+             try await database.read { db in
+                 oppgaverKategorier = try OppgaverKategorier.join(Oppgaver.all) { $0.OppgaveId == $1.id }
+                     .where{ $1.proveId.eq(prøveId) }
+                     .select{($0, $1)}
+                     .fetchAll(db)
+             }
+         }
+     }
     
     func hentDeltaker() async {
         await withErrorReporting {
@@ -86,6 +120,8 @@ struct top: View {
     var prøve: Prover
     var oppgaver : [Oppgaver]
     var kategorier: [Kategorier]
+    var poenger: [(Poenger, Prover.ID)]
+    var oppgaverKategorier: [(OppgaverKategorier, Oppgaver)]
     @Binding var visElevTilbakemleding:VisElevTilbakemleding?
     @State var visFilvelger = false
   
@@ -101,8 +137,8 @@ struct top: View {
                 switch result {
                 case .success(let file):
                     lagPDF(innhold: VStack {
-                        top(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier, visElevTilbakemleding: $visElevTilbakemleding)
-                        hovedinnhold(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier, visElevTilbakemleding: $visElevTilbakemleding, lagerPDF: true)
+                        top(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier,poenger: poenger, oppgaverKategorier: oppgaverKategorier, visElevTilbakemleding: $visElevTilbakemleding)
+                        hovedinnhold(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier, poenger: poenger, oppgaverKategorier: oppgaverKategorier, visElevTilbakemleding: $visElevTilbakemleding, lagerPDF: true)
                     }, filplassering: file)
                 case .failure(let error):
                     print(error)
@@ -119,12 +155,13 @@ struct hovedinnhold: View {
     var prøve: Prover
     var oppgaver : [Oppgaver]
     var kategorier: [Kategorier]
+    var poenger: [(Poenger, Prover.ID)]
+    var oppgaverKategorier: [(OppgaverKategorier, Oppgaver)]
     @Binding var visElevTilbakemleding:VisElevTilbakemleding?
   
     var lagerPDF: Bool = false
     @State var fargeIndex: Int = 0
-    @State var poenger: [(Poenger, Prover.ID)] = []
-    @State var oppgaverKategorier: [(OppgaverKategorier, Oppgaver)] = []
+
     @State var framovermelding: String = ""
     let kategoriKolonner = [GridItem(.fixed(150)), GridItem(.fixed(150)), GridItem(.fixed(150))]
     let poengKolonner = [GridItem(.flexible(minimum: 50), spacing: 0),GridItem(.flexible(minimum: 50), spacing: 0), GridItem(.flexible(minimum: 50), spacing: 0),GridItem(.flexible(minimum: 50), spacing: 0), GridItem(.flexible(minimum: 50), spacing: 0), GridItem(.flexible(minimum: 50), spacing: 0),GridItem(.flexible(minimum: 50), spacing: 0), GridItem(.flexible(minimum: 50), spacing: 0)]
@@ -201,29 +238,7 @@ struct hovedinnhold: View {
     }
     
     
-   func hentPoenger() async {
-       let q1 = Poenger.join(Oppgaver.all) {$0.oppgaveId == $1.id}
-       let q2 = q1.where{$0.deltakerId == self.deltaker.id && $1.proveId == self.prøve.id}
-       let q3 = q2.select {($0, $1.proveId)}
-        await withErrorReporting {
-            try await database.read { db in
-                poenger = try q3
-                    .fetchAll(db)
-            }
-        }
-    }
-    
-    func hentOppgaverKategorierForProve() async {
-        let q1 = OppgaverKategorier.join(Oppgaver.all) { $0.OppgaveId == $1.id }
-        let q2 = q1.where{ $1.proveId == self.prøve.id }
-        let q3 = q2.select{($0, $1)}
-        await withErrorReporting {
-            try await database.read { db in
-                oppgaverKategorier = try q3
-                    .fetchAll(db)
-            }
-        }
-    }
+
     
     func kategoriMaxPoeng(kategori: Kategorier) -> Double {
         var sum: Double = 0

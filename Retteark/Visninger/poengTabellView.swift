@@ -56,7 +56,7 @@ struct poengTabellView: View {
                     .fullScreenCover(item: $visElevTilbakemleding, onDismiss: { visElevTilbakemleding = nil }) { visElevTilbakemleding in
                         switch visElevTilbakemleding{
                         case .valgtElev(let elev):
-                            Text("skal fikse senere")//elevTilbakemeldingVisning(deltaker: deltaker, visElevTilbakemleding: $visElevTilbakemleding)
+                            elevTilbakemeldingVisning(visElevTilbakemleding: $visElevTilbakemleding, deltakerId: deltaker.id, prøveId: prøveID)
                         default:
                             Text("Du skal aldri komme hit")
                         }
