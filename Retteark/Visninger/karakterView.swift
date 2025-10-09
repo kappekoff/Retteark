@@ -13,21 +13,19 @@ struct karakterView: View {
     
     
     var prøveId: Prover.ID
-    var deltakerId: Deltakere.ID
+    var deltaker: Deltakere
+    var oppgaver: [Oppgaver]
+    var poenger: [Poenger]
     let indeks: Int
     
     @Binding var låstKarakter: Bool
     @Binding var endretPoeng: Int
 
     
-    @State var oppgaver: [Oppgaver] = []
-    @State var poeng: Poenger? = nil
-    @State var deltaker: Deltakere? = nil
     @State var karakter = ""
     
     
     var body: some View {
-        
         Group {
             if(låstKarakter) {
                 TextField("", text: $karakter)
@@ -38,21 +36,18 @@ struct karakterView: View {
                     .background(indeks % 2 == 1  ? Color.background:.orange)
                     .multilineTextAlignment(.center)
                     .onChange(of: karakter) { _, newValue in
-                        if let deltaker = deltaker {
-                            withErrorReporting {
-                                try database.write { db in
-                                    if(deltaker.låstKarakter) {
-                                        let midlertidigDeltaker = Deltakere(id: deltakerId, navn: deltaker.navn, proveId: prøveId, låstKarakter: true, karakter: newValue, framovermelding: deltaker.framovermelding)
-                                        try Deltakere.update(midlertidigDeltaker)
+                        withErrorReporting {
+                            try database.write { db in
+                                if(deltaker.låstKarakter) {
+                                    let midlertidigDeltaker = Deltakere(id: deltaker.id, navn: deltaker.navn, proveId: prøveId, låstKarakter: true, karakter: newValue, framovermelding: deltaker.framovermelding)
+                                    try Deltakere.update(midlertidigDeltaker)
                                             .execute(db)
-                                    }
                                 }
                             }
                         }
                     }
                     .task {
-                        await hentDeltaker()
-                        karakter = deltaker?.karakter ?? ""
+                        karakter = deltaker.karakter
                     }
                 
             }
@@ -64,8 +59,8 @@ struct karakterView: View {
                     .border(.black)
                     .background(indeks % 2 == 1 ? Color.background:.orange)
                     .multilineTextAlignment(.center)
-                    .task {
-                        karakter = await finnKarakter()
+                    .onAppear() {
+                        karakter =  finnKarakter()
                     }
                     .onChange(of: endretPoeng) {
                         Task {
@@ -74,64 +69,37 @@ struct karakterView: View {
                     }
             }
         }
-        .task {
-            await hentDeltaker()
-        }
-        
     }
     
-    func hentDeltaker() async {
-        await withErrorReporting {
-            try await database.read { db in
-                deltaker = try Deltakere
-                    .where { $0.id == self.deltakerId}
-                    .fetchOne(db)
-            }
-        }
-    }
-    
-    func hentOppgaver() async {
-        await withErrorReporting {
-            try await database.read { db in
-                oppgaver = try Oppgaver
-                    .where { $0.proveId == self.prøveId}
-                    .fetchAll(db)
-            }
-        }
-    }
-    
-    func hentPoeng(oppgaveId: Oppgaver.ID) async {
-        await withErrorReporting {
-            try await database.read { db in
-                poeng = try Poenger
-                    .where { $0.deltakerId == self.deltakerId && $0.oppgaveId == oppgaveId }
-                    .fetchOne(db)
-            }
-        }
-    }
-
-    func sumAvPoeng() async -> Double  {
-        let formatter: NumberFormatter  = NumberFormatter()
+    func sumAvPoeng() -> Double  {
         var tallsum: Double = 0
-        formatter.numberStyle = .decimal
-        formatter.decimalSeparator = "."
-        formatter.groupingSeparator = ""
         for oppgave in oppgaver {
-            await hentPoeng(oppgaveId: oppgave.id)
+            let poeng =  hentPoengForOppgave(oppgaveId: oppgave.id)
             if let poeng = poeng {
-                if let poengVerdi = formatter.number(from: poeng.poeng)?.doubleValue {
-                    tallsum += poengVerdi
-                }
+                tallsum += poeng
             }
         }
         return tallsum
     }
     
-    func finnKarakter() async -> String {
+    func hentPoengForOppgave(oppgaveId: Oppgaver.ID) -> Double? {
+        var formatter: NumberFormatter  = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.decimalSeparator = "."
+        formatter.groupingSeparator = ""
+        let poeng = poenger.first(where: {$0.oppgaveId == oppgaveId})?.poeng
+        if let poeng = poeng {
+            if let poengVerdi = formatter.number(from: poeng)?.doubleValue {
+                return poengVerdi
+            }
+        }
+        return nil
+    }
+    
+    func finnKarakter() -> String {
         let karaktergrenser = Testdata().karaktergrenser_test
-        await hentOppgaver()
         let maxPoeng = oppgaver.map({$0.maksPoeng ?? 0}).reduce(0, +)
-        let sumPoeng = await sumAvPoeng()
+        let sumPoeng = sumAvPoeng()
         let fått_til = sumPoeng/maxPoeng
         
         if (fått_til > 1 || fått_til < 0) {

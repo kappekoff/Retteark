@@ -11,6 +11,7 @@ struct deltakerRadView: View {
     var deltaker: Deltakere
     var oppgaver: [Oppgaver]
     var prøveID: Prover.ID
+    @Binding var poenger: [Poenger]
     @Binding var indeks: Int
     @Binding var visElevTilbakemleding: VisElevTilbakemleding?
     @State var endretPoeng: Int = 0
@@ -23,7 +24,7 @@ struct deltakerRadView: View {
                 Text(deltaker.navn)
             })
             ForEach(oppgaver){ oppgave in
-                PoengView(deltakerID: deltaker.id, oppgaveID: oppgave.id, endretPoeng: $endretPoeng)
+                PoengView(deltaker: deltaker, oppgave: oppgave, poenger: $poenger , endretPoeng: $endretPoeng)
                 /*.focused($fokus, equals: .poengFokus(id: $prøve.poeng[elevIndeks][oppgaveIndeks].id))
                  .onSubmit {
                  if(prøve.poeng[elevIndeks][oppgaveIndeks].poeng == "") {
@@ -36,9 +37,8 @@ struct deltakerRadView: View {
                  }
                  }*/
             }
-            sumCelle(prøveId: prøveID, deltakerId: deltaker.id, indeks: indeks, endretPoeng: $endretPoeng)
-            karakterCeller(prøveID: prøveID, deltakerID: deltaker.id, indeks: indeks, endretPoeng: $endretPoeng)
-            
+            sumCelle(prøveId: prøveID, oppgaver: oppgaver, poenger: poenger, deltaker: deltaker, indeks: indeks, endretPoeng: $endretPoeng)
+            karakterCeller(prøveID: prøveID, deltaker: deltaker, oppgaver: oppgaver, poenger: poenger, indeks: indeks, endretPoeng: $endretPoeng)
             
         }
         .onAppear {

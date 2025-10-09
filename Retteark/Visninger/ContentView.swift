@@ -98,7 +98,7 @@ struct ContentView: View {
                         case .velgtInstillinger:
                             instillinger(valgtPrøveID: valgtPrøveID, visElevTilbakemleding: $viserSheet).environment(klasseoversikt)
                         case .velgtKlassesammendrag:
-                            Text("skal fikses når kategorier kommer")//Klassesammendrag(visElevTilbakemleding: $viserSheet, prøve: valgtPrøve)
+                            Klassesammendrag(visElevTilbakemleding: $viserSheet, prøveId: valgtPrøveID)
                         case .viserProgressView:
                             ProgressView("Lagrer tilbakemeldinger", value: tilbakemledingerLaget)
                               .progressViewStyle(.circular)

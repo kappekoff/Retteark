@@ -14,6 +14,8 @@ struct poengTabellView: View {
     @State var prøve: Prover? = nil
     @State var oppgaver: [Oppgaver] = []
     @State var deltakere: [Deltakere] = []
+    @State var poenger: [(Poenger, Prover.ID)] = []
+
 
     
     @State var visElevTilbakemleding: VisElevTilbakemleding? = nil
@@ -52,18 +54,20 @@ struct poengTabellView: View {
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: 50).font(.title).border(.primary).fontWeight(.bold).background(.gray)
             
             ForEach(deltakere){ deltaker in
-                deltakerRadView(deltaker: deltaker, oppgaver: oppgaver, prøveID: prøveID, indeks: $indeks, visElevTilbakemleding: $visElevTilbakemleding)
+                deltakerRadView(deltaker: deltaker, oppgaver: oppgaver, prøveID: prøveID, poenger: $poenger.map({$0.0}), indeks: $indeks, visElevTilbakemleding: $visElevTilbakemleding)
                     .fullScreenCover(item: $visElevTilbakemleding, onDismiss: { visElevTilbakemleding = nil }) { visElevTilbakemleding in
                         switch visElevTilbakemleding{
-                        case .valgtElev(let elev):
-                            elevTilbakemeldingVisning(visElevTilbakemleding: $visElevTilbakemleding, deltakerId: deltaker.id, prøveId: prøveID)
+                        case .valgtElev(let valgtDeltaker):
+                            elevTilbakemeldingVisning(visElevTilbakemleding: $visElevTilbakemleding, deltakerId: valgtDeltaker.id, prøveId: prøveID)
                         default:
                             Text("Du skal aldri komme hit")
                         }
                     }
                     .font(.title3).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background(indeks % 2 == 1 ? Color.background:.orange)
-                
              }
+            .onAppear() {
+                indeks += 1
+            }
         }
         .onAppear() {
             fokus_posisjon = [0, 0]
@@ -72,6 +76,7 @@ struct poengTabellView: View {
                 await hentPrøve()
                 await hentOppgaver()
                 await hentDeltakere()
+                await hentPoenger()
             }
         }
         .onChange(of: prøveID)  {
@@ -81,6 +86,7 @@ struct poengTabellView: View {
                 await hentPrøve()
                 await hentOppgaver()
                 await hentDeltakere()
+                await hentPoenger()
             }
             
         }
@@ -114,7 +120,18 @@ struct poengTabellView: View {
                     .fetchAll(db)
             }
         }
-    }    
+    }
+    
+    func hentPoenger() async {
+         await withErrorReporting {
+             try await database.read { db in
+                 poenger = try Poenger.join(Oppgaver.all) {$0.oppgaveId == $1.id}
+                     .where{$1.proveId.eq(prøveID)}
+                     .select {($0, $1.proveId)}
+                     .fetchAll(db)
+             }
+         }
+     }
 }
 
 struct oppgaveNavnCelle: View {
@@ -132,7 +149,9 @@ struct oppgaveNavnCelle: View {
 struct karakterCeller: View {
     
     var prøveID: Prover.ID
-    var deltakerID: Deltakere.ID
+    var deltaker: Deltakere
+    var oppgaver: [Oppgaver]
+    var poenger: [Poenger]
     var indeks: Int
     
     @State var låstKarakter: Bool = true
@@ -140,8 +159,8 @@ struct karakterCeller: View {
 
     
     var body: some View {
-        karakterView(prøveId: prøveID, deltakerId: deltakerID, indeks: indeks,låstKarakter: $låstKarakter, endretPoeng: $endretPoeng)
-        karakterLa_sView(deltakerID: deltakerID, indeks: indeks, låstKarakter: $låstKarakter)
+        karakterView(prøveId: prøveID, deltaker: deltaker, oppgaver: oppgaver, poenger: poenger, indeks: indeks,låstKarakter: $låstKarakter, endretPoeng: $endretPoeng)
+        karakterLa_sView(deltaker: deltaker, indeks: indeks, låstKarakter: $låstKarakter)
     }
 }
     

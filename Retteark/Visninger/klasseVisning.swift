@@ -136,7 +136,7 @@ struct klasseVisning: View {
                 await hentProverForKlasse()
             }
         }
-        .onChange(of: valgtPrøveID) { nyVerdi in
+        .onChange(of: valgtPrøveID) { _, nyVerdi in
             print("valgtPrøveID endret til \(String(describing: nyVerdi))")
         }
 

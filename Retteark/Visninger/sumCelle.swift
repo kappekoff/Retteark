@@ -12,12 +12,13 @@ struct sumCelle: View {
     @Dependency(\.defaultDatabase) var database
 
     var prøveId: Prover.ID
-    var deltakerId: Deltakere.ID
+    var oppgaver: [Oppgaver]
+    var poenger: [Poenger]
+    var deltaker: Deltakere
     var indeks: Int
     @Binding var endretPoeng: Int
     
-    @State var oppgaver: [Oppgaver] = []
-    @State var poeng: Poenger? = nil
+
     @State var sum: String = ""
     
     var body: some View {
@@ -27,62 +28,33 @@ struct sumCelle: View {
             .border(.black)
             .background(indeks % 2 == 1  ? Color.background:.orange)
             .multilineTextAlignment(.center)
-            .task {
-                await hentOppgaver()
-                sum = await sumAvPoeng()
+            .onAppear {
+                sum =  sumAvPoeng()
             }
             .onChange(of: endretPoeng) {
-                Task {
-                    sum = await sumAvPoeng()
-                }
-                
+                sum =  sumAvPoeng()
             }
     }
     
-    func sumAvPoeng() async -> String  {
-
+    func sumAvPoeng() -> String  {
         var tallsum: Double = 0
-        
         for oppgave in oppgaver {
-            tallsum += await hentPoengForOppgave(oppgaveId: oppgave.id) ?? 0
+            tallsum += hentPoengForOppgave(oppgaveId: oppgave.id) ?? 0
         }
-        
         return String(tallsum)
     }
     
-    func hentPoengForOppgave(oppgaveId: Oppgaver.ID) async -> Double? {
+    func hentPoengForOppgave(oppgaveId: Oppgaver.ID) -> Double? {
         var formatter: NumberFormatter  = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.decimalSeparator = "."
         formatter.groupingSeparator = ""
-        await hentPoeng(oppgaveId: oppgaveId)
+        let poeng = poenger.first(where: {$0.oppgaveId == oppgaveId && $0.deltakerId == deltaker.id})?.poeng
         if let poeng = poeng {
-            if let poengVerdi = formatter.number(from: poeng.poeng)?.doubleValue {
+            if let poengVerdi = formatter.number(from: poeng)?.doubleValue {
                 return poengVerdi
             }
         }
         return nil
     }
-    
-    func hentOppgaver() async {
-        await withErrorReporting {
-            try await database.read { db in
-                oppgaver = try Oppgaver
-                    .where { $0.proveId == self.prøveId}
-                    .fetchAll(db)
-            }
-        }
-    }
-    
-    func hentPoeng(oppgaveId: Oppgaver.ID) async {
-        await withErrorReporting {
-            try await database.read { db in
-                poeng = try Poenger
-                    .where { $0.deltakerId == self.deltakerId && $0.oppgaveId == oppgaveId }
-                    .fetchOne(db)
-                    
-            }
-        }
-    }
-    
 }

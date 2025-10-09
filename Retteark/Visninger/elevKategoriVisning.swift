@@ -187,54 +187,56 @@ struct hovedinnhold: View {
                             .border(.primary)
                     }
                 }
-                LazyVGrid(columns: kategoriKolonner, spacing: 30) {
-                    ForEach(kategorier) { kategori in
-                        if(oppgaverKategorier.contains(where: {$0.0.KategoriId == kategori.id})) {
-                            VStack {
-                                Text(kategori.navn)
-                                kakediagram(desimaltall: kategoriDetakerPoeng(kategori: kategori)/kategoriMaxPoeng(kategori: kategori), farge:farger[fargeIndex])
+            }
+            LazyVGrid(columns: kategoriKolonner, spacing: 30) {
+                ForEach(kategorier) { kategori in
+                    if(oppgaverKategorier.contains(where: {$0.0.KategoriId == kategori.id})) {
+                        VStack {
+                            Text(kategori.navn)
+                            kakediagram(desimaltall: kategoriDetakerPoeng(kategori: kategori)/kategoriMaxPoeng(kategori: kategori), farge:farger[fargeIndex])
                                     .frame(width: 150, height: 150, alignment: .center)
                                     .onAppear {
                                         fargeIndex += 1
                                         fargeIndex  %= farger.count
                                     }
-                                Text(String(kategoriDetakerPoeng(kategori: kategori)) + "/" + String(kategoriMaxPoeng(kategori: kategori)))
-                            }
+                            Text(String(kategoriDetakerPoeng(kategori: kategori)) + "/" + String(kategoriMaxPoeng(kategori: kategori)))
                         }
                     }
                 }
+            }
                 
-                Text(.init(lagElevtilbakemelding())).frame(alignment: .leading)
+            Text(.init(lagElevtilbakemelding())).frame(alignment: .leading)
                 
-                if(lagerPDF) {
-                    Text(deltaker.framovermelding)
-                }
-                else {
-                    TextField("Framovermelding", text: $framovermelding, axis: .vertical)
-                        .onAppear {
-                            framovermelding = deltaker.framovermelding
-                        }
-                        .onChange(of: framovermelding) {
-                            Task {
-                                await withErrorReporting {
-                                    try await database.write { db in
-                                        var midlertidiDeltaker = deltaker
+            if(lagerPDF) {
+                Text(deltaker.framovermelding)
+            }
+            else {
+                TextField("Framovermelding", text: $framovermelding, axis: .vertical)
+                    .onAppear {
+                        framovermelding = deltaker.framovermelding
+                    }
+                    .onChange(of: framovermelding) {
+                        Task {
+                            await withErrorReporting {
+                                try await database.write { db in
+                                    var midlertidiDeltaker = deltaker
                                         midlertidiDeltaker.framovermelding = framovermelding
-                                        try Deltakere.update(midlertidiDeltaker).execute(db)
+                                    try Deltakere.update(midlertidiDeltaker).execute(db)
                                         
-                                    }
                                 }
                             }
                         }
-                }
+                    }
+            }
                 
-                if(prøve.visEleverKarakter){
-                    karakterView(prøveId: prøve.id, deltakerId: deltaker.id, indeks: 0, låstKarakter: Binding.constant(deltaker.låstKarakter), endretPoeng: Binding.constant(0)
-                    )
+            if(prøve.visEleverKarakter){
+                HStack {
+                    Text("Karakter: ")
+                    karakterView(prøveId: prøve.id, deltaker: deltaker, oppgaver: oppgaver, poenger: poenger.map({$0.0}), indeks: 1, låstKarakter: Binding.constant(deltaker.låstKarakter), endretPoeng: Binding.constant(0)  )
                 }
+            }
                 
-            }.padding(20).frame(width: 500)
-        }
+        }.padding(20).frame(width: 500)
     }
     
     

@@ -12,45 +12,36 @@ struct PoengView: View {
     @Environment(Klasseoversikt.self) var klasseoversikt
     @Dependency(\.defaultDatabase) var database
 
-    var deltakerID: Deltakere.ID
-    var oppgaveID: Oppgaver.ID
+    var deltaker: Deltakere
+    var oppgave: Oppgaver
     
-    @State var poeng: Poenger? = nil
-    @State var poengVerdi = ""
+    @Binding var poenger: [Poenger]
+    @State var poengVerdi: String? = nil
     @Binding var endretPoeng: Int
     
     var body: some View {
         Group {
-            if let poeng = poeng {
-                tallEllerStrekVisning(tekst: $poengVerdi, tittel: poeng.poeng)
+            if let binding = Binding($poengVerdi) {
+                tallEllerStrekVisning(tekst: binding, tittel: binding.wrappedValue)
                     .font(.title3)
                     .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
                     .border(.black)
                     .multilineTextAlignment(.center)
-                    .onChange(of: poengVerdi) { _, _ in
+                    .onChange(of: binding.wrappedValue) {
                         endretPoeng += 1
                         Task {
-                            self.poeng?.poeng = poengVerdi
                             await lagrePoeng()
                         }
+                        if let i = poenger.firstIndex(where: {$0.oppgaveId == oppgave.id && $0.deltakerId == deltaker.id}) {
+                            poenger[i].poeng = binding.wrappedValue
+                        }
                     }
-                    .onAppear {
-                        poengVerdi = poeng.poeng
-                    }
+
             } else {
-                Text("Laster...").task {
-                    await hentPoeng()
-                }
-            }
-        }
-    }
-    
-    func hentPoeng() async {
-        await withErrorReporting {
-            try await database.read { db in
-                poeng = try Poenger
-                    .where{$0.deltakerId == deltakerID && $0.oppgaveId == oppgaveID}
-                    .fetchOne(db)
+                Text("Laster...")
+                    .onAppear {
+                        poengVerdi = poenger.first(where: {$0.oppgaveId == oppgave.id && $0.deltakerId == deltaker.id})?.poeng
+                    }
             }
         }
     }
@@ -58,8 +49,8 @@ struct PoengView: View {
     func lagrePoeng() async{
         await withErrorReporting {
             try await database.write { db in
-                if let poeng = poeng {
-                    let midlertidigPoeng = poeng
+                if let poeng = poenger.first(where: {$0.oppgaveId == oppgave.id && $0.deltakerId == deltaker.id}){
+                    let midlertidigPoeng = Poenger(oppgaveId: poeng.oppgaveId, deltakerId: poeng.deltakerId, poeng: poengVerdi ?? "", id: poeng.id)
                     try Poenger.update(midlertidigPoeng).execute(db)
                 }
             }

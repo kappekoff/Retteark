@@ -70,20 +70,24 @@ struct leggTilNyPr_veVisning: View {
                             }
                         }
                         await hentElever()
+                        for oppgave in oppgaver {
+                            await withErrorReporting {
+                                try await database.write { db in
+                                    let midlertidigOppgave = Oppgaver(id: oppgave.id, navn: oppgave.navn, proveId: proveid, maksPoeng: oppgave.maksPoeng)
+                                    try  Oppgaver.insert{midlertidigOppgave}.execute(db)
+                                }
+                            }
+                        }
                         
-                    }
-                    elever.forEach { elev in
-                        let deltakerId = UUID().uuidString
-                        Task {
+                        for elev in elever  {
+                            let deltakerId = UUID().uuidString
                             await withErrorReporting {
                                 try await database.write { db in
                                     let midlertidigDeltaker = Deltakere(id: deltakerId, navn: elev.navn, proveId: proveid, låstKarakter: false, karakter: "", framovermelding: "")
                                     try  Deltakere.insert{midlertidigDeltaker}.execute(db)
                                 }
                             }
-                        }
-                        for oppgave in oppgaver {
-                            Task {
+                            for oppgave in oppgaver {
                                 await withErrorReporting {
                                     try await database.write { db in
                                         let midlertidigPoeng = Poenger(oppgaveId: oppgave.id, deltakerId: deltakerId, poeng: "", id: UUID().uuidString)
@@ -93,18 +97,6 @@ struct leggTilNyPr_veVisning: View {
                             }
                         }
                     }
-                                    
-                    for oppgave in oppgaver {
-                        Task {
-                            await withErrorReporting {
-                                try await database.write { db in
-                                    let midlertidigOppgave = Oppgaver(id: oppgave.id, navn: oppgave.navn, proveId: proveid, maksPoeng: oppgave.maksPoeng)
-                                    try  Oppgaver.insert{midlertidigOppgave}.execute(db)
-                                }
-                            }
-                        }
-                    }
-                    
                     visKlassevisningSheet = nil
                 }
                     

@@ -7,11 +7,20 @@
 
 import SwiftUI
 import Charts
+import SharingGRDB
 
 struct Klassesammendrag: View {
+    @Dependency(\.defaultDatabase) var database
     @Binding var visElevTilbakemleding: VisElevTilbakemleding?
-    @Bindable var prøve: Prøve
-  @State var visFilvelger: Bool = false
+    @State var visFilvelger: Bool = false
+    let prøveId: Prover.ID
+    
+    @State var prøve: Prover? = nil
+    @State var deltakere: [Deltakere] = []
+    @State var oppgaver : [Oppgaver] = []
+    @State var kategorier: [Kategorier] = []
+    @State var poenger: [(Poenger, Prover.ID)] = []
+    @State var oppgaverKategorier: [(OppgaverKategorier, Oppgaver)] = []
     
     var body: some View {
         VStack {
@@ -23,15 +32,15 @@ struct Klassesammendrag: View {
                  label: {
                     Image(systemName: "square.and.arrow.up.fill")
                 }
-                 .fileExporter(isPresented: $visFilvelger, document: PDFDocument(pdfData: Data()), contentType: .pdf, defaultFilename: "\(prøve.navn) klassesammendrag.pdf") { result in
+                 .fileExporter(isPresented: $visFilvelger, document: PDFDocument(pdfData: Data()), contentType: .pdf, defaultFilename: "\(prøve?.navn ?? "Fant ikke prøve") klassesammendrag.pdf") { result in
                    switch result {
                     case .success(let file):
                      lagPDF(innhold: VStack {
-                       Text(prøve.navn).font(.largeTitle)
-                       Text("Kategorier").font(.title)
-                       kategoriSammendrag(prøve: prøve)
-                       Text("Karakterer").font(.title)
-                       Stolpediagram(prøve: prøve).frame(height: 500)
+                         Text(prøve?.navn ?? "Fant ikke prøve").font(.largeTitle)
+                         Text("Kategorier").font(.title)
+                         kategoriSammendrag(prøve: $prøve, deltakere: $deltakere, oppgaver: $oppgaver, kategorier: $kategorier, poenger: $poenger, oppgaverKategorier: $oppgaverKategorier)
+                         Text("Karakterer").font(.title)
+                         Stolpediagram(prøve: $prøve, deltakere: $deltakere, oppgaver: $oppgaver, kategorier: $kategorier, poenger: $poenger, oppgaverKategorier: $oppgaverKategorier).frame(height: 500)
                      }, filplassering: file)
                     case .failure(let error):
                      print(error)
@@ -40,9 +49,17 @@ struct Klassesammendrag: View {
             }
             ScrollView {
                 Text("Kategorier").font(.title)
-                kategoriSammendrag(prøve: prøve)
+                kategoriSammendrag(prøve: $prøve, deltakere: $deltakere, oppgaver: $oppgaver, kategorier: $kategorier, poenger: $poenger, oppgaverKategorier: $oppgaverKategorier)
                 Text("Karakterer").font(.title)
-                Stolpediagram(prøve: prøve).frame(height: 500)
+                Stolpediagram(prøve: $prøve, deltakere: $deltakere, oppgaver: $oppgaver, kategorier: $kategorier, poenger: $poenger, oppgaverKategorier: $oppgaverKategorier).frame(height: 500)
+            }
+            .task {
+                await hentDeltakere()
+                await hentPrøve()
+                await hentOppgaver()
+                await hentKategorier()
+                await hentPoenger()
+                await hentOppgaverKategorierForProve()
             }
             
             Button {
@@ -53,54 +70,79 @@ struct Klassesammendrag: View {
         }
     }
     
-    func gjennomsnittsElev() -> [Double]{
-        var antallElever: Double = 0
-        let formatter: NumberFormatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.decimalSeparator = "."
-        formatter.groupingSeparator = ""
-        var oppgaver:[Double] = prøve.oppgaver.map {_ in 0}
-        for elev in prøve.elever {
-            if let elevIndeks = prøve.poengRad(elevId: elev.id) {
-                if(elevHarLevert(elevIndeks: elevIndeks)) {
-                    antallElever += 1
-                    for i in 0..<prøve.oppgaver.count {
-                        if let oppgaveIndeks = prøve.oppgaveIndexMedKjentElev(oppgaveId: prøve.oppgaver[i].id, elevIndex: elevIndeks) {
-                            let tall = formatter.number(from: prøve.poeng[elevIndeks][oppgaveIndeks].poeng) as? Double
-                            if(tall != nil) {
-                               oppgaver[i]  += tall!
-                            }
-                        }
-                    }
-                    
-                }
+    func hentPoenger() async {
+         await withErrorReporting {
+             try await database.read { db in
+                 poenger = try Poenger.join(Oppgaver.all) {$0.oppgaveId == $1.id}
+                     .where{$1.proveId.eq(prøveId)}
+                     .select {($0, $1.proveId)}
+                     .fetchAll(db)
+             }
+         }
+     }
+     
+     func hentOppgaverKategorierForProve() async {
+         await withErrorReporting {
+             try await database.read { db in
+                 oppgaverKategorier = try OppgaverKategorier.join(Oppgaver.all) { $0.OppgaveId == $1.id }
+                     .where{ $1.proveId.eq(prøveId) }
+                     .select{($0, $1)}
+                     .fetchAll(db)
+             }
+         }
+     }
+    
+    func hentDeltakere() async {
+        await withErrorReporting {
+            try await database.read { db in
+                deltakere = try Deltakere
+                    .where{$0.proveId == self.prøveId}
+                    .fetchAll(db)
             }
         }
-        oppgaver = oppgaver.map { $0/antallElever}
-        return oppgaver
     }
     
-    func elevHarLevert(elevIndeks: Int) -> Bool {
-        for oppgave in prøve.oppgaver {
-            if let oppgaveIndeks = prøve.oppgaveIndexMedKjentElev(oppgaveId: oppgave.id, elevIndex: elevIndeks) {
-                for tegn in prøve.poeng[elevIndeks][oppgaveIndeks].poeng {
-                    if tegn.isNumber {
-                        return true
-                    }
-                    
-                }
+    func hentPrøve() async {
+        await withErrorReporting {
+            try await database.read { db in
+                prøve = try Prover
+                    .where{$0.id == prøveId}
+                    .fetchOne(db)
             }
         }
-        return false
+    }
+    
+    func hentOppgaver() async {
+        await withErrorReporting {
+            try await database.read { db in
+                oppgaver = try Oppgaver
+                    .where{$0.proveId == prøveId}
+                    .fetchAll(db)
+            }
+        }
+    }
+    
+    func hentKategorier() async {
+        await withErrorReporting {
+            try await database.read { db in
+                kategorier = try Kategorier
+                    .where{$0.proveId == prøveId}
+                    .fetchAll(db)
+            }
+        }
     }
 }
 
 struct Stolpediagram: View {
-
-    @Bindable var prøve: Prøve
-    var karakterer: [Karakter] {
-        finnKarakterSammensetning()
-    }
+    
+    @Binding var prøve: Prover?
+    @Binding var deltakere: [Deltakere]
+    @Binding var oppgaver : [Oppgaver]
+    @Binding var kategorier: [Kategorier]
+    @Binding var poenger: [(Poenger, Prover.ID)]
+    @Binding var oppgaverKategorier: [(OppgaverKategorier, Oppgaver)]
+    @State var karakterer: [Karakter] = []
+    
     var yAkse: [Int] {
         stride(from: 0, to: (karakterer.max(by: {$0.count < $1.count})?.count ?? 29) + 1, by: 1).map{$0}
     }
@@ -139,24 +181,24 @@ struct Stolpediagram: View {
                         .foregroundStyle(Color.gray)
                 }
         })
+        .task {
+            karakterer = await finnKarakterSammensetning()
+        }
     }
                 
         
-    func finnKarakterSammensetning() -> [Karakter] {
-        var karakterer: [Karakter] = []
-        for karakter in prøve.karaktergrenser.reversed() {
+    func finnKarakterSammensetning() async -> [Karakter] {
+        let karaktergrenser = Testdata().karaktergrenser_test
+        var karakterer:[Karakter]  = []
+        for karakter in karaktergrenser.reversed() {
             if(karakterer.firstIndex(where: {$0.type == String(karakter.karakter[karakter.karakter.startIndex])}) == nil){
                 karakterer.append(Karakter(type: String(karakter.karakter[karakter.karakter.startIndex]), count: 0))
             }
         }
         
-        for elev in prøve.elever{
+        for deltaker in deltakere {
             for j in 0..<karakterer.count {
-                var karakter = String(elev.karakter[elev.karakter.startIndex])
-                if(elev.låstKarakter) {
-                    karakter = prøve.finnKarakter(elevIndeks: prøve.elever.firstIndex{$0.id == elev.id}!)
-                    karakter = String(karakter[karakter.startIndex])
-                }
+                let karakter =  karakterView(prøveId: prøve?.id ?? "", deltaker: deltaker, oppgaver: oppgaver, poenger: poenger.map{$0.0}, indeks: 0, låstKarakter: Binding.constant(deltaker.låstKarakter), endretPoeng: Binding.constant(0)).finnKarakter()
                 if(karakter == karakterer[j].type){
                     karakterer[j].count += 1
                 }
@@ -176,88 +218,77 @@ struct Karakter: Identifiable, Equatable  {
 
 struct kategoriSammendrag: View {
     
-    @Bindable var prøve: Prøve
+    @Binding var prøve: Prover?
+    @Binding var deltakere: [Deltakere]
+    @Binding var oppgaver : [Oppgaver]
+    @Binding var kategorier: [Kategorier]
+    @Binding var poenger: [(Poenger, Prover.ID)]
+    @Binding var oppgaverKategorier: [(OppgaverKategorier, Oppgaver)]
+    
     let kategoriKolonner = [
         GridItem(.fixed(150)), GridItem(.fixed(150)), GridItem(.fixed(150))]
     let farger: [Color] = [Color.teal, Color.red, Color.green, Color.indigo, Color.brown, Color.mint, Color.orange, Color.pink, Color.purple, Color.yellow, Color.gray, Color.cyan]
+    @State var fargeNummer = 0
     
     var body: some View {
         LazyVGrid(columns: kategoriKolonner, spacing: 30) {
-            ForEach(prøve.kategorier) { kategori in
-                if let kategoriIndex = prøve.kategoriIndex(kategoriId: kategori.id) {
-                    if(maxPoengKategori(kategoriIndex: kategoriIndex) > 0) {
-                        VStack {
-                            Text(prøve.kategorier[kategoriIndex].navn)
-                            kakediagram(desimaltall: Double(elevPoengKategori(kategoriIndex: kategoriIndex)/maxPoengKategori(kategoriIndex: kategoriIndex)), farge:farger[kategoriIndex % farger.count]).frame(width: 150, height: 150, alignment: .center)
-                            Text(String(elevPoengKategori(kategoriIndex: kategoriIndex)) + "/" + String(maxPoengKategori(kategoriIndex: kategoriIndex)))
-                        }
+            ForEach(kategorier) { kategori in
+                if(maxPoengKategori(kategori: kategori) > 0) {
+                    VStack {
+                        Text(kategori.navn)
+                        kakediagram(desimaltall: Double(deltakerPoengKategori(kategori: kategori)/maxPoengKategori(kategori: kategori)), farge:farger[fargeNummer % farger.count])
+                            .frame(width: 150, height: 150, alignment: .center)
+                            .onAppear {
+                                fargeNummer += 1
+                            }
+                        Text(String(deltakerPoengKategori(kategori: kategori)) + "/" + String(maxPoengKategori(kategori: kategori)))
                     }
                 }
             }
         }
     }
     
-    func elevPoengKategori(kategoriIndex: Int) -> Double {
-        var sum: Double = 0
-        for oppgave in prøve.oppgaver {
-            if let oppgaveIndex = prøve.oppgaveIndexMedKjentKategori(oppgaveId: oppgave.id, kateogriIndex: kategoriIndex) {
-                if(prøve.kategorierOgOppgaver[kategoriIndex][oppgaveIndex].verdi){
-                    sum += gjennomsnittsElev()[oppgaveIndex]
-                    
-                }
-            }
-        }
-        return sum
-    }
-    
-    func gjennomsnittsElev() -> [Double]{
-        var antallElever: Double = 0
+    func deltakerPoengKategori(kategori: Kategorier) -> Double {
         let formatter: NumberFormatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.decimalSeparator = "."
         formatter.groupingSeparator = ""
-        var oppgaver:[Double] = prøve.oppgaver.map({_ in 0})
-        for elev in prøve.elever {
-            if let elevIndeks = prøve.poengRad(elevId: elev.id) {
-                if(elevHarLevert(elevIndeks: elevIndeks)) {
-                    antallElever += 1
-                    for i in 0..<prøve.oppgaver.count {
-                        if let oppgaveIndeks = prøve.oppgaveIndexMedKjentElev(oppgaveId: prøve.oppgaver[i].id, elevIndex: elevIndeks) {
-                            let tall = formatter.number(from: prøve.poeng[elevIndeks][oppgaveIndeks].poeng) as? Double
-                            if(tall != nil) {
-                               oppgaver[i]  += tall!
-                            }
-                        }
+        var sum: Double = 0
+        var antall: Double = 0
+        for deltaker in deltakere {
+            for oppgave in oppgaver {
+                if(oppgaverKategorier.contains(where: {$0.0.KategoriId == kategori.id && $0.0.OppgaveId == oppgave.id})){
+                    let poengSomString = poenger.first(where: {$0.0.oppgaveId == oppgave.id && $0.0.deltakerId == deltaker.id})?.0.poeng ?? ""
+                    if let poengSomTall = formatter.number(from: poengSomString) {
+                        sum += poengSomTall.doubleValue
+                        antall += 1
                     }
-                    
                 }
             }
         }
-        oppgaver = oppgaver.map { $0/antallElever}
-        return oppgaver
+        return (sum/antall)
     }
     
-    func elevHarLevert(elevIndeks: Int) -> Bool {
-        for oppgave in prøve.oppgaver {
-            if let oppgaveIndeks = prøve.oppgaveIndexMedKjentElev(oppgaveId: oppgave.id, elevIndex: elevIndeks) {
-                for tegn in prøve.poeng[elevIndeks][oppgaveIndeks].poeng {
-                    if tegn.isNumber {
-                        return true
-                    }
-                    
+    func deltakerHarLevert(deltaker: Deltakere) -> Bool {
+        let formatter: NumberFormatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.decimalSeparator = "."
+        formatter.groupingSeparator = ""
+        for poeng in poenger {
+            if(poeng.0.deltakerId == deltaker.id) {
+                if (formatter.number(from: poeng.0.poeng) != nil)  {
+                    return true
                 }
             }
         }
         return false
     }
     
-    func maxPoengKategori(kategoriIndex: Int) -> Double {
+    func maxPoengKategori(kategori: Kategorier) -> Double {
         var sum: Double = 0
-        for oppgave in prøve.oppgaver {
-            if let oppgaveIndex = prøve.oppgaveIndexMedKjentKategori(oppgaveId: oppgave.id, kateogriIndex: kategoriIndex){
-                if(prøve.kategorierOgOppgaver[kategoriIndex][oppgaveIndex].verdi){
-                    sum += prøve.oppgaver[oppgaveIndex].maksPoeng ?? 0
-                }
+        for oppgavekategori in oppgaverKategorier {
+            if(oppgavekategori.0.KategoriId == kategori.id) {
+                sum += oppgavekategori.1.maksPoeng ?? 0
             }
         }
         return sum

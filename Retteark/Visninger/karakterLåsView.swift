@@ -11,10 +11,9 @@ import SharingGRDB
 struct karakterLa_sView: View {
     @Dependency(\.defaultDatabase) var database
     
-    var deltakerID: Deltakere.ID
+    var deltaker: Deltakere
     var indeks: Int
     
-    @State var deltaker: Deltakere? = nil
     @Binding var låstKarakter: Bool
 
     
@@ -23,8 +22,7 @@ struct karakterLa_sView: View {
             låstKarakter.toggle()
             låsKarakarakterForDeltaker()
             Task {
-                await hentDeltaker()
-                låstKarakter = deltaker?.låstKarakter ?? false
+                låstKarakter = deltaker.låstKarakter
             }
         }, label: {
             Image(systemName: låstKarakter ? "lock.fill" : "lock.open.fill")
@@ -36,27 +34,16 @@ struct karakterLa_sView: View {
         .background(indeks % 2 == 1 ? Color.background:.orange)
         .multilineTextAlignment(.center)
         .task{
-            await hentDeltaker()
-            låstKarakter = deltaker?.låstKarakter ?? false
+            låstKarakter = deltaker.låstKarakter
         }
     }
     
     func låsKarakarakterForDeltaker() {
         withErrorReporting {
             try database.write { db in
-                var midlertidigDeltaker = deltaker!
+                var midlertidigDeltaker = deltaker
                 midlertidigDeltaker.låstKarakter.toggle()
                 try Deltakere.update(midlertidigDeltaker).execute(db)
-            }
-        }
-    }
-    
-    func hentDeltaker() async {
-        await withErrorReporting {
-            try await database.read { db in
-                deltaker = try Deltakere
-                    .where { $0.id == self.deltakerID}
-                    .fetchOne(db)
             }
         }
     }
