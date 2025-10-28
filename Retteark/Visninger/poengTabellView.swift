@@ -54,7 +54,7 @@ struct poengTabellView: View {
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: 50).font(.title).border(.primary).fontWeight(.bold).background(.gray)
             
             ForEach(deltakere){ deltaker in
-                deltakerRadView(deltaker: deltaker, oppgaver: oppgaver, prøveID: prøveID, poenger: $poenger.map({$0.0}), indeks: $indeks, visElevTilbakemleding: $visElevTilbakemleding)
+                deltakerRadView(deltaker: deltaker, oppgaver: oppgaver, prøveID: prøveID, poenger: $poenger, indeks: $indeks, visElevTilbakemleding: $visElevTilbakemleding)
                     .fullScreenCover(item: $visElevTilbakemleding, onDismiss: { visElevTilbakemleding = nil }) { visElevTilbakemleding in
                         switch visElevTilbakemleding{
                         case .valgtElev(let valgtDeltaker):
@@ -151,7 +151,7 @@ struct karakterCeller: View {
     var prøveID: Prover.ID
     var deltaker: Deltakere
     var oppgaver: [Oppgaver]
-    var poenger: [Poenger]
+    @Binding var poenger: [(Poenger, Prover.ID)]
     var indeks: Int
     
     @State var låstKarakter: Bool = true
@@ -159,7 +159,7 @@ struct karakterCeller: View {
 
     
     var body: some View {
-        karakterView(prøveId: prøveID, deltaker: deltaker, oppgaver: oppgaver, poenger: poenger, indeks: indeks,låstKarakter: $låstKarakter, endretPoeng: $endretPoeng)
+        karakterView(prøveId: prøveID, deltaker: deltaker, oppgaver: oppgaver, poenger: $poenger, indeks: indeks,låstKarakter: $låstKarakter, endretPoeng: $endretPoeng)
         karakterLa_sView(deltaker: deltaker, indeks: indeks, låstKarakter: $låstKarakter)
     }
 }

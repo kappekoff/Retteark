@@ -13,7 +13,7 @@ struct sumCelle: View {
 
     var prøveId: Prover.ID
     var oppgaver: [Oppgaver]
-    var poenger: [Poenger]
+    @Binding var poenger: [(Poenger, Prover.ID)]
     var deltaker: Deltakere
     var indeks: Int
     @Binding var endretPoeng: Int
@@ -49,7 +49,7 @@ struct sumCelle: View {
         formatter.numberStyle = .decimal
         formatter.decimalSeparator = "."
         formatter.groupingSeparator = ""
-        let poeng = poenger.first(where: {$0.oppgaveId == oppgaveId && $0.deltakerId == deltaker.id})?.poeng
+        let poeng = poenger.first(where: {$0.0.oppgaveId == oppgaveId && $0.0.deltakerId == deltaker.id})?.0.poeng
         if let poeng = poeng {
             if let poengVerdi = formatter.number(from: poeng)?.doubleValue {
                 return poengVerdi

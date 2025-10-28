@@ -15,7 +15,7 @@ struct karakterView: View {
     var prøveId: Prover.ID
     var deltaker: Deltakere
     var oppgaver: [Oppgaver]
-    var poenger: [Poenger]
+    @Binding var poenger: [(Poenger, Prover.ID)]
     let indeks: Int
     
     @Binding var låstKarakter: Bool
@@ -64,7 +64,7 @@ struct karakterView: View {
                     }
                     .onChange(of: endretPoeng) {
                         Task {
-                            karakter = await finnKarakter()
+                            karakter = finnKarakter()
                         }
                     }
             }
@@ -83,11 +83,11 @@ struct karakterView: View {
     }
     
     func hentPoengForOppgave(oppgaveId: Oppgaver.ID) -> Double? {
-        var formatter: NumberFormatter  = NumberFormatter()
+        let formatter: NumberFormatter  = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.decimalSeparator = "."
         formatter.groupingSeparator = ""
-        let poeng = poenger.first(where: {$0.oppgaveId == oppgaveId})?.poeng
+        let poeng = poenger.first(where: {$0.0.oppgaveId == oppgaveId})?.0.poeng
         if let poeng = poeng {
             if let poengVerdi = formatter.number(from: poeng)?.doubleValue {
                 return poengVerdi

@@ -28,8 +28,8 @@ struct elevTilbakemeldingVisning: View {
         ScrollView {
             if let deltaker = deltaker, let prøve = prøve {
                 VStack {
-                    top(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier,poenger: poenger, oppgaverKategorier: oppgaverKategorier, visElevTilbakemleding: $visElevTilbakemleding)
-                    hovedinnhold(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier, poenger: poenger, oppgaverKategorier: oppgaverKategorier, visElevTilbakemleding: $visElevTilbakemleding,  lagerPDF: false)
+                    top(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier,poenger: $poenger, oppgaverKategorier: oppgaverKategorier, visElevTilbakemleding: $visElevTilbakemleding)
+                    hovedinnhold(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier, poenger: $poenger, oppgaverKategorier: oppgaverKategorier, visElevTilbakemleding: $visElevTilbakemleding,  lagerPDF: false)
                 }
                 
             }
@@ -120,7 +120,7 @@ struct top: View {
     var prøve: Prover
     var oppgaver : [Oppgaver]
     var kategorier: [Kategorier]
-    var poenger: [(Poenger, Prover.ID)]
+    @Binding var poenger: [(Poenger, Prover.ID)]
     var oppgaverKategorier: [(OppgaverKategorier, Oppgaver)]
     @Binding var visElevTilbakemleding:VisElevTilbakemleding?
     @State var visFilvelger = false
@@ -137,8 +137,8 @@ struct top: View {
                 switch result {
                 case .success(let file):
                     lagPDF(innhold: VStack {
-                        top(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier,poenger: poenger, oppgaverKategorier: oppgaverKategorier, visElevTilbakemleding: $visElevTilbakemleding)
-                        hovedinnhold(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier, poenger: poenger, oppgaverKategorier: oppgaverKategorier, visElevTilbakemleding: $visElevTilbakemleding, lagerPDF: true)
+                        top(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier,poenger: $poenger, oppgaverKategorier: oppgaverKategorier, visElevTilbakemleding: $visElevTilbakemleding)
+                        hovedinnhold(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier, poenger: $poenger, oppgaverKategorier: oppgaverKategorier, visElevTilbakemleding: $visElevTilbakemleding, lagerPDF: true)
                     }, filplassering: file)
                 case .failure(let error):
                     print(error)
@@ -155,7 +155,7 @@ struct hovedinnhold: View {
     var prøve: Prover
     var oppgaver : [Oppgaver]
     var kategorier: [Kategorier]
-    var poenger: [(Poenger, Prover.ID)]
+    @Binding var poenger: [(Poenger, Prover.ID)]
     var oppgaverKategorier: [(OppgaverKategorier, Oppgaver)]
     @Binding var visElevTilbakemleding:VisElevTilbakemleding?
   
@@ -232,7 +232,7 @@ struct hovedinnhold: View {
             if(prøve.visEleverKarakter){
                 HStack {
                     Text("Karakter: ")
-                    karakterView(prøveId: prøve.id, deltaker: deltaker, oppgaver: oppgaver, poenger: poenger.map({$0.0}), indeks: 1, låstKarakter: Binding.constant(deltaker.låstKarakter), endretPoeng: Binding.constant(0)  )
+                    karakterView(prøveId: prøve.id, deltaker: deltaker, oppgaver: oppgaver, poenger: $poenger, indeks: 1, låstKarakter: Binding.constant(deltaker.låstKarakter), endretPoeng: Binding.constant(0)  )
                 }
             }
                 
