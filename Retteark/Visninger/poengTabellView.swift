@@ -15,16 +15,15 @@ struct poengTabellView: View {
     @State var oppgaver: [Oppgaver] = []
     @State var deltakere: [Deltakere] = []
     @State var poenger: [(Poenger, Prover.ID)] = []
-
-
+    
+    
     
     @State var visElevTilbakemleding: VisElevTilbakemleding? = nil
     @State var oppgaveIndeks: Int? = nil
     @State var farge: Bool = false
-    @State var indeks: Int = 0
     @State var fokus_posisjon: [Int] = [0, 0]
     @FocusState var fokus: Fokus?
-
+    
     
     var body: some View {
         Grid(horizontalSpacing: 0, verticalSpacing: 0){
@@ -53,8 +52,8 @@ struct poengTabellView: View {
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: 50).font(.title).border(.primary).fontWeight(.bold).background(.gray)
             
-            ForEach(deltakere){ deltaker in
-                deltakerRadView(deltaker: deltaker, oppgaver: oppgaver, prøveID: prøveID, poenger: $poenger, indeks: $indeks, visElevTilbakemleding: $visElevTilbakemleding)
+            ForEach(Array(deltakere.enumerated()), id: \.element.id){ indeks, deltaker in
+                deltakerRadView(deltaker: deltaker, oppgaver: oppgaver, prøveID: prøveID, poenger: $poenger, indeks: indeks, visElevTilbakemleding: $visElevTilbakemleding)
                     .fullScreenCover(item: $visElevTilbakemleding, onDismiss: { visElevTilbakemleding = nil }) { visElevTilbakemleding in
                         switch visElevTilbakemleding{
                         case .valgtElev(let valgtDeltaker):
@@ -64,9 +63,6 @@ struct poengTabellView: View {
                         }
                     }
                     .font(.title3).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background(indeks % 2 == 1 ? Color.background:.orange)
-             }
-            .onAppear() {
-                indeks += 1
             }
         }
         .onAppear() {

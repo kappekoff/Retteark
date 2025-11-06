@@ -10,7 +10,7 @@ import SwiftUI
 
 enum VisElevTilbakemleding: Identifiable  {
     case valgtElev(deltaker: Deltakere)
-    case velgtInstillinger
+    case velgtInstillinger(proveID: Prover.ID)
     case valgtKategorier
     case velgtKlassesammendrag
     case viserProgressView

@@ -8,8 +8,6 @@
 import SwiftUI
 import SharingGRDB
 
-
-
 struct klasseVisning: View {
     
     @Environment(Klasseoversikt.self) var klasseoversikt
@@ -136,11 +134,6 @@ struct klasseVisning: View {
                 await hentProverForKlasse()
             }
         }
-        .onChange(of: valgtPrøveID) { _, nyVerdi in
-            print("valgtPrøveID endret til \(String(describing: nyVerdi))")
-        }
-
-            
         .fullScreenCover(item: $visKlassevisningSheet, onDismiss: {visKlassevisningSheet = nil}) { visKlassevisningSheet in
             switch visKlassevisningSheet {
             case .leggTilKlasse:
@@ -159,18 +152,18 @@ struct klasseVisning: View {
     }
     
     func slettKlasseFraListe(klasse: Klasser) async {
+        let midlertidigKlasse = klasser.first(where: {$0.id == klasse.id}) ?? Klasser(id: klasse.id, navn: klasse.navn, skoleår: klasse.skoleår)
         await withErrorReporting {
             try await database.write { db in
-                let midlertidigKlasse = klasser.first(where: {$0.id == klasse.id}) ?? Klasser(id: klasse.id, navn: klasse.navn, skoleår: klasse.skoleår)
                 try Klasser.delete(midlertidigKlasse).execute(db)
             }
         }
     }
     
     func slettPrøveFraKlasse(prøve: Prover) async {
+        let midlertidigPrøve = prøver.first(where: {$0.id == prøve.id}) ?? Prover(id: prøve.id, navn: prøve.navn, visEleverKarakter: prøve.visEleverKarakter, klasseId: prøve.klasseId)
         await withErrorReporting {
             try await database.write { db in
-                let midlertidigPrøve = prøver.first(where: {$0.id == prøve.id}) ?? Prover(id: prøve.id, navn: prøve.navn, visEleverKarakter: prøve.visEleverKarakter, klasseId: prøve.klasseId)
                 try Prover.delete(midlertidigPrøve).execute(db)
             }
         }

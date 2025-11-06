@@ -39,7 +39,7 @@ struct ContentView: View {
                         })
                         .keyboardShortcut("k")
                         Button(action: {
-                            viserSheet = .velgtInstillinger
+                            viserSheet = .velgtInstillinger(proveID: valgtPrøveID)
                             
                         }, label: {
                             Image(systemName: "gear")
@@ -90,13 +90,15 @@ struct ContentView: View {
                         .keyboardShortcut("p")
                     }
                     .buttonStyle(.borderedProminent)
-                    
                     .fullScreenCover(item: $viserSheet, onDismiss: {viserSheet = nil}){ viserSheet in
                         switch viserSheet{
                         case .valgtKategorier:
                             kategoriView(viserSheet: $viserSheet, valgtPrøveID: valgtPrøveID).environment(klasseoversikt)
                         case .velgtInstillinger:
                             instillinger(valgtPrøveID: valgtPrøveID, visElevTilbakemleding: $viserSheet).environment(klasseoversikt)
+                                .onAppear {
+                                    print("velgtInstillinger: \(String(describing: valgtPrøveID))")
+                                }
                         case .velgtKlassesammendrag:
                             Klassesammendrag(visElevTilbakemleding: $viserSheet, prøveId: valgtPrøveID)
                         case .viserProgressView:
@@ -110,6 +112,7 @@ struct ContentView: View {
                     ScrollView(.horizontal) {
                         poengTabellView(prøveID: valgtPrøveID)
                             .padding([.bottom, .leading, .trailing])
+
                     }
                     
                 }

@@ -12,7 +12,7 @@ struct deltakerRadView: View {
     var oppgaver: [Oppgaver]
     var prøveID: Prover.ID
     @Binding var poenger: [(Poenger, Prover.ID)]
-    @Binding var indeks: Int
+    var indeks: Int
     @Binding var visElevTilbakemleding: VisElevTilbakemleding?
     @State var endretPoeng: Int = 0
     
@@ -40,9 +40,6 @@ struct deltakerRadView: View {
             sumCelle(prøveId: prøveID, oppgaver: oppgaver, poenger: $poenger, deltaker: deltaker, indeks: indeks, endretPoeng: $endretPoeng)
             karakterCeller(prøveID: prøveID, deltaker: deltaker, oppgaver: oppgaver, poenger: $poenger, indeks: indeks, endretPoeng: $endretPoeng)
             
-        }
-        .onAppear {
-            indeks = indeks + 1
         }
     }
 }

@@ -37,7 +37,7 @@ struct kategoriView: View {
                 }
                 ForEach(kategorier){ kategori in
                     GridRow() {
-                        Text(kategori.navn)
+                        kategorierRad(kategori: kategori)
                             .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
                             .border(.primary)
                             .background(.orange)
@@ -48,6 +48,23 @@ struct kategoriView: View {
                                                        oppgaveKategoriId: oppgaverKategorier.first(where: {$0.0.KategoriId == kategori.id && $0.0.OppgaveId == oppgave.id})?.0.id
                             )
                         }
+                    }
+                }
+                GridRow {
+                    Button {
+                        Task {
+                            await leggTilKategori()
+                            await hentKategorierForProve()
+                        }
+                    } label: {
+                        Image(systemName: "plus.circle").foregroundColor(.green)
+                    }
+                    .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
+                    .border(.primary)
+                    ForEach(oppgaver){oppgave in
+                        Color.green.gridCellUnsizedAxes([.horizontal, .vertical])
+                            .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
+                            .border(.primary)
                     }
                 }
             }
@@ -93,6 +110,15 @@ struct kategoriView: View {
                     .where{ $1.proveId == self.valgtPrøveID }
                     .select{($0, $1.proveId)}
                     .fetchAll(db)
+            }
+        }
+    }
+    
+    func leggTilKategori() async {
+        let nyKategori = Kategorier(id: UUID().uuidString, navn: "Ny ketegori", proveId: valgtPrøveID)
+        await withErrorReporting {
+            try await database.write { db in
+                try Kategorier.insert{nyKategori}.execute(db)
             }
         }
     }

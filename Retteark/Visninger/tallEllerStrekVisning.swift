@@ -14,7 +14,7 @@ struct tallEllerStrekVisning: View {
     
     var body: some View {
         TextField(tittel, text: $tekst)
-            .onChange(of: tittel) {
+            .onChange(of: tekst) {
                 endretTall(nyVerdi: tekst)
             }
     }
