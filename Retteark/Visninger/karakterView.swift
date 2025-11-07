@@ -87,7 +87,7 @@ struct karakterView: View {
         formatter.numberStyle = .decimal
         formatter.decimalSeparator = "."
         formatter.groupingSeparator = ""
-        let poeng = poenger.first(where: {$0.0.oppgaveId == oppgaveId})?.0.poeng
+        let poeng = poenger.first(where: {$0.0.oppgaveId == oppgaveId && $0.0.deltakerId == deltaker.id})?.0.poeng
         if let poeng = poeng {
             if let poengVerdi = formatter.number(from: poeng)?.doubleValue {
                 return poengVerdi
