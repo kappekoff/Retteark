@@ -14,8 +14,8 @@
             filePath = "Visninger/elevKategoriVisning.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "202"
-            endingLineNumber = "202"
+            startingLineNumber = "203"
+            endingLineNumber = "203"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -380,8 +380,8 @@
             filePath = "Visninger/elevKategoriVisning.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "235"
-            endingLineNumber = "235"
+            startingLineNumber = "236"
+            endingLineNumber = "236"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -480,36 +480,22 @@
             endingLineNumber = "41"
             landmarkName = "sumAvPoeng()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "7A2BD9C2-5F42-40A6-839C-0952C1DD64B8 - 9b023255ff9328ec"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Retteark.sumCelle.sumAvPoeng() -&gt; Swift.String"
-                  moduleName = "Retteark.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/steinangelbraseth/Retteark/Retteark/Visninger/sumCelle.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "41"
-                  endingLineNumber = "41">
-               </Location>
-               <Location
-                  uuid = "7A2BD9C2-5F42-40A6-839C-0952C1DD64B8 - 9b023255ff9328ec"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Retteark.sumCelle.sumAvPoeng() -&gt; Swift.String"
-                  moduleName = "Retteark.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/steinangelbraseth/Retteark/Retteark/Visninger/sumCelle.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "41"
-                  endingLineNumber = "41">
-               </Location>
-            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8C5C42CE-50DD-4C95-BA49-AB8BB6230A2A"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Visninger/karakterView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "63"
+            endingLineNumber = "63"
+            landmarkName = "body"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

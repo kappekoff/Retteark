@@ -59,7 +59,7 @@ struct karakterView: View {
                     .border(.black)
                     .background(indeks % 2 == 1 ? Color.background:.orange)
                     .multilineTextAlignment(.center)
-                    .onAppear() {
+                    .task() {
                         karakter =  finnKarakter()
                     }
                     .onChange(of: endretPoeng) {

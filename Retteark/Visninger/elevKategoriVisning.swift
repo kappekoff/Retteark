@@ -161,6 +161,7 @@ struct hovedinnhold: View {
   
     var lagerPDF: Bool = false
     @State var fargeIndex: Int = 0
+    @State var endretPoeng = 0
 
     @State var framovermelding: String = ""
     let kategoriKolonner = [GridItem(.fixed(150)), GridItem(.fixed(150)), GridItem(.fixed(150))]
@@ -232,11 +233,16 @@ struct hovedinnhold: View {
             if(prøve.visEleverKarakter){
                 HStack {
                     Text("Karakter: ")
-                    karakterView(prøveId: prøve.id, deltaker: deltaker, oppgaver: oppgaver, poenger: $poenger, indeks: 1, låstKarakter: Binding.constant(deltaker.låstKarakter), endretPoeng: Binding.constant(0)  )
+                    karakterView(prøveId: prøve.id, deltaker: deltaker, oppgaver: oppgaver, poenger: $poenger, indeks: 1, låstKarakter: Binding.constant(deltaker.låstKarakter), endretPoeng: $endretPoeng )
                 }
             }
                 
-        }.padding(20).frame(width: 500)
+        }
+        .padding(20)
+        .frame(width: 500)
+        .onChange(of: poenger.count){
+            endretPoeng += 1
+        }
     }
     
     

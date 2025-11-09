@@ -13,16 +13,13 @@ struct karakterLa_sView: View {
     
     var deltaker: Deltakere
     var indeks: Int
-    
     @Binding var låstKarakter: Bool
-
+    
     
     var body: some View {
         Button(action: {
-            låstKarakter.toggle()
-            låsKarakarakterForDeltaker()
             Task {
-                låstKarakter = deltaker.låstKarakter
+                await låsKarakarakterForDeltaker()
             }
         }, label: {
             Image(systemName: låstKarakter ? "lock.fill" : "lock.open.fill")
@@ -33,16 +30,18 @@ struct karakterLa_sView: View {
         .border(.black)
         .background(indeks % 2 == 1 ? Color.background:.orange)
         .multilineTextAlignment(.center)
-        .task{
+        .onAppear {
             låstKarakter = deltaker.låstKarakter
         }
+
     }
     
-    func låsKarakarakterForDeltaker() {
+    func låsKarakarakterForDeltaker() async {
+        låstKarakter.toggle()
+        var midlertidigDeltaker = deltaker
+        midlertidigDeltaker.låstKarakter = låstKarakter
         withErrorReporting {
             try database.write { db in
-                var midlertidigDeltaker = deltaker
-                midlertidigDeltaker.låstKarakter.toggle()
                 try Deltakere.update(midlertidigDeltaker).execute(db)
             }
         }
