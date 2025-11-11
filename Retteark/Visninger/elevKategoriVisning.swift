@@ -9,107 +9,27 @@ import SwiftUI
 import SharingGRDB
 
 struct elevTilbakemeldingVisning: View {
-    @Dependency(\.defaultDatabase) var database
 
     @Binding var visElevTilbakemleding:VisElevTilbakemleding?
     var lagerPDF: Bool = false
     
-    var deltakerId: Deltakere.ID
-    var prøveId: Prover.ID
-    @State var deltaker: Deltakere? = nil
-    @State var prøve: Prover? = nil
-    @State var oppgaver : [Oppgaver] = []
-    @State var kategorier: [Kategorier] = []
-    @State var poenger: [(Poenger, Prover.ID)] = []
-    @State var oppgaverKategorier: [(OppgaverKategorier, Oppgaver)] = []
+    var deltaker: Deltakere
+    var prøve: Prover
+    var oppgaver : [Oppgaver]
+    var kategorier: [Kategorier]
+    @Binding var poenger: [(Poenger, Prover.ID)]
+    var oppgaverKategorier: [(OppgaverKategorier, Oppgaver)]
     
     var body: some View {
 
         ScrollView {
-            if let deltaker = deltaker, let prøve = prøve {
-                VStack {
-                    top(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier,poenger: $poenger, oppgaverKategorier: oppgaverKategorier, visElevTilbakemleding: $visElevTilbakemleding)
-                    hovedinnhold(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier, poenger: $poenger, oppgaverKategorier: oppgaverKategorier, visElevTilbakemleding: $visElevTilbakemleding,  lagerPDF: false)
-                }
-                
+            VStack {
+                top(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier,poenger: $poenger, oppgaverKategorier: oppgaverKategorier, visElevTilbakemleding: $visElevTilbakemleding)
+                hovedinnhold(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier, poenger: $poenger, oppgaverKategorier: oppgaverKategorier, visElevTilbakemleding: $visElevTilbakemleding,  lagerPDF: false)
             }
-            else {
-                Text("Fant ikke elev/prøve")
-            }
-          
         }
         Button("Lukk") {
             visElevTilbakemleding = nil
-        }
-        .task {
-            await hentDeltaker()
-            await hentPrøve()
-            await hentOppgaver()
-            await hentKategorier()
-            await hentPoenger()
-            await hentOppgaverKategorierForProve()
-        }
-    }
-    
-    func hentPoenger() async {
-         await withErrorReporting {
-             try await database.read { db in
-                 poenger = try Poenger.join(Oppgaver.all) {$0.oppgaveId == $1.id}
-                     .where{$0.deltakerId.eq(deltakerId) && $1.proveId.eq(prøveId)}
-                     .select {($0, $1.proveId)}
-                     .fetchAll(db)
-             }
-         }
-     }
-     
-     func hentOppgaverKategorierForProve() async {
-         await withErrorReporting {
-             try await database.read { db in
-                 oppgaverKategorier = try OppgaverKategorier.join(Oppgaver.all) { $0.OppgaveId == $1.id }
-                     .where{ $1.proveId.eq(prøveId) }
-                     .select{($0, $1)}
-                     .fetchAll(db)
-             }
-         }
-     }
-    
-    func hentDeltaker() async {
-        await withErrorReporting {
-            try await database.read { db in
-                deltaker = try Deltakere
-                    .where{$0.id == deltakerId}
-                    .fetchOne(db)
-            }
-        }
-    }
-    
-    func hentPrøve() async {
-        await withErrorReporting {
-            try await database.read { db in
-                prøve = try Prover
-                    .where{$0.id == prøveId}
-                    .fetchOne(db)
-            }
-        }
-    }
-    
-    func hentOppgaver() async {
-        await withErrorReporting {
-            try await database.read { db in
-                oppgaver = try Oppgaver
-                    .where{$0.proveId == prøveId}
-                    .fetchAll(db)
-            }
-        }
-    }
-    
-    func hentKategorier() async {
-        await withErrorReporting {
-            try await database.read { db in
-                kategorier = try Kategorier
-                    .where{$0.proveId == prøveId}
-                    .fetchAll(db)
-            }
         }
     }
 }

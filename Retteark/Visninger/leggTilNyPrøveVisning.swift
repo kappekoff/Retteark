@@ -9,7 +9,6 @@ import SwiftUI
 import SharingGRDB
 
 struct leggTilNyPr_veVisning: View {
-    @Environment(Klasseoversikt.self) var klasseoversikt
     @Dependency(\.defaultDatabase) var database
     var klasseID: String
     @Binding var visKlassevisningSheet: VisKlassevisningSheet?
@@ -22,7 +21,6 @@ struct leggTilNyPr_veVisning: View {
     @FetchAll var elever: [Elever] = []
     
     var body: some View {
-        @Bindable var klasseoversikt = klasseoversikt
         NavigationStack {
             Text("Legg til ny prøve").font(.largeTitle)
             Section("Om prøven"){

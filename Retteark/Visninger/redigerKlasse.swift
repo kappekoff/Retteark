@@ -14,7 +14,6 @@ struct redigerKlasse: View {
     
     var valgtKlasseID: Klasser.ID
     
-    @Environment(Klasseoversikt.self) var klasseoversikt
     @State private var tekstFraVisma: String = ""
     @Dependency(\.defaultDatabase) var database
     @Binding var visKlassevisningSheet:VisKlassevisningSheet?
@@ -28,9 +27,7 @@ struct redigerKlasse: View {
     
     
     
-    var body: some View {
-        @Bindable var klasseoversikt = klasseoversikt
-        
+    var body: some View {        
         VStack {
             NavigationStack {
                 

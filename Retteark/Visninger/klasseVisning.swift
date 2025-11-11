@@ -10,7 +10,6 @@ import SharingGRDB
 
 struct klasseVisning: View {
     
-    @Environment(Klasseoversikt.self) var klasseoversikt
     @State private var visSideKolonner = NavigationSplitViewVisibility.all
     @State private var valgtKlasseID: Klasser.ID?
     @State private var valgtPrøveID: Prover.ID?
@@ -60,9 +59,6 @@ struct klasseVisning: View {
                     } label: {
                         Image(systemName: "plus.circle").foregroundColor(.green)
                     }
-                }
-                ToolbarItem(placement: .bottomBar) {
-                    Text(.init("**Sist lagret:** " + (klasseoversikt.klasseinformasjon.lagret_tidspunkt?.formatted() ?? "")))
                 }
             }
             .toolbar(removing: .sidebarToggle)
@@ -137,15 +133,15 @@ struct klasseVisning: View {
         .fullScreenCover(item: $visKlassevisningSheet, onDismiss: {visKlassevisningSheet = nil}) { visKlassevisningSheet in
             switch visKlassevisningSheet {
             case .leggTilKlasse:
-                leggTilNyKlasseVisning(tekstFraVisma: "", klasseNavn: "", skoleÅr: "",  visKlassevisningSheet: $visKlassevisningSheet).environment(klasseoversikt)
+                leggTilNyKlasseVisning(tekstFraVisma: "", klasseNavn: "", skoleÅr: "",  visKlassevisningSheet: $visKlassevisningSheet)
             case .leggTilPrøve:
                 if let valgtKlasseID = valgtKlasseID {
-                    leggTilNyPr_veVisning(klasseID: valgtKlasseID,  visKlassevisningSheet: $visKlassevisningSheet).environment(klasseoversikt)
+                    leggTilNyPr_veVisning(klasseID: valgtKlasseID,  visKlassevisningSheet: $visKlassevisningSheet)
                 }
             case .redigerKlasse(let klasseid):
-                redigerKlasse(valgtKlasseID: klasseid, visKlassevisningSheet: $visKlassevisningSheet).environment(klasseoversikt)
+                redigerKlasse(valgtKlasseID: klasseid, visKlassevisningSheet: $visKlassevisningSheet)
             case .redigerPrøve( let prøveid):
-                redigerPr_ve(prøveId: prøveid, visKlassevisningSheet: $visKlassevisningSheet).environment(klasseoversikt)
+                redigerPr_ve(prøveId: prøveid, visKlassevisningSheet: $visKlassevisningSheet)
                 
             }
         }

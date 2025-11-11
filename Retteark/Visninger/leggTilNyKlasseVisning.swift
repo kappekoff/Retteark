@@ -9,7 +9,6 @@ import SwiftUI
 import SharingGRDB
     
 struct leggTilNyKlasseVisning: View {
-    @Environment(Klasseoversikt.self) var klasseoversikt
     @Dependency(\.defaultDatabase) var database
     @State var tekstFraVisma: String
     @State var klasseNavn: String
@@ -18,7 +17,6 @@ struct leggTilNyKlasseVisning: View {
     @Binding var visKlassevisningSheet: VisKlassevisningSheet?
     
     var body: some View {
-        @Bindable var klasseoversikt = klasseoversikt
         NavigationStack {
             TextInputField(title: "Klassenavn", text: $klasseNavn)
             TextInputField(title: "Skoleår", text: $skoleÅr)

@@ -10,7 +10,6 @@ import SharingGRDB
 
 struct redigerPr_ve: View {
     var prøveId: Prover.ID
-    @Environment(Klasseoversikt.self) var klasseoversikt
     @Binding var visKlassevisningSheet:VisKlassevisningSheet?
     
     @Dependency(\.defaultDatabase) var database
@@ -21,7 +20,6 @@ struct redigerPr_ve: View {
     @State var oppgaver: [Oppgaver] = []
     @State var prøve: Prover? = nil
     var body: some View {
-        @Bindable var klasseoversikt = klasseoversikt
         NavigationStack {
             Section("Om prøven"){
                 TextInputField(title: "Prøvenavn", text: $prøvenavn)
@@ -56,7 +54,6 @@ struct redigerPr_ve: View {
         }
         HStack {
             Button("Lukk") {
-                klasseoversikt.lagreKlasser()
                 visKlassevisningSheet = nil
             }
         }

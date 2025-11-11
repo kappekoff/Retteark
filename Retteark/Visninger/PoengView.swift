@@ -9,7 +9,6 @@ import SwiftUI
 import SharingGRDB
 
 struct PoengView: View {
-    @Environment(Klasseoversikt.self) var klasseoversikt
     @Dependency(\.defaultDatabase) var database
 
     var deltaker: Deltakere

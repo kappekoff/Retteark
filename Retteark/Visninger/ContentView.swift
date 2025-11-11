@@ -10,23 +10,26 @@ import SharingGRDB
 
 
 struct ContentView: View {
-    
-    @Environment(Klasseoversikt.self) var klasseoversikt
     @Dependency(\.defaultDatabase) var database
-    var valgtKlasseID: Klasse.ID?
-    var valgtPrøveID: Prøve.ID?
+    var valgtKlasseID: Klasser.ID?
+    var valgtPrøveID: Prover.ID?
     
     @State var valgtKlasse: Klasser? = nil
     @State var valgtPrøve: Prover? = nil
-    @State var proveDeltakere: [Elever] = []
+    
+    @State var prøve: Prover? = nil
+    @State var oppgaver: [Oppgaver] = []
+    @State var deltakere: [Deltakere] = []
+    @State var poenger: [(Poenger, Prover.ID)] = []
+    @State var kategorier: [Kategorier]
+    @State var oppgaverKategorier: [(OppgaverKategorier, Oppgaver)]
     
     @State var viserSheet: VisElevTilbakemleding? = nil
     @State var visFilvelger: Bool = false
     @State var tilbakemledingerLaget: Double = 0.0
-  
+    
     
     var body: some View {
-        @Bindable var klasseoversikt = klasseoversikt
         if let valgtKlasseID = valgtKlasseID {
             if let valgtPrøveID = valgtPrøveID {
                 VStack {
@@ -45,42 +48,35 @@ struct ContentView: View {
                             Image(systemName: "gear")
                         })
                         .keyboardShortcut("i")
-                        Button(action: {
-                            klasseoversikt.lagreKlasser()
-                        }, label: {
-                            Image(systemName: "square.and.arrow.down")
-                        })
-                        .keyboardShortcut("s")
-                        /*Button {
-                          visFilvelger.toggle()
-                        } label: {
-                          Image(systemName: "square.and.arrow.up.circle.fill")
-                        }
-                        .fileExporter(isPresented: $visFilvelger, documents: [PDFDocument(pdfData: Data())], contentType: .directory) { result in
-                          switch result {
-                           case .success(let file):
-                            viserSheet = .viserProgressView
-                            let dataPath = file.first!.deletingLastPathComponent().appendingPathComponent("\(file.first!.deletingPathExtension().lastPathComponent)")
-                            do {
-                              try FileManager.default.removeItem(at: file.first!)
-                              try FileManager.default.createDirectory(atPath: dataPath.path, withIntermediateDirectories: true, attributes: nil)
-                            } catch {
-                                print(error.localizedDescription)
-                            }
-                            tilbakemledingerLaget = 0
-                            
-                            for deltaker in proveDeltakere {
-                              lagPDF(innhold:VStack {
-                                top(elev: elev, prøve: valgtPrøve, visElevTilbakemleding: $viserSheet)
-                                hovedinnhold(elev: elev, visElevTilbakemleding: $viserSheet , prøve: valgtPrøve, lagerPDF: true)
-                              }, filplassering: dataPath.appendingPathComponent("\(valgtPrøve.navn)_\(elev.navn).pdf", conformingTo: .pdf))
-                              tilbakemledingerLaget = Double(1/valgtPrøve.elever.count)
-                            }
-                            viserSheet = nil
-                           case .failure(let error):
-                            print(error)
+                        Button {
+                            visFilvelger.toggle()
+                         } label: {
+                             Image(systemName: "square.and.arrow.up.circle.fill")
                          }
-                       }*/
+                         .fileExporter(isPresented: $visFilvelger, documents: [PDFDocument(pdfData: Data())], contentType: .directory) { result in
+                             switch result {
+                             case .success(let file):
+                                 viserSheet = .viserProgressView
+                                 let dataPath = file.first!.deletingLastPathComponent().appendingPathComponent("\(file.first!.deletingPathExtension().lastPathComponent)")
+                             do {
+                                 try FileManager.default.removeItem(at: file.first!)
+                                 try FileManager.default.createDirectory(atPath: dataPath.path, withIntermediateDirectories: true, attributes: nil)
+                             } catch {
+                                 print(error.localizedDescription)
+                             }
+                             for deltaker in deltakere {
+                                 if let prøve = prøve {
+                                     lagPDF(innhold: VStack {
+                                         Text(deltaker.navn).font(.largeTitle)
+                                         hovedinnhold(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier, poenger: $poenger, oppgaverKategorier: oppgaverKategorier, visElevTilbakemleding: Binding.constant(.valgtElev(deltaker: deltaker)), lagerPDF: true)
+                                     }, filplassering: dataPath.appendingPathComponent("\(prøve.navn)_\(deltaker.navn).pdf", conformingTo: .pdf))
+                                 }
+                             }
+                             viserSheet = nil
+                             case .failure(let error):
+                             print(error)
+                             }
+                         }
                         Button(action: {
                             viserSheet = .velgtKlassesammendrag
                             
@@ -93,9 +89,9 @@ struct ContentView: View {
                     .fullScreenCover(item: $viserSheet, onDismiss: {viserSheet = nil}){ viserSheet in
                         switch viserSheet{
                         case .valgtKategorier:
-                            kategoriView(viserSheet: $viserSheet, valgtPrøveID: valgtPrøveID).environment(klasseoversikt)
+                            kategoriView(viserSheet: $viserSheet, valgtPrøveID: valgtPrøveID)
                         case .velgtInstillinger:
-                            instillinger(valgtPrøveID: valgtPrøveID, visElevTilbakemleding: $viserSheet).environment(klasseoversikt)
+                            instillinger(valgtPrøveID: valgtPrøveID, visElevTilbakemleding: $viserSheet)
                                 .onAppear {
                                     print("velgtInstillinger: \(String(describing: valgtPrøveID))")
                                 }
@@ -103,22 +99,37 @@ struct ContentView: View {
                             Klassesammendrag(visElevTilbakemleding: $viserSheet, prøveId: valgtPrøveID)
                         case .viserProgressView:
                             ProgressView("Lagrer tilbakemeldinger", value: tilbakemledingerLaget)
-                              .progressViewStyle(.circular)
+                                .progressViewStyle(.circular)
                             
                         default:
                             Text("Du skal aldri komme hit")
                         }
                     }
                     ScrollView(.horizontal) {
-                        poengTabellView(prøveID: valgtPrøveID)
+                        poengTabellView(prøve: $prøve, oppgaver: $oppgaver, deltakere: $deltakere, poenger: $poenger, kategorier: $kategorier, oppgaverKategorier: $oppgaverKategorier)
                             .padding([.bottom, .leading, .trailing])
-
+                        
                     }
                     
                 }
                 .task {
-                    await hentKlasse()
                     await hentPrøve()
+                    await hentOppgaver()
+                    await hentDeltakere()
+                    await hentPoenger()
+                    await hentKategorier()
+                    await hentOppgaverKategorierForProve()
+                }
+                .onChange(of: valgtPrøveID)  {
+                    Task {
+                        await hentPrøve()
+                        await hentOppgaver()
+                        await hentDeltakere()
+                        await hentPoenger()
+                        await hentKategorier()
+                        await hentOppgaverKategorierForProve()
+                    }
+                    
                 }
             }
             else {
@@ -127,23 +138,67 @@ struct ContentView: View {
         }
     }
     
-    func hentKlasse() async {
-        await withErrorReporting {
-            try await database.read { db in
-                valgtKlasse = try Klasser
-                    .where { $0.id == self.valgtKlasseID}
-                    .fetchOne(db)
-            }
-        }
-    }
-    
     func hentPrøve() async {
         await withErrorReporting {
             try await database.read { db in
-                valgtPrøve = try Prover
+                prøve = try Prover
                     .where { $0.id == self.valgtPrøveID}
                     .fetchOne(db)
             }
         }
     }
+    
+    func hentOppgaver() async {
+        await withErrorReporting {
+            try await database.read { db in
+                oppgaver = try Oppgaver
+                    .where { $0.proveId == self.valgtPrøveID}
+                    .fetchAll(db)
+            }
+        }
+    }
+    
+    func hentDeltakere() async {
+        await withErrorReporting {
+            try await database.read { db in
+                deltakere = try Deltakere
+                    .where { $0.proveId == self.valgtPrøveID}
+                    .fetchAll(db)
+            }
+        }
+    }
+    
+    func hentPoenger() async {
+        await withErrorReporting {
+            try await database.read { db in
+                poenger = try Poenger.join(Oppgaver.all) {$0.oppgaveId == $1.id}
+                    .where{$1.proveId.eq(valgtPrøveID ?? "ingenvalgtPRøveID")}
+                    .select {($0, $1.proveId)}
+                    .fetchAll(db)
+            }
+        }
+    }
+    
+    func hentOppgaverKategorierForProve() async {
+        await withErrorReporting {
+            try await database.read { db in
+                oppgaverKategorier = try OppgaverKategorier.join(Oppgaver.all) { $0.OppgaveId == $1.id }
+                    .where{ $1.proveId.eq(valgtPrøveID ?? "ingenvalgtPRøveID") }
+                    .select{($0, $1)}
+                    .fetchAll(db)
+            }
+        }
+    }
+   
+   
+   func hentKategorier() async {
+       await withErrorReporting {
+           try await database.read { db in
+               kategorier = try Kategorier
+                   .where{$0.proveId == valgtPrøveID ?? "ingenvalgtPRøveID"}
+                   .fetchAll(db)
+           }
+       }
+   }
+    
 }

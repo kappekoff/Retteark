@@ -10,7 +10,6 @@ import SharingGRDB
 
 
 struct kategoriView: View {
-    @Environment(Klasseoversikt.self) var klasseoversikt
     
     @Binding var viserSheet: VisElevTilbakemleding?
     var valgtPrøveID: Prover.ID
@@ -74,9 +73,7 @@ struct kategoriView: View {
                 await hentoppgaverForProve()
                 
             }
- 
             Button("Lukk") {
-                klasseoversikt.lagreKlasser()
                 viserSheet = nil
             }
         }

@@ -20,7 +20,6 @@ struct RettearkApp: App {
     var body: some Scene {
         WindowGroup {
             klasseVisning()
-                .environment(Klasseoversikt())
         }
     }
     

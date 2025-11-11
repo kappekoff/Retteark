@@ -10,11 +10,12 @@ import SharingGRDB
 
 struct poengTabellView: View {
     @Dependency(\.defaultDatabase) var database
-    var prøveID: Prover.ID
-    @State var prøve: Prover? = nil
-    @State var oppgaver: [Oppgaver] = []
-    @State var deltakere: [Deltakere] = []
-    @State var poenger: [(Poenger, Prover.ID)] = []
+    @Binding var prøve: Prover?
+    @Binding var oppgaver: [Oppgaver]
+    @Binding var deltakere: [Deltakere]
+    @Binding var poenger: [(Poenger, Prover.ID)]
+    @Binding var kategorier: [Kategorier]
+    @Binding var oppgaverKategorier: [(OppgaverKategorier, Oppgaver)]
     
     
     
@@ -53,11 +54,17 @@ struct poengTabellView: View {
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: 50).font(.title).border(.primary).fontWeight(.bold).background(.gray)
             
             ForEach(Array(deltakere.enumerated()), id: \.element.id){ indeks, deltaker in
-                deltakerRadView(deltaker: deltaker, oppgaver: oppgaver, prøveID: prøveID, poenger: $poenger, indeks: indeks, visElevTilbakemleding: $visElevTilbakemleding)
+                deltakerRadView(deltaker: deltaker, oppgaver: oppgaver, prøveID: prøve?.id ?? "", poenger: $poenger, indeks: indeks, visElevTilbakemleding: $visElevTilbakemleding)
                     .fullScreenCover(item: $visElevTilbakemleding, onDismiss: { visElevTilbakemleding = nil }) { visElevTilbakemleding in
                         switch visElevTilbakemleding{
                         case .valgtElev(let valgtDeltaker):
-                            elevTilbakemeldingVisning(visElevTilbakemleding: $visElevTilbakemleding, deltakerId: valgtDeltaker.id, prøveId: prøveID)
+                            if let prøve = prøve {
+                                elevTilbakemeldingVisning(visElevTilbakemleding: $visElevTilbakemleding, lagerPDF: false, deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier, poenger: $poenger, oppgaverKategorier: oppgaverKategorier)
+                            }
+                            else {
+                                Text("Fant ikke prøve")
+                            }
+                            
                         default:
                             Text("Du skal aldri komme hit")
                         }
@@ -68,66 +75,9 @@ struct poengTabellView: View {
         .onAppear() {
             fokus_posisjon = [0, 0]
             fokus = .poengFokus(id: fokus_posisjon)
-            Task {
-                await hentPrøve()
-                await hentOppgaver()
-                await hentDeltakere()
-                await hentPoenger()
-            }
-        }
-        .onChange(of: prøveID)  {
-            fokus_posisjon = [0, 0]
-            fokus = .poengFokus(id: fokus_posisjon)
-            Task {
-                await hentPrøve()
-                await hentOppgaver()
-                await hentDeltakere()
-                await hentPoenger()
-            }
-            
         }
     }
     
-    func hentPrøve() async {
-        await withErrorReporting {
-            try await database.read { db in
-                prøve = try Prover
-                    .where { $0.id == self.prøveID}
-                    .fetchOne(db)
-            }
-        }
-    }
-    
-    func hentOppgaver() async {
-        await withErrorReporting {
-            try await database.read { db in
-                oppgaver = try Oppgaver
-                    .where { $0.proveId == self.prøveID}
-                    .fetchAll(db)
-            }
-        }
-    }
-    
-    func hentDeltakere() async {
-        await withErrorReporting {
-            try await database.read { db in
-                deltakere = try Deltakere
-                    .where { $0.proveId == self.prøveID}
-                    .fetchAll(db)
-            }
-        }
-    }
-    
-    func hentPoenger() async {
-         await withErrorReporting {
-             try await database.read { db in
-                 poenger = try Poenger.join(Oppgaver.all) {$0.oppgaveId == $1.id}
-                     .where{$1.proveId.eq(prøveID)}
-                     .select {($0, $1.proveId)}
-                     .fetchAll(db)
-             }
-         }
-     }
 }
 
 struct oppgaveNavnCelle: View {

@@ -9,7 +9,6 @@ import SwiftUI
 import SharingGRDB
 
 struct instillinger: View {
-    @Environment(Klasseoversikt.self) var klasseoversikt
     @Dependency(\.defaultDatabase) var database
     var valgtPrøveID: Prover.ID
     @State var prøve: Prover? = nil
@@ -101,7 +100,6 @@ struct instillinger: View {
             visEleverKarakter = prøve?.visEleverKarakter ?? false
         }
         Button("Lukk") {
-            klasseoversikt.lagreKlasser()
             visElevTilbakemleding = nil
         }
     }

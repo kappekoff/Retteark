@@ -14,11 +14,7 @@ struct Klasse:  Identifiable, Hashable, Codable {
     var id: String = UUID().uuidString
     var navn: String
     var skoleÅr: String
-    var elever: [Elev]
-    var prøver: [Prøve]
-    
-    
-    
+
     init(navn: String, elever: [Elev], skoleÅr: String) {
         self.navn = navn
         self.elever = elever

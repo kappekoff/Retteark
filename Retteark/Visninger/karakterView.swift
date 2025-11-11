@@ -11,7 +11,6 @@ import SharingGRDB
 struct karakterView: View {
     @Dependency(\.defaultDatabase) var database
     
-    
     var prøveId: Prover.ID
     var deltaker: Deltakere
     var oppgaver: [Oppgaver]
@@ -21,7 +20,6 @@ struct karakterView: View {
     @Binding var låstKarakter: Bool
     @Binding var endretPoeng: Int
 
-    
     @State var karakter = ""
     
     
