@@ -11,7 +11,6 @@ import SharingGRDB
 struct karakterView: View {
     @Dependency(\.defaultDatabase) var database
     
-    var prøveId: Prover.ID
     var deltaker: Deltakere
     var oppgaver: [Oppgaver]
     @Binding var poenger: [(Poenger, Prover.ID)]
@@ -37,9 +36,11 @@ struct karakterView: View {
                         withErrorReporting {
                             try database.write { db in
                                 if(deltaker.låstKarakter) {
-                                    let midlertidigDeltaker = Deltakere(id: deltaker.id, navn: deltaker.navn, proveId: prøveId, låstKarakter: true, karakter: newValue, framovermelding: deltaker.framovermelding)
+                                    var midlertidigDeltaker = deltaker
+                                    midlertidigDeltaker.låstKarakter = true
+                                    midlertidigDeltaker.karakter = newValue
                                     try Deltakere.update(midlertidigDeltaker)
-                                            .execute(db)
+                                        .execute(db)
                                 }
                             }
                         }

@@ -54,21 +54,7 @@ struct poengTabellView: View {
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: 50).font(.title).border(.primary).fontWeight(.bold).background(.gray)
             
             ForEach(Array(deltakere.enumerated()), id: \.element.id){ indeks, deltaker in
-                deltakerRadView(deltaker: deltaker, oppgaver: oppgaver, prøveID: prøve?.id ?? "", poenger: $poenger, indeks: indeks, visElevTilbakemleding: $visElevTilbakemleding)
-                    .fullScreenCover(item: $visElevTilbakemleding, onDismiss: { visElevTilbakemleding = nil }) { visElevTilbakemleding in
-                        switch visElevTilbakemleding{
-                        case .valgtElev(let valgtDeltaker):
-                            if let prøve = prøve {
-                                elevTilbakemeldingVisning(visElevTilbakemleding: $visElevTilbakemleding, lagerPDF: false, deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier, poenger: $poenger, oppgaverKategorier: oppgaverKategorier)
-                            }
-                            else {
-                                Text("Fant ikke prøve")
-                            }
-                            
-                        default:
-                            Text("Du skal aldri komme hit")
-                        }
-                    }
+                deltakerRadView(deltaker: deltaker, oppgaver: oppgaver, kategorier: kategorier, oppgaverKategorier: oppgaverKategorier, prøve: prøve, poenger: $poenger, indeks: indeks, visElevTilbakemleding: $visElevTilbakemleding)
                     .font(.title3).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background(indeks % 2 == 1 ? Color.background:.orange)
             }
         }
@@ -94,7 +80,6 @@ struct oppgaveNavnCelle: View {
 
 struct karakterCeller: View {
     
-    var prøveID: Prover.ID
     var deltaker: Deltakere
     var oppgaver: [Oppgaver]
     @Binding var poenger: [(Poenger, Prover.ID)]
@@ -105,7 +90,7 @@ struct karakterCeller: View {
 
     
     var body: some View {
-        karakterView(prøveId: prøveID, deltaker: deltaker, oppgaver: oppgaver, poenger: $poenger, indeks: indeks,låstKarakter: $låstKarakter, endretPoeng: $endretPoeng)
+        karakterView(deltaker: deltaker, oppgaver: oppgaver, poenger: $poenger, indeks: indeks,låstKarakter: $låstKarakter, endretPoeng: $endretPoeng)
         karakterLa_sView(deltaker: deltaker, indeks: indeks, låstKarakter: $låstKarakter)
     }
 }

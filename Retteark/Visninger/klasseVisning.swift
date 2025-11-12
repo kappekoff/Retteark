@@ -62,7 +62,7 @@ struct klasseVisning: View {
                 }
             }
             .toolbar(removing: .sidebarToggle)
-            }content:{
+            } content: {
             if (valgtKlasseID != nil) {
                 List(selection: $valgtPrøveID) {
                     ForEach(prøver){ valgtPrøve in

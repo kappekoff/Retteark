@@ -11,7 +11,6 @@ import SharingGRDB
 struct sumCelle: View {
     @Dependency(\.defaultDatabase) var database
 
-    var prøveId: Prover.ID
     var oppgaver: [Oppgaver]
     @Binding var poenger: [(Poenger, Prover.ID)]
     var deltaker: Deltakere

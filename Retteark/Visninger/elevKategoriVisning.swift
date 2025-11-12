@@ -103,7 +103,7 @@ struct hovedinnhold: View {
                             .frame(width: 50, height: 20, alignment: .center)
                             .border(.primary)
                             .background(.orange)
-                        Text(poenger.first(where: {$0.0.oppgaveId == oppgave.id})?.0.poeng ?? "???")
+                        Text(poenger.first(where: {$0.0.oppgaveId == oppgave.id && $0.0.deltakerId == deltaker.id})?.0.poeng ?? "???")
                             .frame(width: 50, height: 20, alignment: .center)
                             .border(.primary)
                     }
@@ -153,7 +153,7 @@ struct hovedinnhold: View {
             if(prøve.visEleverKarakter){
                 HStack {
                     Text("Karakter: ")
-                    karakterView(prøveId: prøve.id, deltaker: deltaker, oppgaver: oppgaver, poenger: $poenger, indeks: 1, låstKarakter: Binding.constant(deltaker.låstKarakter), endretPoeng: $endretPoeng )
+                    karakterView(deltaker: deltaker, oppgaver: oppgaver, poenger: $poenger, indeks: 1, låstKarakter: Binding.constant(deltaker.låstKarakter), endretPoeng: $endretPoeng )
                 }
             }
                 
@@ -188,7 +188,7 @@ struct hovedinnhold: View {
         var sum: Double = 0
         for oppgave in oppgaver {
             if(oppgaverKategorier.contains(where: {$0.0.KategoriId == kategori.id && $0.0.OppgaveId == oppgave.id})) {
-                if let maksPoengString = poenger.first(where: {$0.0.oppgaveId == oppgave.id})?.0.poeng{
+                if let maksPoengString = poenger.first(where: {$0.0.oppgaveId == oppgave.id && $0.0.deltakerId == deltaker.id})?.0.poeng{
                     if let maksPoeng = formatter.number(from: maksPoengString) as? Double {
                         sum += maksPoeng
                     }

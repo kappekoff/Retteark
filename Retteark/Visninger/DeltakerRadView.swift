@@ -10,7 +10,9 @@ import SwiftUI
 struct deltakerRadView: View {
     var deltaker: Deltakere
     var oppgaver: [Oppgaver]
-    var prøveID: Prover.ID
+    var kategorier: [Kategorier]
+    var oppgaverKategorier: [(OppgaverKategorier, Oppgaver)]
+    var prøve: Prover?
     @Binding var poenger: [(Poenger, Prover.ID)]
     var indeks: Int
     @Binding var visElevTilbakemleding: VisElevTilbakemleding?
@@ -37,8 +39,22 @@ struct deltakerRadView: View {
                  }
                  }*/
             }
-            sumCelle(prøveId: prøveID, oppgaver: oppgaver, poenger: $poenger, deltaker: deltaker, indeks: indeks, endretPoeng: $endretPoeng)
-            karakterCeller(prøveID: prøveID, deltaker: deltaker, oppgaver: oppgaver, poenger: $poenger, indeks: indeks, endretPoeng: $endretPoeng)
+            sumCelle(oppgaver: oppgaver, poenger: $poenger, deltaker: deltaker, indeks: indeks, endretPoeng: $endretPoeng)
+            karakterCeller(deltaker: deltaker, oppgaver: oppgaver, poenger: $poenger, indeks: indeks, endretPoeng: $endretPoeng)
+                .fullScreenCover(item: $visElevTilbakemleding, onDismiss: { visElevTilbakemleding = nil }) { visElevTilbakemleding in
+                    switch visElevTilbakemleding{
+                    case .valgtElev(let valgtDeltaker):
+                        if let prøve = prøve {
+                            elevTilbakemeldingVisning(visElevTilbakemleding: $visElevTilbakemleding, lagerPDF: false, deltaker: valgtDeltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier, poenger: $poenger, oppgaverKategorier: oppgaverKategorier)
+                        }
+                        else {
+                            Text("Fant ikke prøve")
+                        }
+                        
+                    default:
+                        Text("Du skal aldri komme hit")
+                    }
+                }
             
         }
     }

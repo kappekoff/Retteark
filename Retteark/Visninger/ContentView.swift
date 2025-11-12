@@ -21,8 +21,8 @@ struct ContentView: View {
     @State var oppgaver: [Oppgaver] = []
     @State var deltakere: [Deltakere] = []
     @State var poenger: [(Poenger, Prover.ID)] = []
-    @State var kategorier: [Kategorier]
-    @State var oppgaverKategorier: [(OppgaverKategorier, Oppgaver)]
+    @State var kategorier: [Kategorier] = []
+    @State var oppgaverKategorier: [(OppgaverKategorier, Oppgaver)] = []
     
     @State var viserSheet: VisElevTilbakemleding? = nil
     @State var visFilvelger: Bool = false
