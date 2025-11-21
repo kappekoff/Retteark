@@ -13,6 +13,7 @@ struct deltakerRadView: View {
     var kategorier: [Kategorier]
     var oppgaverKategorier: [(OppgaverKategorier, Oppgaver)]
     var prøve: Prover?
+    @FocusState.Binding var fokus: Fokus?
     @Binding var poenger: [(Poenger, Prover.ID)]
     var indeks: Int
     @Binding var visElevTilbakemleding: VisElevTilbakemleding?
@@ -25,19 +26,22 @@ struct deltakerRadView: View {
             }, label: {
                 Text(deltaker.navn)
             })
-            ForEach(oppgaver){ oppgave in
+            ForEach(oppgaver.enumerated(), id: \.element.id){ oppgaveIndeks, oppgave in
                 PoengView(deltaker: deltaker, oppgave: oppgave, poenger: $poenger , endretPoeng: $endretPoeng)
-                /*.focused($fokus, equals: .poengFokus(id: $prøve.poeng[elevIndeks][oppgaveIndeks].id))
-                 .onSubmit {
-                 if(prøve.poeng[elevIndeks][oppgaveIndeks].poeng == "") {
-                 prøve.poeng[elevIndeks][oppgaveIndeks].poeng = String((oppgave.maksPoeng!))
-                 var fokus_posisjon = [elevIndeks, oppgaveIndeks+1]
-                 if(fokus?.get()[1] ?? 0 >= prøve.oppgaver.count - 1) {
-                 fokus_posisjon = [(fokus?.get()[0] ?? 0) + 1, 0]
-                 }
-                 fokus = .poengFokus(id: fokus_posisjon)
-                 }
-                 }*/
+                    .focused($fokus, equals: .poengFokus(id: poenger.first(where: {$0.0.oppgaveId == oppgave.id && $0.0.deltakerId == deltaker.id})?.0.id ?? "fant ikke poeng for denne cellen"))
+                    .onSubmit {
+                        if(poenger.first(where: {$0.0.oppgaveId == oppgave.id && $0.0.deltakerId == deltaker.id})?.0.poeng == "") {
+                            let poengIndeks = poenger.firstIndex(where: {$0.0.oppgaveId == oppgave.id && $0.0.deltakerId == deltaker.id})
+                            guard let poengIndeks = poengIndeks else {
+                                return
+                            }
+                            poenger[poengIndeks].0.poeng = oppgave.maksPoeng != nil ? String(oppgave.maksPoeng!) : ""
+                        }
+                        let nesteOppgave:Oppgaver = oppgaveIndeks >= (oppgaver.count - 1) ? oppgaver[0] : oppgaver[oppgaveIndeks+1]
+                        let nestePoenger:Poenger? = poenger.first(where: {$0.0.oppgaveId == nesteOppgave.id && $0.0.deltakerId == deltaker.id})?.0
+                        let fokus_posisjon: Fokus = .poengFokus(id: nestePoenger?.id ?? "")
+                         fokus = fokus_posisjon
+                    }
             }
             sumCelle(oppgaver: oppgaver, poenger: $poenger, deltaker: deltaker, indeks: indeks, endretPoeng: $endretPoeng)
             karakterCeller(deltaker: deltaker, oppgaver: oppgaver, poenger: $poenger, indeks: indeks, endretPoeng: $endretPoeng)
@@ -55,7 +59,6 @@ struct deltakerRadView: View {
                         Text("Du skal aldri komme hit")
                     }
                 }
-            
         }
     }
 }

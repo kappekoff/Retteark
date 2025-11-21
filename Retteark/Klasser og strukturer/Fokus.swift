@@ -8,7 +8,7 @@
 import Foundation
 
 enum Fokus: Hashable, Identifiable {
-    case poengFokus(id: [Int])
+    case poengFokus(id: Poenger.ID)
     
     var id:String {
         switch self {
@@ -16,7 +16,7 @@ enum Fokus: Hashable, Identifiable {
             return "poengFokus"
         }
     }
-    func get() -> [Int] {
+    func get() -> String {
             switch self {
             case .poengFokus(let posisjon):
                 return posisjon

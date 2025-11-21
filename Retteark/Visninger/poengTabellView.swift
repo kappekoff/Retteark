@@ -22,7 +22,7 @@ struct poengTabellView: View {
     @State var visElevTilbakemleding: VisElevTilbakemleding? = nil
     @State var oppgaveIndeks: Int? = nil
     @State var farge: Bool = false
-    @State var fokus_posisjon: [Int] = [0, 0]
+    @State var fokus_posisjon: String = ""
     @FocusState var fokus: Fokus?
     
     
@@ -54,13 +54,16 @@ struct poengTabellView: View {
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: 50).font(.title).border(.primary).fontWeight(.bold).background(.gray)
             
             ForEach(Array(deltakere.enumerated()), id: \.element.id){ indeks, deltaker in
-                deltakerRadView(deltaker: deltaker, oppgaver: oppgaver, kategorier: kategorier, oppgaverKategorier: oppgaverKategorier, prøve: prøve, poenger: $poenger, indeks: indeks, visElevTilbakemleding: $visElevTilbakemleding)
+                deltakerRadView(deltaker: deltaker, oppgaver: oppgaver, kategorier: kategorier, oppgaverKategorier: oppgaverKategorier, prøve: prøve, fokus: $fokus, poenger: $poenger, indeks: indeks, visElevTilbakemleding: $visElevTilbakemleding)
                     .font(.title3).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background(indeks % 2 == 1 ? Color.background:.orange)
             }
         }
         .onAppear() {
-            fokus_posisjon = [0, 0]
-            fokus = .poengFokus(id: fokus_posisjon)
+            if(poenger.count > 0) {
+                fokus_posisjon = poenger[0].0.id
+                fokus = .poengFokus(id: fokus_posisjon)
+            }
+
         }
     }
     
