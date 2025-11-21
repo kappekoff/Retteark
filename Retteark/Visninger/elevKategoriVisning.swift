@@ -80,7 +80,6 @@ struct hovedinnhold: View {
     @Binding var visElevTilbakemleding:VisElevTilbakemleding?
   
     var lagerPDF: Bool = false
-    @State var fargeIndex: Int = 0
     @State var endretPoeng = 0
 
     @State var framovermelding: String = ""
@@ -110,16 +109,12 @@ struct hovedinnhold: View {
                 }
             }
             LazyVGrid(columns: kategoriKolonner, spacing: 30) {
-                ForEach(kategorier) { kategori in
+                ForEach(Array(kategorier.enumerated()), id: \.element.id) { kategoriIndex, kategori in
                     if(oppgaverKategorier.contains(where: {$0.0.KategoriId == kategori.id})) {
                         VStack {
                             Text(kategori.navn)
-                            kakediagram(desimaltall: kategoriDetakerPoeng(kategori: kategori)/kategoriMaxPoeng(kategori: kategori), farge:farger[fargeIndex])
+                            kakediagram(desimaltall: kategoriDetakerPoeng(kategori: kategori)/kategoriMaxPoeng(kategori: kategori), farge:farger[kategoriIndex % farger.count])
                                     .frame(width: 150, height: 150, alignment: .center)
-                                    .onAppear {
-                                        fargeIndex += 1
-                                        fargeIndex  %= farger.count
-                                    }
                             Text(String(kategoriDetakerPoeng(kategori: kategori)) + "/" + String(kategoriMaxPoeng(kategori: kategori)))
                         }
                     }
