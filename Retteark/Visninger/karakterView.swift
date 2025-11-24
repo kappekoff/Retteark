@@ -29,7 +29,6 @@ struct karakterView: View {
                     .font(.title3)
                     .fontWeight(.bold)
                     .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
-                    .border(.black)
                     .background(indeks % 2 == 1  ? Color.background:.orange)
                     .multilineTextAlignment(.center)
                     .onChange(of: karakter) { _, newValue in
@@ -55,7 +54,6 @@ struct karakterView: View {
                     .font(.title3)
                     .fontWeight(.bold)
                     .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
-                    .border(.black)
                     .background(indeks % 2 == 1 ? Color.background:.orange)
                     .multilineTextAlignment(.center)
                     .onAppear {

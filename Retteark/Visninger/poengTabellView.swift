@@ -94,6 +94,7 @@ struct karakterCeller: View {
     
     var body: some View {
         karakterView(deltaker: deltaker, oppgaver: oppgaver, poenger: $poenger, indeks: indeks,låstKarakter: $låstKarakter, endretPoeng: $endretPoeng)
+            .border(.black)
         karakterLa_sView(deltaker: deltaker, indeks: indeks, låstKarakter: $låstKarakter)
     }
 }
