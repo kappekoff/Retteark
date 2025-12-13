@@ -163,6 +163,7 @@ struct ContentView: View {
             try await database.read { db in
                 deltakere = try Deltakere
                     .where { $0.proveId == self.valgtPrøveID}
+                    .order(by: {$0.navn.lower()})
                     .fetchAll(db)
             }
         }

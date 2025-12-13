@@ -55,7 +55,7 @@ struct poengTabellView: View {
             
             ForEach(Array(deltakere.enumerated()), id: \.element.id){ indeks, deltaker in
                 deltakerRadView(deltaker: deltaker, oppgaver: oppgaver, kategorier: kategorier, oppgaverKategorier: oppgaverKategorier, prøve: prøve, fokus: $fokus, poenger: $poenger, indeks: indeks, visElevTilbakemleding: $visElevTilbakemleding)
-                    .font(.title3).frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50).border(.primary).background(indeks % 2 == 1 ? Color.background:.orange)
+                    .font(.title3).frame(minWidth: 0, maxWidth: 150, minHeight: 0, maxHeight: 50, alignment: .leading).border(.primary).background(indeks % 2 == 1 ? Color.background:.orange)
             }
         }
         .onAppear() {
