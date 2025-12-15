@@ -59,6 +59,7 @@ struct PoengView: View {
                 lagrePoengTimer?.cancel()
                 lagrePoengTimer = Task {
                     try? await Task.sleep(for: .milliseconds(500))
+                    guard !Task.isCancelled else {return}
                     await lagrePoeng()
                 }
             }

@@ -21,47 +21,68 @@ struct karakterView: View {
 
     @State var karakter = ""
     
+    var lagerPDF: Bool = false
+    
     
     var body: some View {
         Group {
-            if(låstKarakter) {
-                TextField("", text: $karakter)
-                    .font(.title3)
-                    .fontWeight(.bold)
-                    .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
-                    .background(indeks % 2 == 1  ? Color.background:.orange)
-                    .multilineTextAlignment(.center)
-                    .onChange(of: karakter) { _, newValue in
-                        withErrorReporting {
-                            try database.write { db in
-                                if(deltaker.låstKarakter) {
-                                    var midlertidigDeltaker = deltaker
-                                    midlertidigDeltaker.låstKarakter = true
-                                    midlertidigDeltaker.karakter = newValue
-                                    try Deltakere.update(midlertidigDeltaker)
-                                        .execute(db)
-                                }
-                            }
-                        }
-                    }
-                    .task {
-                        karakter = deltaker.karakter
-                    }
-                
-            }
-            else{
-                Text(karakter)
+            if (lagerPDF) {
+                Text(deltaker.låstKarakter ? deltaker.karakter : finnKarakter())
                     .font(.title3)
                     .fontWeight(.bold)
                     .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
                     .background(indeks % 2 == 1 ? Color.background:.orange)
                     .multilineTextAlignment(.center)
                     .onAppear {
-                        karakter =  finnKarakter()
+                        karakter = deltaker.låstKarakter ? deltaker.karakter : finnKarakter()
                     }
                     .onChange(of: endretPoeng) {
-                        karakter = finnKarakter()
+                        karakter = deltaker.låstKarakter ? deltaker.karakter : finnKarakter()
                     }
+                    .onChange(of: deltaker) {
+                        karakter = deltaker.låstKarakter ? deltaker.karakter : finnKarakter()
+                    }
+            }
+            else {
+                if(låstKarakter) {
+                    TextField("", text: $karakter)
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
+                        .background(indeks % 2 == 1  ? Color.background:.orange)
+                        .multilineTextAlignment(.center)
+                        .onChange(of: karakter) { _, newValue in
+                            withErrorReporting {
+                                try database.write { db in
+                                    if(deltaker.låstKarakter) {
+                                        var midlertidigDeltaker = deltaker
+                                        midlertidigDeltaker.låstKarakter = true
+                                        midlertidigDeltaker.karakter = newValue
+                                        try Deltakere.update(midlertidigDeltaker)
+                                            .execute(db)
+                                    }
+                                }
+                            }
+                        }
+                        .task {
+                            karakter = deltaker.karakter
+                        }
+                    
+                }
+                else {
+                    Text(karakter)
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
+                        .background(indeks % 2 == 1 ? Color.background:.orange)
+                        .multilineTextAlignment(.center)
+                        .onAppear {
+                            karakter =  finnKarakter()
+                        }
+                        .onChange(of: endretPoeng) {
+                            karakter = finnKarakter()
+                        }
+                }
             }
         }
     }

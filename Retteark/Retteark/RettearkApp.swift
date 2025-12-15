@@ -263,7 +263,7 @@ struct Oppgaver:FetchableRecord, Codable, Identifiable {
 }
 
 @Table("Deltakere")
-struct Deltakere: FetchableRecord, Codable, Identifiable {
+struct Deltakere: FetchableRecord, Codable, Identifiable, Equatable {
     var id: String
     var navn: String
     var proveId: String

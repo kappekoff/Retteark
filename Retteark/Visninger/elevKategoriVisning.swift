@@ -148,7 +148,7 @@ struct hovedinnhold: View {
             if(prøve.visEleverKarakter){
                 HStack {
                     Text("Karakter: ")
-                    karakterView(deltaker: deltaker, oppgaver: oppgaver, poenger: $poenger, indeks: 1, låstKarakter: Binding.constant(deltaker.låstKarakter), endretPoeng: $endretPoeng )
+                    karakterView(deltaker: deltaker, oppgaver: oppgaver, poenger: $poenger, indeks: 1, låstKarakter: Binding.constant(deltaker.låstKarakter), endretPoeng: $endretPoeng, lagerPDF: lagerPDF)
                 }
             }
                 
