@@ -198,7 +198,7 @@ struct Stolpediagram: View {
         
         for deltaker in deltakere {
             for j in 0..<karakterer.count {
-                let karakter =  karakterView(deltaker: deltaker, oppgaver: oppgaver, poenger: $poenger, indeks: 0, låstKarakter: Binding.constant(deltaker.låstKarakter), endretPoeng: Binding.constant(0)).finnKarakter()
+                let karakter =  karakterView(deltaker: deltaker, oppgaver: oppgaver, poenger: $poenger, indeks: 0, låstKarakter: Binding.constant(deltaker.låstKarakter)).finnKarakter()
                 if(karakter == karakterer[j].type){
                     karakterer[j].count += 1
                 }

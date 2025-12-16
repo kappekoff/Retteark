@@ -17,9 +17,12 @@ struct karakterView: View {
     let indeks: Int
     
     @Binding var låstKarakter: Bool
-    @Binding var endretPoeng: Int
 
-    @State var karakter = ""
+    var karakter: String {
+        finnKarakter()
+    }
+    
+    @State var låstkarakter = ""
     
     var lagerPDF: Bool = false
     
@@ -33,25 +36,16 @@ struct karakterView: View {
                     .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
                     .background(indeks % 2 == 1 ? Color.background:.orange)
                     .multilineTextAlignment(.center)
-                    .onAppear {
-                        karakter = deltaker.låstKarakter ? deltaker.karakter : finnKarakter()
-                    }
-                    .onChange(of: endretPoeng) {
-                        karakter = deltaker.låstKarakter ? deltaker.karakter : finnKarakter()
-                    }
-                    .onChange(of: deltaker) {
-                        karakter = deltaker.låstKarakter ? deltaker.karakter : finnKarakter()
-                    }
             }
             else {
                 if(låstKarakter) {
-                    TextField("", text: $karakter)
+                    TextField("", text: $låstkarakter)
                         .font(.title3)
                         .fontWeight(.bold)
                         .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
                         .background(indeks % 2 == 1  ? Color.background:.orange)
                         .multilineTextAlignment(.center)
-                        .onChange(of: karakter) { _, newValue in
+                        .onChange(of: låstkarakter) { _, newValue in
                             withErrorReporting {
                                 try database.write { db in
                                     if(deltaker.låstKarakter) {
@@ -64,9 +58,10 @@ struct karakterView: View {
                                 }
                             }
                         }
-                        .task {
-                            karakter = deltaker.karakter
+                        .onAppear {
+                            låstkarakter = deltaker.karakter
                         }
+
                     
                 }
                 else {
@@ -76,12 +71,7 @@ struct karakterView: View {
                         .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
                         .background(indeks % 2 == 1 ? Color.background:.orange)
                         .multilineTextAlignment(.center)
-                        .onAppear {
-                            karakter =  finnKarakter()
-                        }
-                        .onChange(of: endretPoeng) {
-                            karakter = finnKarakter()
-                        }
+
                 }
             }
         }

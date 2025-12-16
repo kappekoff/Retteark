@@ -13,13 +13,11 @@ struct PoengView: View {
 
     var deltaker: Deltakere
     var oppgave: Oppgaver
-    
-    
+
     @Binding var poenger: [(Poenger, Prover.ID)]
     var poengVerdi: String? {
         return poenger.first(where: {$0.0.oppgaveId == oppgave.id && $0.0.deltakerId == deltaker.id})?.0.poeng
     }
-    @Binding var endretPoeng: Int
     @State private var lagrePoengTimer: Task<Void, Never>?
     
     var body: some View {
@@ -55,7 +53,6 @@ struct PoengView: View {
             .border(.black)
             .multilineTextAlignment(.center)
             .onChange(of: binding.wrappedValue) {
-                endretPoeng += 1
                 lagrePoengTimer?.cancel()
                 lagrePoengTimer = Task {
                     try? await Task.sleep(for: .milliseconds(500))

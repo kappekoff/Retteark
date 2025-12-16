@@ -54,7 +54,7 @@ struct poengTabellView: View {
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: 50).font(.title).border(.primary).fontWeight(.bold).background(.gray)
             
             ForEach(Array(deltakere.enumerated()), id: \.element.id){ indeks, deltaker in
-                deltakerRadView(deltaker: deltaker, oppgaver: oppgaver, kategorier: kategorier, oppgaverKategorier: oppgaverKategorier, prøve: prøve, fokus: $fokus, poenger: $poenger, indeks: indeks, visElevTilbakemleding: $visElevTilbakemleding)
+                deltakerRadView(deltaker: deltaker, deltakere: $deltakere, oppgaver: $oppgaver, kategorier: $kategorier, oppgaverKategorier: $oppgaverKategorier, prøve: prøve, fokus: $fokus, poenger: $poenger, indeks: indeks, visElevTilbakemleding: $visElevTilbakemleding)
                     .font(.title3).frame(minWidth: 0, maxWidth: 150, minHeight: 0, maxHeight: 50, alignment: .leading).border(.primary).background(indeks % 2 == 1 ? Color.background:.orange)
             }
         }
@@ -89,11 +89,10 @@ struct karakterCeller: View {
     var indeks: Int
     
     @State var låstKarakter: Bool = true
-    @Binding var endretPoeng: Int
 
     
     var body: some View {
-        karakterView(deltaker: deltaker, oppgaver: oppgaver, poenger: $poenger, indeks: indeks,låstKarakter: $låstKarakter, endretPoeng: $endretPoeng)
+        karakterView(deltaker: deltaker, oppgaver: oppgaver, poenger: $poenger, indeks: indeks,låstKarakter: $låstKarakter)
             .border(.black)
         karakterLa_sView(deltaker: deltaker, indeks: indeks, låstKarakter: $låstKarakter)
     }

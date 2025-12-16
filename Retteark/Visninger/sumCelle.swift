@@ -15,10 +15,11 @@ struct sumCelle: View {
     @Binding var poenger: [(Poenger, Prover.ID)]
     var deltaker: Deltakere
     var indeks: Int
-    @Binding var endretPoeng: Int
     
 
-    @State var sum: String = ""
+    var sum: String {
+        sumAvPoeng()
+    }
     
     var body: some View {
         Text(sum)
@@ -27,12 +28,8 @@ struct sumCelle: View {
             .border(.black)
             .background(indeks % 2 == 1  ? Color.background:.orange)
             .multilineTextAlignment(.center)
-            .onAppear {
-                sum =  sumAvPoeng()
-            }
-            .onChange(of: endretPoeng) {
-                sum =  sumAvPoeng()
-            }
+
+
     }
     
     func sumAvPoeng() -> String  {

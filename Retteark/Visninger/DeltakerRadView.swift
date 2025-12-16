@@ -8,17 +8,16 @@
 import SwiftUI
 
 struct deltakerRadView: View {
-    var deltaker: Deltakere
-    var oppgaver: [Oppgaver]
-    var kategorier: [Kategorier]
-    var oppgaverKategorier: [(OppgaverKategorier, Oppgaver)]
+    let deltaker: Deltakere
+    @Binding var deltakere: [Deltakere]
+    @Binding var oppgaver: [Oppgaver]
+    @Binding var kategorier: [Kategorier]
+    @Binding var oppgaverKategorier: [(OppgaverKategorier, Oppgaver)]
     var prøve: Prover?
     @FocusState.Binding var fokus: Fokus?
     @Binding var poenger: [(Poenger, Prover.ID)]
     var indeks: Int
     @Binding var visElevTilbakemleding: VisElevTilbakemleding?
-    @State var endretPoeng: Int = 0
-    
     var body: some View {
         GridRow(){
             Button(action: {
@@ -27,7 +26,7 @@ struct deltakerRadView: View {
                 Text(deltaker.navn)
             })
             ForEach(oppgaver.enumerated(), id: \.element.id){ oppgaveIndeks, oppgave in
-                PoengView(deltaker: deltaker, oppgave: oppgave, poenger: $poenger , endretPoeng: $endretPoeng)
+                PoengView(deltaker: deltaker, oppgave: oppgave, poenger: $poenger)
                     .focused($fokus, equals: .poengFokus(id: poenger.first(where: {$0.0.oppgaveId == oppgave.id && $0.0.deltakerId == deltaker.id})?.0.id ?? "fant ikke poeng for denne cellen"))
                     .onSubmit {
                         if(poenger.first(where: {$0.0.oppgaveId == oppgave.id && $0.0.deltakerId == deltaker.id})?.0.poeng == "") {
@@ -43,8 +42,8 @@ struct deltakerRadView: View {
                          fokus = fokus_posisjon
                     }
             }
-            sumCelle(oppgaver: oppgaver, poenger: $poenger, deltaker: deltaker, indeks: indeks, endretPoeng: $endretPoeng)
-            karakterCeller(deltaker: deltaker, oppgaver: oppgaver, poenger: $poenger, indeks: indeks, endretPoeng: $endretPoeng)
+            sumCelle(oppgaver: oppgaver, poenger: $poenger, deltaker: deltaker, indeks: indeks)
+            karakterCeller(deltaker: deltaker, oppgaver: oppgaver, poenger: $poenger, indeks: indeks)
                 .fullScreenCover(item: $visElevTilbakemleding, onDismiss: { visElevTilbakemleding = nil }) { visElevTilbakemleding in
                     switch visElevTilbakemleding{
                     case .valgtElev(let valgtDeltaker):
