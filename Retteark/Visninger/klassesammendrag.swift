@@ -7,7 +7,7 @@
 
 import SwiftUI
 import Charts
-import SharingGRDB
+import SQLiteData
 
 struct Klassesammendrag: View {
     @Dependency(\.defaultDatabase) var database

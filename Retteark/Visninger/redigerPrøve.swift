@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import SharingGRDB
+import SQLiteData
 
 struct redigerPr_ve: View {
     var prøveId: Prover.ID

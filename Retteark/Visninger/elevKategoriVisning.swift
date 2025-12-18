@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import SharingGRDB
+import SQLiteData
 
 struct elevTilbakemeldingVisning: View {
 
@@ -15,10 +15,10 @@ struct elevTilbakemeldingVisning: View {
     
     var deltaker: Deltakere
     var prøve: Prover
-    var oppgaver : [Oppgaver]
-    var kategorier: [Kategorier]
+    @Binding var oppgaver : [Oppgaver]
+    @Binding var kategorier: [Kategorier]
     @Binding var poenger: [(Poenger, Prover.ID)]
-    var oppgaverKategorier: [(OppgaverKategorier, Oppgaver)]
+    @Binding var oppgaverKategorier: [(OppgaverKategorier, Oppgaver)]
     
     var body: some View {
 
@@ -108,7 +108,7 @@ struct hovedinnhold: View {
                 }
             }
             LazyVGrid(columns: kategoriKolonner, spacing: 30) {
-                ForEach(Array(kategorier.enumerated()), id: \.element.id) { kategoriIndex, kategori in
+                ForEach(Array(kategorier.filter({$0.proveId == prøve.id}).enumerated()), id: \.element.id) { kategoriIndex, kategori in
                     if(oppgaverKategorier.contains(where: {$0.0.KategoriId == kategori.id})) {
                         VStack {
                             Text(kategori.navn)
@@ -153,7 +153,7 @@ struct hovedinnhold: View {
                 
         }
         .padding(20)
-        .frame(width: 500)
+        .frame(maxWidth: 500, maxHeight: .infinity)
 
     }
     

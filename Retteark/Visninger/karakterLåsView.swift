@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import SharingGRDB
+import SQLiteData
 
 struct karakterLa_sView: View {
     @Dependency(\.defaultDatabase) var database

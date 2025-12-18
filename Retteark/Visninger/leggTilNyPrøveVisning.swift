@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import SharingGRDB
+import SQLiteData
 
 struct leggTilNyPr_veVisning: View {
     @Dependency(\.defaultDatabase) var database

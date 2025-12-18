@@ -7,10 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		941211F62E45DF2C0060099B /* SharingGRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 941211F52E45DF2C0060099B /* SharingGRDB */; };
-		941211F82E45DF2C0060099B /* SharingGRDBCore in Frameworks */ = {isa = PBXBuildFile; productRef = 941211F72E45DF2C0060099B /* SharingGRDBCore */; };
-		941211FA2E45DF2C0060099B /* StructuredQueriesGRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 941211F92E45DF2C0060099B /* StructuredQueriesGRDB */; };
-		941211FC2E45DF2C0060099B /* StructuredQueriesGRDBCore in Frameworks */ = {isa = PBXBuildFile; productRef = 941211FB2E45DF2C0060099B /* StructuredQueriesGRDBCore */; };
+		941A8D422EF3F8170082B061 /* SQLiteData in Frameworks */ = {isa = PBXBuildFile; productRef = 941A8D412EF3F8170082B061 /* SQLiteData */; };
 		94361DCB2E65CAFD0019496B /* karakterLåsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94361DCA2E65CAFD0019496B /* karakterLåsView.swift */; };
 		94361DCD2E6720820019496B /* DeltakerRadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94361DCC2E6720820019496B /* DeltakerRadView.swift */; };
 		949429E5293D243C00543B19 /* bakgrunsfarger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949429E4293D243C00543B19 /* bakgrunsfarger.swift */; };
@@ -118,10 +115,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				941211FC2E45DF2C0060099B /* StructuredQueriesGRDBCore in Frameworks */,
-				941211FA2E45DF2C0060099B /* StructuredQueriesGRDB in Frameworks */,
-				941211F62E45DF2C0060099B /* SharingGRDB in Frameworks */,
-				941211F82E45DF2C0060099B /* SharingGRDBCore in Frameworks */,
+				941A8D422EF3F8170082B061 /* SQLiteData in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -271,10 +265,7 @@
 			);
 			name = Retteark;
 			packageProductDependencies = (
-				941211F52E45DF2C0060099B /* SharingGRDB */,
-				941211F72E45DF2C0060099B /* SharingGRDBCore */,
-				941211F92E45DF2C0060099B /* StructuredQueriesGRDB */,
-				941211FB2E45DF2C0060099B /* StructuredQueriesGRDBCore */,
+				941A8D412EF3F8170082B061 /* SQLiteData */,
 			);
 			productName = Retteark;
 			productReference = 94DF82DB2878BB540054D5B8 /* Retteark.app */;
@@ -324,7 +315,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1400;
-				LastUpgradeCheck = 1530;
+				LastUpgradeCheck = 2620;
 				TargetAttributes = {
 					94DF82DA2878BB540054D5B8 = {
 						CreatedOnToolsVersion = 14.0;
@@ -349,7 +340,7 @@
 			);
 			mainGroup = 94DF82D22878BB540054D5B8;
 			packageReferences = (
-				941211F42E45DF2C0060099B /* XCRemoteSwiftPackageReference "sharing-grdb" */,
+				941A8D402EF3F8170082B061 /* XCRemoteSwiftPackageReference "sqlite-data" */,
 			);
 			productRefGroup = 94DF82DC2878BB540054D5B8 /* Products */;
 			projectDirPath = "";
@@ -497,6 +488,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 2NSD56573L;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -519,6 +511,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_STRICT_CONCURRENCY = minimal;
@@ -561,6 +554,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 2NSD56573L;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -576,6 +570,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_STRICT_CONCURRENCY = minimal;
@@ -593,8 +588,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Retteark/Preview Content\"";
-				DEVELOPMENT_TEAM = 2NSD56573L;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_FILE_ACCESS_DOWNLOADS_FOLDER = readwrite;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_RESOURCE_ACCESS_PRINTING = YES;
+				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -602,7 +601,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -610,9 +609,10 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kappekoff.Retteark;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = YES;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 5.0;
@@ -629,8 +629,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Retteark/Preview Content\"";
-				DEVELOPMENT_TEAM = 2NSD56573L;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_FILE_ACCESS_DOWNLOADS_FOLDER = readwrite;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_RESOURCE_ACCESS_PRINTING = YES;
+				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -638,7 +642,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -646,9 +650,10 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kappekoff.Retteark;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = YES;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 5.0;
@@ -659,11 +664,9 @@
 		94DF83032878BB570054D5B8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2NSD56573L;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MARKETING_VERSION = 1.0;
@@ -679,11 +682,9 @@
 		94DF83042878BB570054D5B8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2NSD56573L;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MARKETING_VERSION = 1.0;
@@ -699,10 +700,8 @@
 		94DF83062878BB570054D5B8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2NSD56573L;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kappekoff.RettearkUITests;
@@ -717,10 +716,8 @@
 		94DF83072878BB570054D5B8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2NSD56573L;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kappekoff.RettearkUITests;
@@ -774,36 +771,21 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		941211F42E45DF2C0060099B /* XCRemoteSwiftPackageReference "sharing-grdb" */ = {
+		941A8D402EF3F8170082B061 /* XCRemoteSwiftPackageReference "sqlite-data" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/pointfreeco/sharing-grdb";
+			repositoryURL = "https://github.com/pointfreeco/sqlite-data.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.5.0;
+				minimumVersion = 1.4.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		941211F52E45DF2C0060099B /* SharingGRDB */ = {
+		941A8D412EF3F8170082B061 /* SQLiteData */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 941211F42E45DF2C0060099B /* XCRemoteSwiftPackageReference "sharing-grdb" */;
-			productName = SharingGRDB;
-		};
-		941211F72E45DF2C0060099B /* SharingGRDBCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 941211F42E45DF2C0060099B /* XCRemoteSwiftPackageReference "sharing-grdb" */;
-			productName = SharingGRDBCore;
-		};
-		941211F92E45DF2C0060099B /* StructuredQueriesGRDB */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 941211F42E45DF2C0060099B /* XCRemoteSwiftPackageReference "sharing-grdb" */;
-			productName = StructuredQueriesGRDB;
-		};
-		941211FB2E45DF2C0060099B /* StructuredQueriesGRDBCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 941211F42E45DF2C0060099B /* XCRemoteSwiftPackageReference "sharing-grdb" */;
-			productName = StructuredQueriesGRDBCore;
+			package = 941A8D402EF3F8170082B061 /* XCRemoteSwiftPackageReference "sqlite-data" */;
+			productName = SQLiteData;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

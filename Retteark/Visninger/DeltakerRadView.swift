@@ -48,7 +48,7 @@ struct deltakerRadView: View {
                     switch visElevTilbakemleding{
                     case .valgtElev(let valgtDeltaker):
                         if let prøve = prøve {
-                            elevTilbakemeldingVisning(visElevTilbakemleding: $visElevTilbakemleding, lagerPDF: false, deltaker: valgtDeltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier, poenger: $poenger, oppgaverKategorier: oppgaverKategorier)
+                            elevTilbakemeldingVisning(visElevTilbakemleding: $visElevTilbakemleding, lagerPDF: false, deltaker: valgtDeltaker, prøve: prøve, oppgaver: $oppgaver, kategorier: $kategorier, poenger: $poenger, oppgaverKategorier: $oppgaverKategorier)
                         }
                         else {
                             Text("Fant ikke prøve")

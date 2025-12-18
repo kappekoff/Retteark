@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import SharingGRDB
+import SQLiteData
 import OSLog
 private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "RettearkApp", category: "Database")
 
@@ -232,21 +232,21 @@ struct RettearkApp: App {
 }
 
 @Table("Klasser")
-struct Klasser:FetchableRecord, Codable, Identifiable {
+struct Klasser: Codable, Identifiable {
     var id: String
     var navn: String
     var skoleår: String
 }
 
 @Table("Elever")
-struct Elever: FetchableRecord, Codable, Identifiable {
+struct Elever: Codable, Identifiable {
     var id: String
     var navn: String
     var klasseId: String?
 }
 
 @Table("Prover")
-struct Prover:FetchableRecord, Codable, Identifiable {
+struct Prover: Codable, Identifiable {
     var id: String
     var navn: String
     var visEleverKarakter: Bool
@@ -254,7 +254,7 @@ struct Prover:FetchableRecord, Codable, Identifiable {
 }
 
 @Table("Oppgaver")
-struct Oppgaver:FetchableRecord, Codable, Identifiable {
+struct Oppgaver: Codable, Identifiable {
     var id: String
     var navn: String
     var proveId: String
@@ -263,7 +263,7 @@ struct Oppgaver:FetchableRecord, Codable, Identifiable {
 }
 
 @Table("Deltakere")
-struct Deltakere: FetchableRecord, Codable, Identifiable, Equatable {
+struct Deltakere: Codable, Identifiable, Equatable {
     var id: String
     var navn: String
     var proveId: String
@@ -273,21 +273,21 @@ struct Deltakere: FetchableRecord, Codable, Identifiable, Equatable {
 }
 
 @Table("Poenger")
-struct Poenger: FetchableRecord, Codable, Identifiable, TableRecord {
+struct Poenger: Codable, Identifiable {
     var oppgaveId: String
     var deltakerId: String
     var poeng: String
     var id: String
 }
 @Table("Kategorier")
-struct Kategorier: FetchableRecord, Codable, Identifiable {
+struct Kategorier: Codable, Identifiable {
     var id: String
     var navn: String
     var proveId: String
 }
 
 @Table("OppgaverKategorier")
-struct OppgaverKategorier: FetchableRecord, Codable, Identifiable {
+struct OppgaverKategorier: Codable, Identifiable {
     var id: String
     var KategoriId: String
     var OppgaveId: String

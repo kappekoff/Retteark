@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import SharingGRDB
+import SQLiteData
 
 struct klasseVisning: View {
     
@@ -16,8 +16,8 @@ struct klasseVisning: View {
     @State var visKlassevisningSheet: VisKlassevisningSheet? = nil
     
     @Dependency(\.defaultDatabase) var database
-    @SharedReader(.fetchAll(sql: "SELECT * FROM Klasser")) var klasser: [Klasser]
-    @FetchAll var prøver: [Prover] = []
+    @State var klasser: [Klasser] = []
+    @State var prøver: [Prover] = []
 
     var body: some View {
         NavigationSplitView(columnVisibility: $visSideKolonner){
@@ -130,6 +130,9 @@ struct klasseVisning: View {
                 await hentProverForKlasse()
             }
         }
+        .task {
+            await hentKlasser()
+        }
         .fullScreenCover(item: $visKlassevisningSheet, onDismiss: {visKlassevisningSheet = nil}) { visKlassevisningSheet in
             switch visKlassevisningSheet {
             case .leggTilKlasse:
@@ -171,13 +174,22 @@ struct klasseVisning: View {
     
     func hentProverForKlasse() async {
         await withErrorReporting {
-            try await $prøver.load(
-                Prover
-                    .where{ $0.klasseId == self.valgtKlasseID },
-                animation: .default
-            )
+            try await database.read { db in
+                prøver = try Prover
+                    .where{ $0.klasseId == self.valgtKlasseID }
+                    .fetchAll(db)
+            }
         }
-        
+    }
+
+    
+    func hentKlasser() async {
+        await withErrorReporting {
+            try await database.read { db in
+                klasser = try Klasser
+                    .fetchAll(db)
+            }
+        }
     }
 }
 

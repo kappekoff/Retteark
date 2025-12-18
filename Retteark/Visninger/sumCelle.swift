@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import SharingGRDB
+import SQLiteData
 
 struct sumCelle: View {
     @Dependency(\.defaultDatabase) var database
