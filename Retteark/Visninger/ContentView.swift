@@ -89,12 +89,9 @@ struct ContentView: View {
                     .fullScreenCover(item: $viserSheet, onDismiss: {viserSheet = nil}){ viserSheet in
                         switch viserSheet{
                         case .valgtKategorier:
-                            kategoriView(viserSheet: $viserSheet, valgtPrøveID: valgtPrøveID)
+                            kategoriView(viserSheet: $viserSheet, valgtPrøveID: valgtPrøveID,oppgaver: $oppgaver, kategorier: $kategorier, oppgaverKategorier: $oppgaverKategorier)
                         case .velgtInstillinger:
-                            instillinger(valgtPrøveID: valgtPrøveID, visElevTilbakemleding: $viserSheet)
-                                .onAppear {
-                                    print("velgtInstillinger: \(String(describing: valgtPrøveID))")
-                                }
+                            instillinger(prøve: $prøve, oppgaver: $oppgaver, deltakere: $deltakere, kategorier: $kategorier, visElevTilbakemleding: $viserSheet)
                         case .velgtKlassesammendrag:
                             Klassesammendrag(visElevTilbakemleding: $viserSheet, prøveId: valgtPrøveID)
                         case .viserProgressView:

@@ -254,7 +254,7 @@ struct Prover: Codable, Identifiable {
 }
 
 @Table("Oppgaver")
-struct Oppgaver: Codable, Identifiable {
+struct Oppgaver: Codable, Identifiable, Equatable {
     var id: String
     var navn: String
     var proveId: String

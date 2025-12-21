@@ -15,6 +15,7 @@ struct leggTilNyKlasseVisning: View {
     @State var skoleÅr: String
     @State var elever: [Elever] = []
     @Binding var visKlassevisningSheet: VisKlassevisningSheet?
+    @Binding var klasser: [Klasser]
     
     var body: some View {
         NavigationStack {
@@ -59,6 +60,7 @@ struct leggTilNyKlasseVisning: View {
                         try await database.write { db in
                             let midlertidigKlasse = Klasser(id: klasseId, navn: klasseNavn, skoleår: skoleÅr)
                             try  Klasser.insert{midlertidigKlasse}.execute(db)
+                            klasser.append(midlertidigKlasse)
                         }
                     }
                 }

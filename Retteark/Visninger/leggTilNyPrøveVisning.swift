@@ -12,13 +12,14 @@ struct leggTilNyPr_veVisning: View {
     @Dependency(\.defaultDatabase) var database
     var klasseID: String
     @Binding var visKlassevisningSheet: VisKlassevisningSheet?
+    @Binding var prøver: [Prover]
     @State var prøveNavn: String = ""
     @State var oppgaver: [Oppgaver] = [];
     @State var visEleverKarakter = true;
     @State var nyeOppgaver: String = "";
     @State var maksPoeng: Double? = nil
     let proveid = UUID().uuidString
-    @FetchAll var elever: [Elever] = []
+    @State var elever: [Elever] = []
     
     var body: some View {
         NavigationStack {
@@ -65,6 +66,7 @@ struct leggTilNyPr_veVisning: View {
                             try await database.write { db in
                                 let midlertidigPrøve = Prover(id: proveid, navn: prøveNavn, visEleverKarakter: visEleverKarakter, klasseId: klasseID)
                                 try  Prover.insert{midlertidigPrøve}.execute(db)
+                                prøver.append(midlertidigPrøve)
                             }
                         }
                         await hentElever()
@@ -114,11 +116,11 @@ struct leggTilNyPr_veVisning: View {
     
     func hentElever() async {
         await withErrorReporting {
-            try await $elever.load(
-                Elever
-                    .where{ $0.klasseId == self.klasseID },
-                animation: .default
-            )
+            try await database.read { db in
+                elever = try Elever
+                    .where{$0.klasseId == self.klasseID}
+                    .fetchAll(db)
+            }
         }
     }
 }

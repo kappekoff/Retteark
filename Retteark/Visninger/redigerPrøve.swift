@@ -11,7 +11,7 @@ import SQLiteData
 struct redigerPr_ve: View {
     var prøveId: Prover.ID
     @Binding var visKlassevisningSheet:VisKlassevisningSheet?
-    
+    @Binding var prøver: [Prover]
     @Dependency(\.defaultDatabase) var database
 
     @State var prøvenavn: String = ""
@@ -25,10 +25,21 @@ struct redigerPr_ve: View {
                 TextInputField(title: "Prøvenavn", text: $prøvenavn)
                 Toggle("Vis karakter til elever", isOn: $visEleverKarakter)
             }
+            .onChange(of: prøvenavn) {
+                Task {
+                    await withErrorReporting {
+                        try await database.write { db in
+                            let midlertidigProve = Prover(id: prøve?.id ?? "", navn: prøve?.navn ?? "", visEleverKarakter: prøve?.visEleverKarakter ?? false, klasseId: prøve?.klasseId ?? "")
+                            try  Prover.update(midlertidigProve)
+                                .execute(db)
+                        }
+                    }
+                }
+            }
             Section("Oppgaver") {
                 List() {
-                    ForEach(oppgaver) { oppgave in
-                        OppgaveVisning(oppgave: oppgave, navn: oppgave.navn, maksPoeng: oppgave.maksPoeng)
+                    ForEach($oppgaver) { oppgave in
+                        OppgaveVisning(oppgave: oppgave)
                     }
                     .onDelete(perform: slettOppgaveFraListe)
                     Button {
@@ -37,6 +48,7 @@ struct redigerPr_ve: View {
                                 try await database.write { db in
                                     let midlertidigOppgave = Oppgaver(id: UUID().uuidString, navn: "", proveId: prøveId, maksPoeng: 1)
                                     try  Oppgaver.insert{midlertidigOppgave}.execute(db)
+                                    oppgaver.append(midlertidigOppgave)
                                 }
                             }
                         }
@@ -100,17 +112,27 @@ struct redigerPr_ve: View {
 
 
 struct OppgaveVisning: View {
-    
-    var oppgave: Oppgaver
-    @State var navn: String
-    @State var maksPoeng: Double?
-    
+    @Dependency(\.defaultDatabase) var database
+    @Binding var oppgave: Oppgaver
+
     var body: some View {
         HStack {
-            TextField("Oppgavenavn", text: $navn)
+            TextField("Oppgavenavn", text: $oppgave.navn)
             Spacer()
-            NumericTextField("Makspoeng", number: $maksPoeng, isDecimalAllowed: true)
+            NumericTextField("Makspoeng", number: $oppgave.maksPoeng, isDecimalAllowed: true)
         }
+        .onChange(of: oppgave) {
+            Task {
+                await withErrorReporting {
+                    try await database.write { db in
+                        let midlertidigOppgave = Oppgaver(id: oppgave.id, navn: oppgave.navn, proveId: oppgave.proveId, maksPoeng: oppgave.maksPoeng)
+                        try  Oppgaver.update(midlertidigOppgave)
+                            .execute(db)
+                    }
+                }
+            }
+        }
+        
     }
     
 }

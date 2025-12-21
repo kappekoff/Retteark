@@ -22,7 +22,7 @@ struct redigerKlasse: View {
     @State private var midlertidigKlasseSkoleår: String = ""
     
     
-    @FetchAll var klasser : [Klasser] = []
+    @Binding var klasser : [Klasser]
     @State var elever: [Elever] = []
     
     
@@ -46,6 +46,7 @@ struct redigerKlasse: View {
                                 try await database.write { db in
                                     let midlertidigElev = Elever(id: UUID().uuidString, navn: "", klasseId: valgtKlasseID)
                                     try  Elever.insert{midlertidigElev}.execute(db)
+                                    elever.append(midlertidigElev)
                                 }
                             }
                         }
@@ -74,20 +75,23 @@ struct redigerKlasse: View {
                     try await database.write { db in
                         let midlertidigKlasse = Klasser(id: valgtKlasseID, navn: midlertidigKlasseNavn, skoleår: midlertidigKlasseSkoleår)
                         try  Klasser.update(midlertidigKlasse).execute(db)
+                        let indexTilKlasse = klasser.index(where: {$0.id == valgtKlasseID})
+                        if let indexTilKlasse = indexTilKlasse {
+                            klasser[indexTilKlasse] = midlertidigKlasse
+                        }
                     }
                 }
             }
         }
     }
             
-    
     func hentKlasser() async {
         await withErrorReporting {
-            try await $klasser.load(
-                Klasser
-                    .where{ $0.id == self.valgtKlasseID },
-                animation: .default
-            )
+            try await database.read { db in
+                klasser = try Klasser
+                    .where{ $0.id == self.valgtKlasseID }
+                    .fetchAll(db)
+            }
         }
     }
     
@@ -101,9 +105,6 @@ struct redigerKlasse: View {
         }
     }
     
-    
-    
-    
     func slettElevFraListe(at offsets: IndexSet){
         let eleverSomSkalSlettes = offsets.map { elever[$0] }
         eleverSomSkalSlettes.forEach { elev in
@@ -116,7 +117,6 @@ struct redigerKlasse: View {
                 }
             }
         }
-        
     }
 }
 

@@ -24,7 +24,7 @@ struct elevTilbakemeldingVisning: View {
 
         ScrollView {
             VStack {
-                top(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier,poenger: $poenger, oppgaverKategorier: oppgaverKategorier, visElevTilbakemleding: $visElevTilbakemleding)
+                top(deltaker: deltaker, prøve: prøve, oppgaver: $oppgaver, kategorier: $kategorier,poenger: $poenger, oppgaverKategorier: $oppgaverKategorier, visElevTilbakemleding: $visElevTilbakemleding)
                 hovedinnhold(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier, poenger: $poenger, oppgaverKategorier: oppgaverKategorier, visElevTilbakemleding: $visElevTilbakemleding,  lagerPDF: false)
             }
         }
@@ -38,10 +38,10 @@ struct top: View {
     @Dependency(\.defaultDatabase) var database
     var deltaker: Deltakere
     var prøve: Prover
-    var oppgaver : [Oppgaver]
-    var kategorier: [Kategorier]
+    @Binding var oppgaver : [Oppgaver]
+    @Binding var kategorier: [Kategorier]
     @Binding var poenger: [(Poenger, Prover.ID)]
-    var oppgaverKategorier: [(OppgaverKategorier, Oppgaver)]
+    @Binding var oppgaverKategorier: [(OppgaverKategorier, Oppgaver)]
     @Binding var visElevTilbakemleding:VisElevTilbakemleding?
     @State var visFilvelger = false
   
@@ -57,7 +57,7 @@ struct top: View {
                 switch result {
                 case .success(let file):
                     lagPDF(innhold: VStack {
-                        top(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier,poenger: $poenger, oppgaverKategorier: oppgaverKategorier, visElevTilbakemleding: $visElevTilbakemleding)
+                        top(deltaker: deltaker, prøve: prøve, oppgaver: $oppgaver, kategorier: $kategorier,poenger: $poenger, oppgaverKategorier: $oppgaverKategorier, visElevTilbakemleding: $visElevTilbakemleding)
                         hovedinnhold(deltaker: deltaker, prøve: prøve, oppgaver: oppgaver, kategorier: kategorier, poenger: $poenger, oppgaverKategorier: oppgaverKategorier, visElevTilbakemleding: $visElevTilbakemleding, lagerPDF: true)
                     }, filplassering: file)
                 case .failure(let error):

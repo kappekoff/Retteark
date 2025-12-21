@@ -82,7 +82,6 @@ struct klasseVisning: View {
                                     Image(systemName: "square.and.pencil")
                                 }
                                 .tint(.yellow)
-
                             }
                     }
                     .onDelete(perform: funksjonSomIkkeSletterNoe)
@@ -136,16 +135,15 @@ struct klasseVisning: View {
         .fullScreenCover(item: $visKlassevisningSheet, onDismiss: {visKlassevisningSheet = nil}) { visKlassevisningSheet in
             switch visKlassevisningSheet {
             case .leggTilKlasse:
-                leggTilNyKlasseVisning(tekstFraVisma: "", klasseNavn: "", skoleÅr: "",  visKlassevisningSheet: $visKlassevisningSheet)
+                leggTilNyKlasseVisning(tekstFraVisma: "", klasseNavn: "", skoleÅr: "",  visKlassevisningSheet: $visKlassevisningSheet, klasser: $klasser)
             case .leggTilPrøve:
                 if let valgtKlasseID = valgtKlasseID {
-                    leggTilNyPr_veVisning(klasseID: valgtKlasseID,  visKlassevisningSheet: $visKlassevisningSheet)
+                    leggTilNyPr_veVisning(klasseID: valgtKlasseID,  visKlassevisningSheet: $visKlassevisningSheet, prøver: $prøver)
                 }
             case .redigerKlasse(let klasseid):
-                redigerKlasse(valgtKlasseID: klasseid, visKlassevisningSheet: $visKlassevisningSheet)
+                redigerKlasse(valgtKlasseID: klasseid, visKlassevisningSheet: $visKlassevisningSheet, klasser: $klasser)
             case .redigerPrøve( let prøveid):
-                redigerPr_ve(prøveId: prøveid, visKlassevisningSheet: $visKlassevisningSheet)
-                
+                redigerPr_ve(prøveId: prøveid, visKlassevisningSheet: $visKlassevisningSheet, prøver: $prøver)
             }
         }
     }

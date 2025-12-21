@@ -14,10 +14,9 @@ struct kategoriView: View {
     @Binding var viserSheet: VisElevTilbakemleding?
     var valgtPrøveID: Prover.ID
     @Dependency(\.defaultDatabase) var database
-    @State var oppgaver: [Oppgaver] = []
-    @State var kategorier: [Kategorier] = []
-    @State var oppgaverKategorier: [(OppgaverKategorier, Oppgaver.ID)] = []
-    
+    @Binding var oppgaver: [Oppgaver]
+    @Binding var kategorier: [Kategorier]
+    @Binding var oppgaverKategorier: [(OppgaverKategorier, Oppgaver)]
     
     var body: some View {
         VStack {
@@ -43,6 +42,7 @@ struct kategoriView: View {
                         ForEach(oppgaver){oppgave in
                             kategoriOgOppgaveCelleView(kategori: kategori,
                                                        oppgave: oppgave,
+                                                       oppgaverKategorier: $oppgaverKategorier,
                                                        verdi: oppgaverKategorier.contains(where: {$0.0.KategoriId == kategori.id && $0.0.OppgaveId == oppgave.id}),
                                                        oppgaveKategoriId: oppgaverKategorier.first(where: {$0.0.KategoriId == kategori.id && $0.0.OppgaveId == oppgave.id})?.0.id
                             )
@@ -53,7 +53,6 @@ struct kategoriView: View {
                     Button {
                         Task {
                             await leggTilKategori()
-                            await hentKategorierForProve()
                         }
                     } label: {
                         Image(systemName: "plus.circle").foregroundColor(.green)
@@ -67,60 +66,23 @@ struct kategoriView: View {
                     }
                 }
             }
-            .task {
-                await hentOppgaverKategorierForProve()
-                await hentKategorierForProve()
-                await hentoppgaverForProve()
-                
-            }
             Button("Lukk") {
                 viserSheet = nil
             }
         }
     }
-    
-    func hentoppgaverForProve() async {
-        await withErrorReporting {
-            try await database.read { db in
-                oppgaver = try Oppgaver
-                    .where{ $0.proveId == self.valgtPrøveID }
-                    .fetchAll(db)
-            }
-        }
-    }
-    
-    func hentKategorierForProve() async {
-        await withErrorReporting {
-            try await database.read { db in
-                kategorier = try Kategorier
-                    .where{ $0.proveId == self.valgtPrøveID }
-                    .fetchAll(db)
-            }
-        }
-    }
-    
-    func hentOppgaverKategorierForProve() async {
-        await withErrorReporting {
-            try await database.read { db in
-                oppgaverKategorier = try OppgaverKategorier
-                    .join(Oppgaver.all) { $0.OppgaveId == $1.id }
-                    .where{ $1.proveId == self.valgtPrøveID }
-                    .select{($0, $1.proveId)}
-                    .fetchAll(db)
-            }
-        }
-    }
+
     
     func leggTilKategori() async {
         let nyKategori = Kategorier(id: UUID().uuidString, navn: "Ny ketegori", proveId: valgtPrøveID)
         await withErrorReporting {
             try await database.write { db in
                 try Kategorier.insert{nyKategori}.execute(db)
+                
             }
         }
+        kategorier.append(nyKategori)
     }
-
-    
 }
 
 struct kategoriOgOppgaveCelleView : View {
@@ -128,6 +90,8 @@ struct kategoriOgOppgaveCelleView : View {
    
     let kategori: Kategorier
     let oppgave: Oppgaver
+    @Binding var oppgaverKategorier: [(OppgaverKategorier, Oppgaver)]
+
 
     @State var verdi: Bool
     let oppgaveKategoriId: String?
@@ -139,12 +103,14 @@ struct kategoriOgOppgaveCelleView : View {
             .onChange(of: verdi) { oldValue, newValue in
                 if(newValue == true) {
                     Task {
+                        let midlertidigOppgaveKategori = OppgaverKategorier(id: UUID().uuidString, KategoriId: kategori.id, OppgaveId: oppgave.id)
                         await withErrorReporting {
                             try await database.write { db in
-                                let midlertidigOppgaveKategori = OppgaverKategorier(id: UUID().uuidString, KategoriId: kategori.id, OppgaveId: oppgave.id)
                                 try  OppgaverKategorier.insert{midlertidigOppgaveKategori}.execute(db)
+                                
                             }
                         }
+                        oppgaverKategorier.append((midlertidigOppgaveKategori, oppgave))
                     }
                 }
                 else {

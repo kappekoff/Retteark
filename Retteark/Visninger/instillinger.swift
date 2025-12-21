@@ -10,11 +10,10 @@ import SQLiteData
 
 struct instillinger: View {
     @Dependency(\.defaultDatabase) var database
-    var valgtPrøveID: Prover.ID
-    @State var prøve: Prover? = nil
-    @State var oppgaver: [Oppgaver] = []
-    @State var deltakere: [Deltakere] = []
-    @State var kategorier: [Kategorier] = []
+    @Binding var prøve: Prover?
+    @Binding var oppgaver: [Oppgaver]
+    @Binding var deltakere: [Deltakere]
+    @Binding var kategorier: [Kategorier]
     @Binding var visElevTilbakemleding: VisElevTilbakemleding?
     @State var visEleverKarakter: Bool = false
    
@@ -58,7 +57,7 @@ struct instillinger: View {
                 }
                 .onDelete(perform: slettOppgaveFraListe)
                 Button {
-                    let nyOppgave = Oppgaver(id: UUID().uuidString, navn: "", proveId: valgtPrøveID, maksPoeng: 2)
+                    let nyOppgave = Oppgaver(id: UUID().uuidString, navn: "", proveId: prøve?.id ?? "", maksPoeng: 2)
                     Task {
                         await withErrorReporting {
                             try await database.write { db in
@@ -93,10 +92,6 @@ struct instillinger: View {
             }
         }
         .task {
-            await hentPrøve()
-            await hentoppgaverForProve()
-            await hentDeltakereForProve()
-            await hentKategorierForProve()
             visEleverKarakter = prøve?.visEleverKarakter ?? false
         }
         Button("Lukk") {
@@ -104,48 +99,8 @@ struct instillinger: View {
         }
     }
     
-    func hentPrøve() async {
-        await withErrorReporting {
-            try await database.read { db in
-                prøve = try Prover
-                    .where { $0.id == self.valgtPrøveID}
-                    .fetchOne(db)
-            }
-        }
-    }
-    
-    func hentoppgaverForProve() async {
-        await withErrorReporting {
-            try await database.read { db in
-                oppgaver = try Oppgaver
-                    .where{ $0.proveId == self.valgtPrøveID }
-                    .fetchAll(db)
-            }
-        }
-    }
-    
-    func hentDeltakereForProve() async {
-        await withErrorReporting {
-            try await database.read { db in
-                deltakere = try Deltakere
-                    .where{ $0.proveId == self.valgtPrøveID }
-                    .fetchAll(db)
-            }
-        }
-    }
-    
-    func hentKategorierForProve() async {
-        await withErrorReporting {
-            try await database.read { db in
-                kategorier = try Kategorier
-                    .where{ $0.proveId == self.valgtPrøveID }
-                    .fetchAll(db)
-            }
-        }
-    }
-    
     func leggTilKategori() async {
-        let nyKategori = Kategorier(id: UUID().uuidString, navn: "", proveId: valgtPrøveID)
+        let nyKategori = Kategorier(id: UUID().uuidString, navn: "", proveId: prøve?.id ?? "")
         await withErrorReporting {
             try await database.write { db in
                 try Kategorier.insert{nyKategori}.execute(db)
