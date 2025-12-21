@@ -22,7 +22,7 @@ struct instillinger: View {
         Text("Instillinger").font(.largeTitle)
         List(){
             Section("Kategorier"){
-                ForEach(kategorier) { kategori in
+                ForEach($kategorier) { kategori in
                     kategorierRad(kategori: kategori)
                 }
                 Button {
@@ -52,7 +52,7 @@ struct instillinger: View {
                  }
                  }*/
             Section("Oppgaver") {
-                ForEach(oppgaver) { oppgave in
+                ForEach($oppgaver) { oppgave in
                     oppgaverRad(oppgave: oppgave)
                 }
                 .onDelete(perform: slettOppgaveFraListe)
@@ -71,7 +71,7 @@ struct instillinger: View {
                 }
             }
             Section("Deltakere") {
-                ForEach(deltakere) { deltaker in
+                ForEach($deltakere) { deltaker in
                     deltakerRad(deltaker: deltaker)
                 }
             }
@@ -126,26 +126,21 @@ struct instillinger: View {
 
 struct oppgaverRad: View {
     @Dependency(\.defaultDatabase) var database
-    var oppgave: Oppgaver
-    @State var oppgaveNavn = ""
-    @State var oppgaveMaksPoeng: Double? = nil
+    @Binding var oppgave: Oppgaver
+
     
     var body: some View {
         HStack {
-            TextField("Oppgavenavn", text: $oppgaveNavn)
+            TextField("Oppgavenavn", text: $oppgave.navn)
             Spacer()
-            NumericTextField("Makspoeng", number: $oppgaveMaksPoeng, isDecimalAllowed: true)
+            NumericTextField("Makspoeng", number: $oppgave.maksPoeng, isDecimalAllowed: true)
         }
-        .onAppear {
-            oppgaveNavn = oppgave.navn
-            oppgaveMaksPoeng = oppgave.maksPoeng ?? nil
-        }
-        .onChange(of: [oppgaveNavn, String(oppgaveMaksPoeng ?? 0)]) {
+        .onChange(of: oppgave) {
+            let oppgaveSomSkalLagres = oppgave
             Task {
                 await withErrorReporting {
                     try await database.write { db in
-                        let midlertidigOppgave = Oppgaver(id: oppgave.id, navn: oppgaveNavn, proveId: oppgave.proveId, maksPoeng: oppgaveMaksPoeng ?? 2)
-                        try Oppgaver.update(midlertidigOppgave)
+                        try Oppgaver.update(oppgaveSomSkalLagres)
                             .execute(db)
                     }
                 }
@@ -157,20 +152,15 @@ struct oppgaverRad: View {
 
 struct deltakerRad: View {
     @Dependency(\.defaultDatabase) var database
-    var deltaker: Deltakere
-    
-    @State var deltakerNavn: String = ""
-    
+    @Binding var deltaker: Deltakere
+        
     var body: some View {
-        TextField("Deltakernavn", text: $deltakerNavn)
-            .onAppear {
-                deltakerNavn = deltaker.navn
-            }
-            .onChange(of: deltakerNavn) {
+        TextField("Deltakernavn", text: $deltaker.navn)
+            .onChange(of: deltaker) {
+                let midlertidigDeltaker = deltaker
                 Task {
                     await withErrorReporting {
                         try await database.write { db in
-                            let midlertidigDeltaker = Deltakere(id: deltaker.id, navn: deltakerNavn, proveId: deltaker.proveId, låstKarakter: deltaker.låstKarakter, karakter: deltaker.karakter, framovermelding: "")
                             try Deltakere.update(midlertidigDeltaker)
                                 .execute(db)
                         }
@@ -183,20 +173,16 @@ struct deltakerRad: View {
 
 struct kategorierRad: View {
     @Dependency(\.defaultDatabase) var database
-    var kategori: Kategorier
+    @Binding var kategori: Kategorier
     
-    @State var kategoriNavn: String = ""
     
     var body: some View {
-        TextField("Kategorinavn", text: $kategoriNavn)
-            .onAppear {
-                kategoriNavn = kategori.navn
-            }
-            .onChange(of: kategoriNavn) {
+        TextField("Kategorinavn", text: $kategori.navn)
+            .onChange(of: kategori) {
+                let midlertidigKategori = kategori
                 Task {
                     await withErrorReporting {
                         try await database.write { db in
-                            let midlertidigKategori = Kategorier(id: kategori.id, navn: kategoriNavn, proveId: kategori.proveId)
                             try Kategorier.update(midlertidigKategori)
                                 .execute(db)
                         }

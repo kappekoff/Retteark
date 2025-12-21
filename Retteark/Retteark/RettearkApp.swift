@@ -280,7 +280,7 @@ struct Poenger: Codable, Identifiable {
     var id: String
 }
 @Table("Kategorier")
-struct Kategorier: Codable, Identifiable {
+struct Kategorier: Codable, Identifiable, Equatable {
     var id: String
     var navn: String
     var proveId: String

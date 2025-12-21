@@ -41,7 +41,7 @@ struct poengTabellView: View {
             GridRow{
                 Image(systemName: "number")
                 ForEach($oppgaver){oppgave in
-                    maxPoengVisning(poeng: oppgave.maksPoeng)
+                    maxPoengVisning(oppgave: oppgave)
                         .onChange(of: oppgave.maksPoeng.wrappedValue) { gammelVerdi, nyVerdi in
                             //må endre her seneere
                             print("Endret maks poeng fra \(String(describing: gammelVerdi)) til \(String(describing: nyVerdi))")
