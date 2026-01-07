@@ -26,21 +26,21 @@ struct kategoriView: View {
                     Color.green.gridCellUnsizedAxes([.horizontal, .vertical])
                         .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
                         .border(.primary)
-                    ForEach(oppgaver){oppgave in
-                        Text(oppgave.navn)
+                    ForEach($oppgaver){oppgave in
+                        Text(oppgave.navn.wrappedValue)
                             .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
                             .border(.primary)
                             .background(.green)
                     }
                 }
-                ForEach(kategorier){ kategori in
+                ForEach($kategorier){ kategori in
                     GridRow() {
                         kategorierRad(kategori: kategori)
                             .frame(minWidth: 0, maxWidth: 75, minHeight: 0, maxHeight: 50)
                             .border(.primary)
                             .background(.orange)
                         ForEach(oppgaver){oppgave in
-                            kategoriOgOppgaveCelleView(kategori: kategori,
+                            kategoriOgOppgaveCelleView(kategori: kategori.wrappedValue,
                                                        oppgave: oppgave,
                                                        oppgaverKategorier: $oppgaverKategorier,
                                                        verdi: oppgaverKategorier.contains(where: {$0.0.KategoriId == kategori.id && $0.0.OppgaveId == oppgave.id}),
