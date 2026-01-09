@@ -64,6 +64,14 @@ struct instillinger: View {
                                 try Oppgaver.insert{nyOppgave}.execute(db)
                             }
                         }
+                        for deltaker in deltakere {
+                            await withErrorReporting {
+                                try await database.write { db in
+                                    let midlertidigPoeng = Poenger(oppgaveId: nyOppgave.id, deltakerId: deltaker.id, poeng: "", id: UUID().uuidString)
+                                    try  Poenger.insert{midlertidigPoeng}.execute(db)
+                                }
+                            }
+                        }
                     }
                 }
                 label: {
