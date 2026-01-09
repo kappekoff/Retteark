@@ -57,21 +57,8 @@ struct instillinger: View {
                 }
                 .onDelete(perform: slettOppgaveFraListe)
                 Button {
-                    let nyOppgave = Oppgaver(id: UUID().uuidString, navn: "", proveId: prøve?.id ?? "", maksPoeng: 2)
                     Task {
-                        await withErrorReporting {
-                            try await database.write { db in
-                                try Oppgaver.insert{nyOppgave}.execute(db)
-                            }
-                        }
-                        for deltaker in deltakere {
-                            await withErrorReporting {
-                                try await database.write { db in
-                                    let midlertidigPoeng = Poenger(oppgaveId: nyOppgave.id, deltakerId: deltaker.id, poeng: "", id: UUID().uuidString)
-                                    try  Poenger.insert{midlertidigPoeng}.execute(db)
-                                }
-                            }
-                        }
+                        await leggTilOppgave()
                     }
                 }
                 label: {
@@ -114,6 +101,27 @@ struct instillinger: View {
                 try Kategorier.insert{nyKategori}.execute(db)
             }
         }
+        kategorier.append(nyKategori)
+    }
+    
+    func leggTilOppgave() async {
+        let nyOppgave = Oppgaver(id: UUID().uuidString, navn: "", proveId: prøve?.id ?? "", maksPoeng: 2)
+        Task {
+            await withErrorReporting {
+                try await database.write { db in
+                    try Oppgaver.insert{nyOppgave}.execute(db)
+                }
+            }
+            for deltaker in deltakere {
+                await withErrorReporting {
+                    try await database.write { db in
+                        let midlertidigPoeng = Poenger(oppgaveId: nyOppgave.id, deltakerId: deltaker.id, poeng: "", id: UUID().uuidString)
+                        try  Poenger.insert{midlertidigPoeng}.execute(db)
+                    }
+                }
+            }
+        }
+        oppgaver.append(nyOppgave)
     }
     
     func slettOppgaveFraListe(at offsets: IndexSet){
