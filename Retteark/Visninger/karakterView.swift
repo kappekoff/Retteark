@@ -122,5 +122,14 @@ struct karakterView: View {
         
         return "??"
     }
+    
+    func eksporterKarakter() -> String {
+        if(deltaker.låstKarakter) {
+            return deltaker.karakter
+        }
+        else {
+            return finnKarakter()
+        }
+    }
 
 }

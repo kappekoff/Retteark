@@ -91,9 +91,9 @@ struct ContentView: View {
                         case .valgtKategorier:
                             kategoriView(viserSheet: $viserSheet, valgtPrøveID: valgtPrøveID,oppgaver: $oppgaver, kategorier: $kategorier, oppgaverKategorier: $oppgaverKategorier)
                         case .velgtInstillinger:
-                            instillinger(prøve: $prøve, oppgaver: $oppgaver, deltakere: $deltakere, kategorier: $kategorier, visElevTilbakemleding: $viserSheet)
+                            instillinger(prøve: $prøve, oppgaver: $oppgaver, deltakere: $deltakere, kategorier: $kategorier, poenger: $poenger, visElevTilbakemleding: $viserSheet)
                         case .velgtKlassesammendrag:
-                            Klassesammendrag(visElevTilbakemleding: $viserSheet, prøveId: valgtPrøveID)
+                            Klassesammendrag(visElevTilbakemleding: $viserSheet, prøve: $prøve, deltakere: $deltakere, oppgaver: $oppgaver, kategorier: $kategorier, poenger: $poenger, oppgaverKategorier: $oppgaverKategorier)
                         case .viserProgressView:
                             ProgressView("Lagrer tilbakemeldinger", value: tilbakemledingerLaget)
                                 .progressViewStyle(.circular)

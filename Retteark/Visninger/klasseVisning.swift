@@ -51,7 +51,9 @@ struct klasseVisning: View {
             .navigationTitle("Klasser")
             .toolbar {
                 ToolbarItem {
+                    #if os(iOS)
                     EditButton()
+                    #endif
                 }
                 ToolbarItem(placement: .automatic) {
                     Button {
@@ -89,7 +91,9 @@ struct klasseVisning: View {
                 .navigationTitle("Prøver")
                 .toolbar{
                     ToolbarItem(placement: .primaryAction) {
+                        #if os(iOS)
                         EditButton()
+                        #endif
                     }
                     ToolbarItem(placement: .principal) {
                         Button {
@@ -155,6 +159,9 @@ struct klasseVisning: View {
                 try Klasser.delete(midlertidigKlasse).execute(db)
             }
         }
+        klasser.removeAll { kl in
+            kl.id == klasse.id
+        }
     }
     
     func slettPrøveFraKlasse(prøve: Prover) async {
@@ -163,6 +170,9 @@ struct klasseVisning: View {
             try await database.write { db in
                 try Prover.delete(midlertidigPrøve).execute(db)
             }
+        }
+        prøver.removeAll { pr in
+            pr.id == prøve.id
         }
     }
     

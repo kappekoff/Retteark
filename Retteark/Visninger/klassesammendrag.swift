@@ -13,14 +13,13 @@ struct Klassesammendrag: View {
     @Dependency(\.defaultDatabase) var database
     @Binding var visElevTilbakemleding: VisElevTilbakemleding?
     @State var visFilvelger: Bool = false
-    let prøveId: Prover.ID
     
-    @State var prøve: Prover? = nil
-    @State var deltakere: [Deltakere] = []
-    @State var oppgaver : [Oppgaver] = []
-    @State var kategorier: [Kategorier] = []
-    @State var poenger: [(Poenger, Prover.ID)] = []
-    @State var oppgaverKategorier: [(OppgaverKategorier, Oppgaver)] = []
+    @Binding var prøve: Prover?
+    @Binding var deltakere: [Deltakere]
+    @Binding var oppgaver : [Oppgaver]
+    @Binding var kategorier: [Kategorier]
+    @Binding var poenger: [(Poenger, Prover.ID)]
+    @Binding var oppgaverKategorier: [(OppgaverKategorier, Oppgaver)]
     
     var body: some View {
         VStack {
@@ -53,81 +52,11 @@ struct Klassesammendrag: View {
                 Text("Karakterer").font(.title)
                 Stolpediagram(prøve: $prøve, deltakere: $deltakere, oppgaver: $oppgaver, kategorier: $kategorier, poenger: $poenger, oppgaverKategorier: $oppgaverKategorier).frame(height: 500)
             }
-            .task {
-                await hentDeltakere()
-                await hentPrøve()
-                await hentOppgaver()
-                await hentKategorier()
-                await hentPoenger()
-                await hentOppgaverKategorierForProve()
-            }
             
             Button {
                 visElevTilbakemleding = nil
             } label: {
                 Text("Lukk")
-            }
-        }
-    }
-    
-    func hentPoenger() async {
-         await withErrorReporting {
-             try await database.read { db in
-                 poenger = try Poenger.join(Oppgaver.all) {$0.oppgaveId == $1.id}
-                     .where{$1.proveId.eq(prøveId)}
-                     .select {($0, $1.proveId)}
-                     .fetchAll(db)
-             }
-         }
-     }
-     
-     func hentOppgaverKategorierForProve() async {
-         await withErrorReporting {
-             try await database.read { db in
-                 oppgaverKategorier = try OppgaverKategorier.join(Oppgaver.all) { $0.OppgaveId == $1.id }
-                     .where{ $1.proveId.eq(prøveId) }
-                     .select{($0, $1)}
-                     .fetchAll(db)
-             }
-         }
-     }
-    
-    func hentDeltakere() async {
-        await withErrorReporting {
-            try await database.read { db in
-                deltakere = try Deltakere
-                    .where{$0.proveId == self.prøveId}
-                    .fetchAll(db)
-            }
-        }
-    }
-    
-    func hentPrøve() async {
-        await withErrorReporting {
-            try await database.read { db in
-                prøve = try Prover
-                    .where{$0.id == prøveId}
-                    .fetchOne(db)
-            }
-        }
-    }
-    
-    func hentOppgaver() async {
-        await withErrorReporting {
-            try await database.read { db in
-                oppgaver = try Oppgaver
-                    .where{$0.proveId == prøveId}
-                    .fetchAll(db)
-            }
-        }
-    }
-    
-    func hentKategorier() async {
-        await withErrorReporting {
-            try await database.read { db in
-                kategorier = try Kategorier
-                    .where{$0.proveId == prøveId}
-                    .fetchAll(db)
             }
         }
     }
@@ -198,8 +127,8 @@ struct Stolpediagram: View {
         
         for deltaker in deltakere {
             for j in 0..<karakterer.count {
-                let karakter =  karakterView(deltaker: deltaker, oppgaver: oppgaver, poenger: $poenger, indeks: 0, låstKarakter: Binding.constant(deltaker.låstKarakter)).finnKarakter()
-                if(karakter == karakterer[j].type){
+                let karakter =  karakterView(deltaker: deltaker, oppgaver: oppgaver, poenger: $poenger, indeks: 0, låstKarakter: Binding.constant(deltaker.låstKarakter)).eksporterKarakter()
+                if(karakter.first.map(String.init) ?? "" == karakterer[j].type){
                     karakterer[j].count += 1
                 }
             }
@@ -241,7 +170,7 @@ struct kategoriSammendrag: View {
                             .onAppear {
                                 fargeNummer += 1
                             }
-                        Text(String(deltakerPoengKategori(kategori: kategori)) + "/" + String(maxPoengKategori(kategori: kategori)))
+                        Text(String(round(deltakerPoengKategori(kategori: kategori)*100)/100) + "/" + String(maxPoengKategori(kategori: kategori)))
                     }
                 }
             }
@@ -253,20 +182,24 @@ struct kategoriSammendrag: View {
         formatter.numberStyle = .decimal
         formatter.decimalSeparator = "."
         formatter.groupingSeparator = ""
-        var sum: Double = 0
-        var antall: Double = 0
+        var totalSum: Double = 0
+        var antallDeltakere: Double  = 0
         for deltaker in deltakere {
-            for oppgave in oppgaver {
-                if(oppgaverKategorier.contains(where: {$0.0.KategoriId == kategori.id && $0.0.OppgaveId == oppgave.id})){
-                    let poengSomString = poenger.first(where: {$0.0.oppgaveId == oppgave.id && $0.0.deltakerId == deltaker.id})?.0.poeng ?? ""
-                    if let poengSomTall = formatter.number(from: poengSomString) {
-                        sum += poengSomTall.doubleValue
-                        antall += 1
+            var deltakerSum: Double = 0
+            if deltakerHarLevert(deltaker: deltaker){
+                for oppgave in oppgaver {
+                    if(oppgaverKategorier.contains(where: {$0.0.KategoriId == kategori.id && $0.0.OppgaveId == oppgave.id})){
+                        let poengSomString = poenger.first(where: {$0.0.oppgaveId == oppgave.id && $0.0.deltakerId == deltaker.id})?.0.poeng ?? ""
+                        if let poengSomTall = formatter.number(from: poengSomString) {
+                            deltakerSum += poengSomTall.doubleValue
+                        }
                     }
                 }
+                antallDeltakere += 1
+                totalSum += deltakerSum
             }
         }
-        return (sum/antall)
+        return antallDeltakere > 0 ? (totalSum/antallDeltakere) : 0
     }
     
     func deltakerHarLevert(deltaker: Deltakere) -> Bool {

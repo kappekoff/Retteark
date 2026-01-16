@@ -14,6 +14,7 @@ struct instillinger: View {
     @Binding var oppgaver: [Oppgaver]
     @Binding var deltakere: [Deltakere]
     @Binding var kategorier: [Kategorier]
+    @Binding var poenger: [(Poenger, Prover.ID)]
     @Binding var visElevTilbakemleding: VisElevTilbakemleding?
     @State var visEleverKarakter: Bool = false
    
@@ -113,12 +114,13 @@ struct instillinger: View {
                 }
             }
             for deltaker in deltakere {
+                let midlertidigPoeng = Poenger(oppgaveId: nyOppgave.id, deltakerId: deltaker.id, poeng: "", id: UUID().uuidString)
                 await withErrorReporting {
                     try await database.write { db in
-                        let midlertidigPoeng = Poenger(oppgaveId: nyOppgave.id, deltakerId: deltaker.id, poeng: "", id: UUID().uuidString)
                         try  Poenger.insert{midlertidigPoeng}.execute(db)
                     }
                 }
+                poenger.append((midlertidigPoeng,prøve?.id ?? "" ))
             }
         }
         oppgaver.append(nyOppgave)
